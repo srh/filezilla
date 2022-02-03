@@ -108,27 +108,41 @@ bool CLoginManager::query_unprotect_site(Site & site)
 	return true;
 }
 
-bool CLoginManager::query_credentials(Site & site, std::wstring const& challenge, bool canRemember)
+bool CLoginManager::query_credentials(Site & site, std::wstring const& challenge, bool otp, bool canRemember)
 {
 	assert(!site.credentials.encrypted_);
+
+	bool needs_user{};
+	bool needs_pass{};
+	bool needs_otp{};
 
 	wxString title;
 	wxString header;
 	if (site.server.GetUser().empty() && ProtocolHasUser(site.server.GetProtocol())) {
+		needs_user = true;
 		if (site.credentials.logonType_ == LogonType::interactive) {
 			title = _("Enter username");
 			header = _("Please enter a username for this server:");
-
 			canRemember = false;
 		}
 		else {
 			title = _("Enter username and password");
 			header = _("Please enter username and password for this server:");
+			needs_pass = true;
 		}
 	}
 	else {
-		title = _("Enter password");
-		header = _("Please enter a password for this server:");
+		if (otp) {
+			needs_otp = true;
+			title = _("Enter the 2FA code");
+			header = _("Please enter the 2FA code for this server:");
+			needs_pass = site.credentials.logonType_ == LogonType::interactive;
+		}
+		else {
+			needs_pass = true;
+			title = _("Enter password");
+			header = _("Please enter a password for this server:");
+		}
 	}
 
 	wxDialogEx pwdDlg;
@@ -157,7 +171,7 @@ bool CLoginManager::query_credentials(Site & site, std::wstring const& challenge
 		inner->Add(new wxStaticText(&pwdDlg, -1, LabelEscape(site.server.GetUser())));
 	}
 
-	if (!challenge.empty()) {
+	if (!challenge.empty() && !otp) {
 		std::wstring displayChallenge = fz::trimmed(challenge);
 #ifdef FZ_WINDOWS
 		fz::replace_substrings(displayChallenge, L"\n", L"\r\n");
@@ -165,7 +179,7 @@ bool CLoginManager::query_credentials(Site & site, std::wstring const& challenge
 		main->AddSpacer(0);
 		main->Add(new wxStaticText(&pwdDlg, -1, _("Challenge:")));
 		auto* challengeText = new wxTextCtrlEx(&pwdDlg, -1, displayChallenge, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY);
-		challengeText->SetMinSize(wxSize(lay.dlgUnits(160), lay.dlgUnits(50)));
+		challengeText->SetMinSize(wxSize(lay.dlgUnits(240), lay.dlgUnits(60)));
 		challengeText->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE));
 		main->Add(challengeText, lay.grow);
 	}
@@ -176,7 +190,7 @@ bool CLoginManager::query_credentials(Site & site, std::wstring const& challenge
 	main->Add(inner);
 
 	wxTextCtrl* newUser{};
-	if (site.server.GetUser().empty() && ProtocolHasUser(site.server.GetProtocol())) {
+	if (needs_user) {
 		inner->Add(new wxStaticText(&pwdDlg, -1, _("&User:")), lay.valign);
 		newUser = new wxTextCtrlEx(&pwdDlg, -1, wxString());
 		newUser->SetMinSize(wxSize(150, -1));
@@ -186,7 +200,7 @@ bool CLoginManager::query_credentials(Site & site, std::wstring const& challenge
 
 	wxTextCtrl* password{};
 	wxTextCtrl* key{}; // for storj
-	if (!site.server.GetUser().empty() || site.credentials.logonType_ != LogonType::interactive) {
+	if (needs_pass) {
 		inner->Add(new wxStaticText(&pwdDlg, -1, _("&Password:")), lay.valign);
 		password = new wxTextCtrlEx(&pwdDlg, -1, wxString(), wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD);
 		password->SetMinSize(wxSize(150, -1));
@@ -203,8 +217,16 @@ bool CLoginManager::query_credentials(Site & site, std::wstring const& challenge
 		}
 	}
 
+	wxTextCtrl* otpCode{};
+	if (needs_otp) {
+		inner->Add(new wxStaticText(&pwdDlg, -1, _("&Token code:")), lay.valign);
+		otpCode = new wxTextCtrlEx(&pwdDlg, -1, wxString());
+		otpCode->SetMinSize(wxSize(150, -1));
+		inner->Add(otpCode, lay.valign);
+	}
+
 	wxCheckBox* remember{};
-	if (canRemember) {
+	if (canRemember && needs_pass) {
 		main->AddSpacer(0);
 		remember = new wxCheckBox(&pwdDlg, -1, _("&Remember password until FileZilla is closed"));
 		remember->SetValue(true);
@@ -260,6 +282,16 @@ bool CLoginManager::query_credentials(Site & site, std::wstring const& challenge
 		if (remember && remember->IsChecked()) {
 			RememberPassword(site, challenge);
 		}
+
+		if (otpCode) {
+			auto code = otpCode->GetValue().ToStdWstring();
+			if (code.empty()) {
+				wxMessageBoxEx(_("No code given."), _("Invalid input"), wxICON_EXCLAMATION);
+				continue;
+			}
+			site.credentials.SetExtraParameter(site.server.GetProtocol(), "otp_code", code);
+		}
+
 		break;
 	}
 

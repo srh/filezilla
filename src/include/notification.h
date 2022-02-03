@@ -198,7 +198,8 @@ class FZC_PUBLIC_SYMBOL CInteractiveLoginNotification final : public CAsyncReque
 public:
 	enum type {
 		interactive,
-		keyfile
+		keyfile,
+		totp
 	};
 
 	CInteractiveLoginNotification(type t, std::wstring const& challenge, bool repeated);

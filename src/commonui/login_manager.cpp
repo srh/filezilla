@@ -38,7 +38,7 @@ bool login_manager::GetPassword(Site & site, bool silent)
 		}
 
 		if (!silent) {
-			return query_credentials(site, std::wstring(), true);
+			return query_credentials(site, std::wstring(), false, true);
 		}
 	}
 
@@ -46,7 +46,7 @@ bool login_manager::GetPassword(Site & site, bool silent)
 }
 
 
-bool login_manager::GetPassword(Site & site, bool silent, std::wstring const& challenge, bool canRemember)
+bool login_manager::GetPassword(Site & site, bool silent, std::wstring const& challenge, bool otp, bool canRemember)
 {
 	if (canRemember) {
 		auto it = FindItem(site.server, challenge);
@@ -59,7 +59,7 @@ bool login_manager::GetPassword(Site & site, bool silent, std::wstring const& ch
 		return false;
 	}
 
-	return query_credentials(site, challenge, canRemember);
+	return query_credentials(site, challenge, otp, canRemember);
 }
 
 void login_manager::CachedPasswordFailed(CServer const& server, std::wstring const& challenge)

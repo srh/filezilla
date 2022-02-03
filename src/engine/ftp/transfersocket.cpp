@@ -14,6 +14,8 @@
 #include <libfilezilla/rate_limited_layer.hpp>
 #include <libfilezilla/util.hpp>
 
+using namespace std::literals;
+
 #ifndef FZ_WINDOWS
 #define HAVE_ASCII_TRANSFORM 1
 #endif
@@ -385,21 +387,40 @@ void CTransferSocket::OnConnect()
 
 	if (tls_layer_) {
 		auto const cap = CServerCapabilities::GetCapability(controlSocket_.currentServer_, tls_resumption);
-		if (tls_layer_->resumed_session()) {
+
+		if (controlSocket_.tls_layer_->get_alpn() == "x-filezilla-ftp"sv) {
+			if (!tls_layer_->resumed_session()) {
+				TransferEnd(TransferEndReason::failed_tls_resumption);
+				return;
+			}
+			else if (tls_layer_->get_alpn() != "ftp-data"sv) {
+				controlSocket_.log(logmsg::error, _("Wrong ALPN on data connection"));
+				TransferEnd(TransferEndReason::wrong_tls_alpn);
+				return;
+			}
+
 			if (cap != yes) {
 				engine_.AddNotification(std::make_unique<FtpTlsResumptionNotification>(controlSocket_.currentServer_));
 				CServerCapabilities::SetCapability(controlSocket_.currentServer_, tls_resumption, yes);
 			}
 		}
 		else {
-			if (cap == yes) {
-				TransferEnd(TransferEndReason::failed_tls_resumption);
-				return;
+			if (tls_layer_->resumed_session()) {
+				if (cap != yes) {
+					engine_.AddNotification(std::make_unique<FtpTlsResumptionNotification>(controlSocket_.currentServer_));
+					CServerCapabilities::SetCapability(controlSocket_.currentServer_, tls_resumption, yes);
+				}
 			}
-			else if (cap == unknown) {
-				// Ask whether to allow this insecure connection
-				++activity_block_;
-				controlSocket_.SendAsyncRequest(std::make_unique<FtpTlsNoResumptionNotification>(controlSocket_.currentServer_));
+			else {
+				if (cap == yes) {
+					TransferEnd(TransferEndReason::failed_tls_resumption);
+					return;
+				}
+				else if (cap == unknown) {
+					// Ask whether to allow this insecure connection
+					++activity_block_;
+					controlSocket_.SendAsyncRequest(std::make_unique<FtpTlsNoResumptionNotification>(controlSocket_.currentServer_));
+				}
 			}
 		}
 		// Re-enable Nagle algorithm
@@ -718,6 +739,9 @@ bool CTransferSocket::InitLayers(bool active)
 		active_layer_ = tls_layer_.get();
 		tls_layer_->set_min_tls_ver(get_min_tls_ver(engine_.GetOptions()));
 
+		if (controlSocket_.tls_layer_->get_alpn() == "x-filezilla-ftp"sv) {
+			tls_layer_->set_alpn("ftp-data"sv);
+		}
 		if (!tls_layer_->client_handshake(controlSocket_.tls_layer_->get_raw_certificate(), controlSocket_.tls_layer_->get_session_parameters(), controlSocket_.tls_layer_->peer_host())) {
 			return false;
 		}

@@ -183,9 +183,10 @@ bool CAsyncRequestQueue::ProcessNextRequest()
 			CLoginManager::Get().CachedPasswordFailed(notification.server, notification.GetChallenge());
 		}
 		bool canRemember = notification.GetType() == CInteractiveLoginNotification::keyfile;
+		bool otp = notification.GetType() == CInteractiveLoginNotification::totp;
 
 		Site site(notification.server, notification.handle_, notification.credentials);
-		if (CLoginManager::Get().GetPassword(site, true, notification.GetChallenge(), canRemember)) {
+		if (CLoginManager::Get().GetPassword(site, true, notification.GetChallenge(), otp, canRemember)) {
 			notification.credentials = site.credentials;
 			notification.passwordSet = true;
 		}
@@ -196,7 +197,7 @@ bool CAsyncRequestQueue::ProcessNextRequest()
 				return false;
 			}
 
-			if (CLoginManager::Get().GetPassword(site, false, notification.GetChallenge(), canRemember)) {
+			if (CLoginManager::Get().GetPassword(site, false, notification.GetChallenge(), otp, canRemember)) {
 				notification.credentials = site.credentials;
 				notification.passwordSet = true;
 			}

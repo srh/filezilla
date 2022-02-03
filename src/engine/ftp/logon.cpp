@@ -5,7 +5,11 @@
 #include "../servercapabilities.h"
 #include "../tls.h"
 
+#include "../../include/misc.h"
+
 #include "../../include/engine_options.h"
+
+using namespace std::literals;
 
 CFtpLogonOpData::CFtpLogonOpData(CFtpControlSocket& controlSocket)
 	: COpData(Command::connect, L"CFtpLogonOpData")
@@ -142,7 +146,13 @@ int CFtpLogonOpData::Send()
 			{
 			case loginCommandType::user:
 				if (controlSocket_.credentials_.logonType_ == LogonType::interactive) {
-					waitChallenge = true;
+					challengeMode_ = always;
+				}
+				else if (controlSocket_.tls_layer_ && controlSocket_.tls_layer_->get_alpn() == "x-filezilla-ftp"sv) {
+					challengeMode_ = mfa;
+				}
+
+				if (challengeMode_) {
 					challenge.clear();
 				}
 
@@ -155,7 +165,8 @@ int CFtpLogonOpData::Send()
 				}
 			case loginCommandType::pass:
 				if (!challenge.empty()) {
-					auto notification = std::make_unique<CInteractiveLoginNotification>(CInteractiveLoginNotification::interactive, challenge, false);
+					auto type = otp_ ? CInteractiveLoginNotification::totp : CInteractiveLoginNotification::interactive;
+					auto notification = std::make_unique<CInteractiveLoginNotification>(type, challenge, false);
 					notification->server = currentServer_;
 					notification->handle_ = controlSocket_.handle_;
 					notification->credentials = controlSocket_.credentials_;
@@ -166,7 +177,16 @@ int CFtpLogonOpData::Send()
 					return FZ_REPLY_WOULDBLOCK;
 				}
 				else {
-					std::wstring pass = (controlSocket_.credentials_.logonType_ == LogonType::anonymous) ? L"anonymous@example.com" : controlSocket_.credentials_.GetPass();
+					std::wstring pass;
+					if (controlSocket_.credentials_.logonType_ == LogonType::anonymous) {
+						pass = L"anonymous@example.com";
+					}
+					else {
+						pass = controlSocket_.credentials_.GetPass();
+						if (controlSocket_.credentials_.HasExtraParameter("otp_code")) {
+							pass = controlSocket_.credentials_.GetExtraParameter("otp_code") + L";" + pass;
+						}
+					}
 					if (cmd.command.empty()) {
 						return controlSocket_.SendCommand(L"PASS " + pass, true);
 					}
@@ -274,7 +294,7 @@ int CFtpLogonOpData::ParseResponse()
 			controlSocket_.tls_layer_ = std::make_unique<fz::tls_layer>(controlSocket_.event_loop_, &controlSocket_, *controlSocket_.active_layer_, &engine_.GetContext().GetTlsSystemTrustStore(), controlSocket_.logger_);
 			controlSocket_.active_layer_ = controlSocket_.tls_layer_.get();
 
-			controlSocket_.tls_layer_->set_alpn("ftp");
+			controlSocket_.tls_layer_->set_alpn({"ftp", "x-filezilla-ftp"});
 			controlSocket_.tls_layer_->set_min_tls_ver(get_min_tls_ver(options_));
 			if (!controlSocket_.tls_layer_->client_handshake(&controlSocket_)) {
 				return FZ_REPLY_ERROR | FZ_REPLY_DISCONNECTED;
@@ -288,6 +308,30 @@ int CFtpLogonOpData::ParseResponse()
 	}
 	else if (opState == LOGON_LOGON) {
 		t_loginCommand cmd = loginSequence.front();
+
+		if (cmd.type == loginCommandType::user) {
+			if (code == 3 && response.substr(0, 3) == L"336"sv) {
+				if (controlSocket_.tls_layer_ && controlSocket_.tls_layer_->get_alpn() == "x-filezilla-ftp"sv) {
+					size_t beg = challenge.rfind('[');
+					size_t end = challenge.rfind(']');
+					if (beg != std::string::npos && end != std::string::npos && beg < end) {
+						auto tokens = fz::strtok_view(std::wstring_view(challenge).substr(beg + 1, end - beg - 1), ',');
+						if (tokens.size() == 1 && tokens[0] == L"alg:totp"sv) {
+							otp_ = true;
+						}
+					}
+				}
+				else {
+					if (challengeMode_ != always) {
+						log(logmsg::status, _("Consider using the interactive login type."));
+						challenge.clear();
+					}
+				}
+			}
+			else if (challengeMode_ != always) {
+				challenge.clear();
+			}
+		}
 
 		if (code != 2 && code != 3) {
 			if (cmd.type == loginCommandType::user || cmd.type == loginCommandType::pass) {
@@ -358,7 +402,7 @@ int CFtpLogonOpData::ParseResponse()
 		}
 
 		if (!loginSequence.empty()) {
-			waitChallenge = false;
+			challengeMode_ = none;
 
 			return FZ_REPLY_CONTINUE;
 		}
@@ -848,5 +892,20 @@ void CFtpLogonOpData::ParseFeat(std::wstring line)
 	}
 	else if (HasFeature(up, L"EPSV")) {
 		CServerCapabilities::SetCapability(currentServer_, epsv_command, yes);
+	}
+}
+
+void CFtpLogonOpData::tls_handshake_finished()
+{
+	if (opState == LOGON_AUTH_WAIT) {
+		if (controlSocket_.tls_layer_ && controlSocket_.tls_layer_->get_alpn() == "x-filezilla-ftp") {
+			neededCommands[LOGON_SYST] = 0;
+			neededCommands[LOGON_PBSZ] = 0;
+			neededCommands[LOGON_PROT] = 0;
+			neededCommands[LOGON_CLNT] = 0;
+			neededCommands[LOGON_OPTSUTF8] = 0;
+			controlSocket_.m_protectDataChannel = true;
+		}
+		opState = LOGON_LOGON;
 	}
 }

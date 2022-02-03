@@ -796,7 +796,7 @@ void Credentials::SetExtraParameter(ServerProtocol protocol, std::string_view co
 		bool found = false;
 		auto const& traits = ExtraServerParameterTraits(protocol);
 		for (auto const& trait : traits) {
-			if (trait.section_ != ParameterSection::credentials && name == trait.name_) {
+			if (trait.section_ == ParameterSection::credentials && name == trait.name_) {
 				found = true;
 				break;
 			}
@@ -813,6 +813,12 @@ void Credentials::SetExtraParameter(ServerProtocol protocol, std::string_view co
 	}
 }
 
+void Credentials::SetExtraParameters(ServerProtocol protocol, std::map<std::string, std::wstring, std::less<>> const& extraParameters)
+{
+	for (auto const& param : extraParameters) {
+		SetExtraParameter(protocol, param.first, param.second);
+	}
+}
 
 std::vector<LogonType> GetSupportedLogonTypes(ServerProtocol protocol)
 {
@@ -855,12 +861,22 @@ std::vector<LogonType> GetSupportedLogonTypes(ServerProtocol protocol)
 std::vector<ParameterTraits> const& ExtraServerParameterTraits(ServerProtocol protocol)
 {
 	switch (protocol) {
+	case FTP:
+	case FTPS:
+		{
+			static std::vector<ParameterTraits> const ret = []() {
+				std::vector<ParameterTraits> ret;
+				ret.emplace_back(ParameterTraits{"otp_code", ParameterSection::credentials, ParameterTraits::optional | ParameterTraits::custom, std::wstring(), std::wstring()});
+				return ret;
+			}();
+			return ret;
+		}
 	case GOOGLE_CLOUD:
 		{
 			static std::vector<ParameterTraits> const ret = []() {
 				std::vector<ParameterTraits> ret;
 				ret.emplace_back(ParameterTraits{"login_hint", ParameterSection::user, ParameterTraits::optional, std::wstring(), _("Name or email address")});
-				ret.emplace_back(ParameterTraits{"oauth_identity", ParameterSection::custom, ParameterTraits::optional, std::wstring(), std::wstring()});
+				ret.emplace_back(ParameterTraits{"oauth_identity", ParameterSection::extra, ParameterTraits::optional | ParameterTraits::custom, std::wstring(), std::wstring()});
 				return ret;
 			}();
 			return ret;
@@ -871,8 +887,8 @@ std::vector<ParameterTraits> const& ExtraServerParameterTraits(ServerProtocol pr
 				std::vector<ParameterTraits> ret;
 				ret.emplace_back(ParameterTraits{"identpath", ParameterSection::host, 0, std::wstring(), _("Path of identity service")});
 				ret.emplace_back(ParameterTraits{"identuser", ParameterSection::user, ParameterTraits::optional, std::wstring(), std::wstring()});
-				ret.emplace_back(ParameterTraits{"keystone_version", ParameterSection::custom, ParameterTraits::optional, std::wstring(), std::wstring()});
-				ret.emplace_back(ParameterTraits{"domain", ParameterSection::custom, ParameterTraits::optional, L"Default", std::wstring()});
+				ret.emplace_back(ParameterTraits{"keystone_version", ParameterSection::extra, ParameterTraits::optional | ParameterTraits::custom, std::wstring(), std::wstring()});
+				ret.emplace_back(ParameterTraits{"domain", ParameterSection::extra, ParameterTraits::optional | ParameterTraits::custom, L"Default", std::wstring()});
 				return ret;
 			}();
 			return ret;
@@ -891,13 +907,13 @@ std::vector<ParameterTraits> const& ExtraServerParameterTraits(ServerProtocol pr
 		{
 			static std::vector<ParameterTraits> const ret = []() {
 				std::vector<ParameterTraits> ret;
-				ret.emplace_back(ParameterTraits{"ssealgorithm", ParameterSection::custom, ParameterTraits::optional, std::wstring(), std::wstring()});
-				ret.emplace_back(ParameterTraits{"ssekmskey", ParameterSection::custom, ParameterTraits::optional, std::wstring(), std::wstring()});
-				ret.emplace_back(ParameterTraits{"ssecustomerkey", ParameterSection::custom, ParameterTraits::optional, std::wstring(), std::wstring()});
-				ret.emplace_back(ParameterTraits{"stsrolearn", ParameterSection::custom, ParameterTraits::optional, std::wstring(), std::wstring()});
-				ret.emplace_back(ParameterTraits{"stsmfaserial", ParameterSection::custom, ParameterTraits::optional, std::wstring(), std::wstring()});
-				ret.emplace_back(ParameterTraits{"region", ParameterSection::custom, ParameterTraits::optional, std::wstring(), std::wstring()});
-				ret.emplace_back(ParameterTraits{"original_profile", ParameterSection::custom, ParameterTraits::optional, std::wstring(), std::wstring()});
+				ret.emplace_back(ParameterTraits{"ssealgorithm", ParameterSection::extra, ParameterTraits::optional | ParameterTraits::custom, std::wstring(), std::wstring()});
+				ret.emplace_back(ParameterTraits{"ssekmskey", ParameterSection::extra, ParameterTraits::optional | ParameterTraits::custom, std::wstring(), std::wstring()});
+				ret.emplace_back(ParameterTraits{"ssecustomerkey", ParameterSection::extra, ParameterTraits::optional | ParameterTraits::custom, std::wstring(), std::wstring()});
+				ret.emplace_back(ParameterTraits{"stsrolearn", ParameterSection::extra, ParameterTraits::optional | ParameterTraits::custom, std::wstring(), std::wstring()});
+				ret.emplace_back(ParameterTraits{"stsmfaserial", ParameterSection::extra, ParameterTraits::optional | ParameterTraits::custom, std::wstring(), std::wstring()});
+				ret.emplace_back(ParameterTraits{"region", ParameterSection::extra, ParameterTraits::optional | ParameterTraits::custom, std::wstring(), std::wstring()});
+				ret.emplace_back(ParameterTraits{"original_profile", ParameterSection::extra, ParameterTraits::optional | ParameterTraits::custom, std::wstring(), std::wstring()});
 				return ret;
 			}();
 			return ret;
@@ -908,7 +924,7 @@ std::vector<ParameterTraits> const& ExtraServerParameterTraits(ServerProtocol pr
 		static std::vector<ParameterTraits> const ret = []() {
 			std::vector<ParameterTraits> ret;
 			ret.emplace_back(ParameterTraits{"login_hint", ParameterSection::user, ParameterTraits::optional, std::wstring(), _("Name or email address")});
-			ret.emplace_back(ParameterTraits{"oauth_identity", ParameterSection::custom, ParameterTraits::optional, std::wstring(), std::wstring()});
+			ret.emplace_back(ParameterTraits{"oauth_identity", ParameterSection::extra, ParameterTraits::optional| ParameterTraits::custom, std::wstring(), std::wstring()});
 			return ret;
 		}();
 		return ret;
@@ -917,8 +933,8 @@ std::vector<ParameterTraits> const& ExtraServerParameterTraits(ServerProtocol pr
 	{
 		static std::vector<ParameterTraits> const ret = []() {
 			std::vector<ParameterTraits> ret;
-			ret.emplace_back(ParameterTraits{"oauth_identity", ParameterSection::custom, ParameterTraits::optional, std::wstring(), std::wstring()});
-			ret.emplace_back(ParameterTraits{"root_namespace", ParameterSection::custom, ParameterTraits::optional, std::wstring(), std::wstring()});
+			ret.emplace_back(ParameterTraits{"oauth_identity", ParameterSection::extra, ParameterTraits::optional | ParameterTraits::custom, std::wstring(), std::wstring()});
+			ret.emplace_back(ParameterTraits{"root_namespace", ParameterSection::extra, ParameterTraits::optional | ParameterTraits::custom, std::wstring(), std::wstring()});
 			return ret;
 		}();
 		return ret;
@@ -927,7 +943,7 @@ std::vector<ParameterTraits> const& ExtraServerParameterTraits(ServerProtocol pr
 	{
 		static std::vector<ParameterTraits> const ret = []() {
 			std::vector<ParameterTraits> ret;
-			ret.emplace_back(ParameterTraits{"oauth_identity", ParameterSection::custom, ParameterTraits::optional, std::wstring(), std::wstring()});
+			ret.emplace_back(ParameterTraits{"oauth_identity", ParameterSection::extra, ParameterTraits::optional | ParameterTraits::custom, std::wstring(), std::wstring()});
 			return ret;
 		}();
 		return ret;
@@ -936,7 +952,7 @@ std::vector<ParameterTraits> const& ExtraServerParameterTraits(ServerProtocol pr
 	{
 		static std::vector<ParameterTraits> const ret = []() {
 			std::vector<ParameterTraits> ret;
-			ret.emplace_back(ParameterTraits{"passphrase_hash", ParameterSection::custom, ParameterTraits::optional, std::wstring(), std::wstring()});
+			ret.emplace_back(ParameterTraits{"passphrase_hash", ParameterSection::extra, ParameterTraits::optional | ParameterTraits::custom, std::wstring(), std::wstring()});
 			return ret;
 		}();
 		return ret;
@@ -945,7 +961,7 @@ std::vector<ParameterTraits> const& ExtraServerParameterTraits(ServerProtocol pr
 	{
 		static std::vector<ParameterTraits> const ret = []() {
 			std::vector<ParameterTraits> ret;
-			ret.emplace_back(ParameterTraits{"credentials_hash", ParameterSection::custom, ParameterTraits::optional, std::wstring(), std::wstring()});
+			ret.emplace_back(ParameterTraits{"credentials_hash", ParameterSection::extra, ParameterTraits::optional | ParameterTraits::custom, std::wstring(), std::wstring()});
 			return ret;
 		}();
 		return ret;

@@ -20,7 +20,7 @@ public:
 
 protected:
 	bool query_unprotect_site(Site & site);
-	bool query_credentials(Site & site, std::wstring const& challenge, bool canRemember);
+	bool query_credentials(Site & site, std::wstring const& challenge, bool otp, bool canRemember);
 
 	static CLoginManager m_theLoginManager;
 };

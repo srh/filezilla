@@ -290,7 +290,7 @@ void GeneralSiteControls::SetSite(Site const& site)
 		}
 		auto const& traits = ExtraServerParameterTraits(protocol);
 		for (auto const& trait : traits) {
-			if (trait.section_ == ParameterSection::credentials || trait.section_ == ParameterSection::custom) {
+			if (trait.section_ == ParameterSection::credentials || trait.flags_ & ParameterTraits::custom) {
 				continue;
 			}
 
@@ -481,7 +481,7 @@ void GeneralSiteControls::SetControlVisibility(ServerProtocol protocol, LogonTyp
 
 	std::vector<ParameterTraits> const& parameterTraits = ExtraServerParameterTraits(protocol);
 	for (auto const& trait : parameterTraits) {
-		if (trait.section_ == ParameterSection::custom) {
+		if (trait.flags_ & ParameterTraits::custom) {
 			continue;
 		}
 		auto & parameters = extraParameters_[trait.section_];
@@ -686,7 +686,7 @@ bool GeneralSiteControls::UpdateSite(Site & site, bool silent)
 
 	std::vector<ParameterTraits> const& parameterTraits = ExtraServerParameterTraits(protocol);
 	for (auto const& trait : parameterTraits) {
-		if (trait.section_ == ParameterSection::custom || trait.section_ == ParameterSection::credentials) {
+		if (trait.section_ == ParameterSection::credentials || trait.flags_ & ParameterTraits::custom) {
 			continue;
 		}
 		for (auto const& row : extraParameters_[trait.section_]) {
@@ -701,7 +701,12 @@ bool GeneralSiteControls::UpdateSite(Site & site, bool silent)
 						return false;
 					}
 				}
-				site.server.SetExtraParameter(trait.name_, value);
+				if (trait.section_ == ParameterSection::credentials) {
+					site.credentials.SetExtraParameter(protocol, trait.name_, value);
+				}
+				else {
+					site.server.SetExtraParameter(trait.name_, value);
+				}
 				break;
 			}
 		}

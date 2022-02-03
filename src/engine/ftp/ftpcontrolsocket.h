@@ -36,7 +36,8 @@ enum class TransferEndReason
 	transfer_command_failure,			// Used if the transfer command fails, but after receiving a 150 first
 	failure,							// Other unspecific failure
 	failed_resumetest,
-	failed_tls_resumption
+	failed_tls_resumption,
+	wrong_tls_alpn
 };
 
 class CFtpControlSocket final : public CRealControlSocket

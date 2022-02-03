@@ -254,7 +254,6 @@ namespace ParameterSection {
 		user,
 		credentials,
 		extra,
-		custom,
 
 		section_count
 	};
@@ -270,6 +269,7 @@ struct ParameterTraits
 		optional = 0x01,
 		numeric = 0x02,
 		content_transparent = 0x04, // Parameter used for any purpose that does not affect site content
+		custom = 0x08 // Hint for the UI to not generate input fields, trait needs custom handling
 	};
 	unsigned char flags_;
 	std::wstring default_;
@@ -307,6 +307,7 @@ public:
 	std::map<std::string, std::wstring, std::less<>> const& GetExtraParameters() const;
 	bool HasExtraParameter(std::string_view const& name) const;
 	void SetExtraParameter(ServerProtocol protocol, std::string_view const& name, std::wstring const& value);
+	void SetExtraParameters(ServerProtocol protocol, std::map<std::string, std::wstring, std::less<>> const& extraParameters);
 
 protected:
 	std::wstring password_;

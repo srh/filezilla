@@ -53,8 +53,16 @@ public:
 	void ParseFeat(std::wstring line);
 
 	std::wstring challenge; // Used for interactive logons
-	bool waitChallenge{};
+
+	enum challengeMode {
+		none,
+		mfa,
+		always
+	};
+	challengeMode challengeMode_{};
 	bool gotFirstWelcomeLine{};
+
+	void tls_handshake_finished();
 
 private:
 
@@ -70,6 +78,7 @@ private:
 	std::deque<t_loginCommand> loginSequence;
 
 	int ftp_proxy_type_{};
+	bool otp_{};
 };
 
 #endif

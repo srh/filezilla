@@ -122,7 +122,7 @@ void CFtpControlSocket::ParseLine(std::wstring line)
 
 	if (!operations_.empty() && operations_.back()->opId == Command::connect) {
 		auto & data = static_cast<CFtpLogonOpData &>(*operations_.back());
-		if (data.waitChallenge) {
+		if (data.challengeMode_) {
 			std::wstring& challenge = data.challenge;
 			if (!challenge.empty())
 #ifdef FZ_WINDOWS
@@ -179,7 +179,6 @@ void CFtpControlSocket::OnConnect()
 {
 	m_lastTypeBinary = -1;
 	m_sentRestartOffset = false;
-	m_protectDataChannel = false;
 
 	SetAlive();
 
@@ -495,6 +494,8 @@ bool CFtpControlSocket::SetAsyncRequestReply(CAsyncRequestNotification *pNotific
 				return false;
 			}
 			credentials_.SetPass(pInteractiveLoginNotification->credentials.GetPass());
+			credentials_.SetExtraParameters(currentServer_.GetProtocol(), pInteractiveLoginNotification->credentials.GetExtraParameters());
+
 			SendNextCommand();
 		}
 		break;
@@ -513,10 +514,8 @@ bool CFtpControlSocket::SetAsyncRequestReply(CAsyncRequestNotification *pNotific
 				return false;
 			}
 
-			if (!operations_.empty() && operations_.back()->opId == Command::connect &&
-				operations_.back()->opState == LOGON_AUTH_WAIT)
-			{
-				operations_.back()->opState = LOGON_LOGON;
+			if (!operations_.empty() && operations_.back()->opId == Command::connect) {
+				static_cast<CFtpLogonOpData&>(*operations_.back()).tls_handshake_finished();
 			}
 		}
 		break;
@@ -543,7 +542,7 @@ bool CFtpControlSocket::SetAsyncRequestReply(CAsyncRequestNotification *pNotific
 				CServerCapabilities::SetCapability(currentServer_, tls_resumption, no);
 				if (!operations_.empty() && operations_.back()->opId == PrivCommand::rawtransfer && m_pTransferSocket) {
 					m_pTransferSocket->ContinueWithoutSesssionResumption();
-				}	
+				}
 				return true;
 			}
 		}
@@ -807,6 +806,7 @@ void CFtpControlSocket::ResetSocket()
 	m_Response.clear();
 	m_MultilineResponseCode.clear();;
 	m_MultilineResponseLines.clear();
+	m_protectDataChannel = false;
 
 	CRealControlSocket::ResetSocket();
 }

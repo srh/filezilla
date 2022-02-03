@@ -22,7 +22,7 @@ public:
 	virtual ~login_manager() = default;
 
 	bool GetPassword(Site & site, bool silent);
-	bool GetPassword(Site & site, bool silent, std::wstring const& challenge, bool canRemember);
+	bool GetPassword(Site & site, bool silent, std::wstring const& challenge, bool otp, bool canRemember);
 
 	void CachedPasswordFailed(CServer const& server, std::wstring const& challenge = std::wstring());
 
@@ -34,7 +34,7 @@ public:
 protected:
 
 	virtual bool query_unprotect_site(Site&) { return false; }
-	virtual bool query_credentials(Site&, std::wstring const& /*challenge*/, bool /*canRemember*/) { return false; }
+	virtual bool query_credentials(Site&, std::wstring const& /*challenge*/, bool /*otp*/, bool /*canRemember*/) { return false; }
 
 	// Session password cache for Ask-type servers
 	struct t_passwordcache final
