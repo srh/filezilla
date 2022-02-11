@@ -213,7 +213,47 @@ bool CXmlFile::GetXmlFile(std::wstring const& file)
 	}
 
 	// File exists, open it
-	auto result = m_document.load_file(static_cast<wchar_t const*>(file.c_str()));
+	fz::file f;
+	fz::result r = f.open(fz::to_native(file), fz::file::reading);
+	if (!r) {
+		switch (r.error_) {
+		case fz::result::noperm:
+			m_error += fz::sprintf(fztranslate("No permission to open '%s'"), file);
+			break;
+		case fz::result::nofile:
+			m_error += fz::sprintf(fztranslate("Not a file or does not exist: '%s'"), file);
+			break;
+		default:
+			m_error += fz::sprintf(fztranslate("Error %d opening '%s'"), r.error_, file);
+			break;
+		}
+		return false;
+	}
+	auto size = f.size();
+	if (size < 0) {
+		m_error += fz::sprintf(fztranslate("Could not get size of '%s'"), file);
+		return false;
+	}
+	auto buffer = reinterpret_cast<uint8_t*>(pugi::get_memory_allocation_function()(static_cast<size_t>(size)));
+	if (!buffer) {
+		return false;
+	}
+	auto *p = buffer;
+	auto to_read = size;
+	while (to_read) {
+		auto read = f.read(p, to_read);
+
+		if (read <= 0) {
+			m_error += fz::sprintf(fztranslate("Reading from '%s' failed."), file);
+			pugi::get_memory_deallocation_function()(buffer);
+			return false;
+		}
+
+		p += read;
+		to_read -= read;
+	}
+
+	auto result = m_document.load_buffer_inplace_own(buffer, static_cast<size_t>(size));
 	if (!result) {
 		m_error += fz::sprintf(L"%s at offset %d.", result.description(), result.offset);
 		return false;
