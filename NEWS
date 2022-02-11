@@ -10,6 +10,10 @@ Legend:
     *nix: Unix (e.g BSD) and Unix-like systems (e.g. Linux)
     macOS/OS X: Apple macOS
 
+3.58.0 (2022-02-11)
+
+- More detailed error messages if an XML file known to exist cannot be opened
+
 3.58.0-rc1 (2022-02-03)
 
 + Negotiate custom ALPN with FileZilla Server >=1.3.0 during TLS handshake to save some roundtrips during connection establishment
