@@ -25,7 +25,7 @@ public:
 	char permissions_[9]{};
 
 private:
-	static bool DoConvertPermissions(std::wstring const& rwx, char* permissions);
+	static bool FZCUI_PRIVATE_SYMBOL DoConvertPermissions(std::wstring const& rwx, char* permissions);
 };
 
 #endif

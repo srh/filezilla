@@ -44,17 +44,17 @@ protected:
 
 private:
 
-	void Load(pugi::xml_node& settings, bool predefined, bool importing);
+	void FZCUI_PRIVATE_SYMBOL Load(pugi::xml_node& settings, bool predefined, bool importing);
 
-	pugi::xml_node CreateSettingsXmlElement();
+	pugi::xml_node FZCUI_PRIVATE_SYMBOL CreateSettingsXmlElement();
 
-	void LoadGlobalDefaultOptions();
-	CLocalPath InitSettingsDir();
+	void FZCUI_PRIVATE_SYMBOL LoadGlobalDefaultOptions();
+	CLocalPath FZCUI_PRIVATE_SYMBOL InitSettingsDir();
 
-	virtual void process_changed(watched_options const& changed) override;
-	void set_xml_value(pugi::xml_node& settings, size_t opt, bool clean);
+	virtual void FZCUI_PRIVATE_SYMBOL process_changed(watched_options const& changed) override;
+	void FZCUI_PRIVATE_SYMBOL set_xml_value(pugi::xml_node& settings, size_t opt, bool clean);
 
-	void set_dirty();
+	void FZCUI_PRIVATE_SYMBOL set_dirty();
 	bool dirty_{};
 	virtual void on_dirty() = 0;
 

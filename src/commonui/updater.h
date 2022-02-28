@@ -154,40 +154,40 @@ public:
 	bool Busy() const;
 
 private:
-	bool LongTimeSinceLastCheck() const;
+	bool FZCUI_PRIVATE_SYMBOL LongTimeSinceLastCheck() const;
 
-	int Download(std::wstring const& url, std::wstring const& local_file = std::wstring());
-	int Request(fz::uri const& uri);
-	int ContinueDownload();
+	int FZCUI_PRIVATE_SYMBOL Download(std::wstring const& url, std::wstring const& local_file = std::wstring());
+	int FZCUI_PRIVATE_SYMBOL Request(fz::uri const& uri);
+	int FZCUI_PRIVATE_SYMBOL ContinueDownload();
 
-	void OnRun(bool manual);
-	UpdaterState LoadLocalData();
-	bool ShouldCheck(UpdaterState & s);
+	void FZCUI_PRIVATE_SYMBOL OnRun(bool manual);
+	UpdaterState FZCUI_PRIVATE_SYMBOL LoadLocalData();
+	bool FZCUI_PRIVATE_SYMBOL ShouldCheck(UpdaterState & s);
 
-	bool CreateConnectCommand(std::wstring const& url);
-	bool CreateTransferCommand(std::wstring const& url, std::wstring const& local_file);
+	bool FZCUI_PRIVATE_SYMBOL CreateConnectCommand(std::wstring const& url);
+	bool FZCUI_PRIVATE_SYMBOL CreateTransferCommand(std::wstring const& url, std::wstring const& local_file);
 
-	fz::uri GetUrl();
-	void ProcessNotification(std::unique_ptr<CNotification> && notification);
-	void ProcessOperation(COperationNotification const& operation);
-	bool FilterOutput();
-	void ParseData();
-	UpdaterState ProcessFinishedDownload();
-	UpdaterState ProcessFinishedData(bool can_download);
+	fz::uri FZCUI_PRIVATE_SYMBOL GetUrl();
+	void FZCUI_PRIVATE_SYMBOL ProcessNotification(std::unique_ptr<CNotification> && notification);
+	void FZCUI_PRIVATE_SYMBOL ProcessOperation(COperationNotification const& operation);
+	bool FZCUI_PRIVATE_SYMBOL FilterOutput();
+	void FZCUI_PRIVATE_SYMBOL ParseData();
+	UpdaterState FZCUI_PRIVATE_SYMBOL ProcessFinishedDownload();
+	UpdaterState FZCUI_PRIVATE_SYMBOL ProcessFinishedData(bool can_download);
 
-	bool VerifyChecksum(std::wstring const& file, int64_t size, std::wstring const& checksum);
+	bool FZCUI_PRIVATE_SYMBOL VerifyChecksum(std::wstring const& file, int64_t size, std::wstring const& checksum);
 
-	std::wstring GetTempFile() const;
-	std::wstring GetFilename(std::wstring const& url) const;
-	std::wstring GetLocalFile(build const& b, bool allow_existing);
+	std::wstring FZCUI_PRIVATE_SYMBOL GetTempFile() const;
+	std::wstring FZCUI_PRIVATE_SYMBOL GetFilename(std::wstring const& url) const;
+	std::wstring FZCUI_PRIVATE_SYMBOL GetLocalFile(build const& b, bool allow_existing);
 
-	void SetState(UpdaterState s);
+	void FZCUI_PRIVATE_SYMBOL SetState(UpdaterState s);
 
-	void OnEngineEvent(CFileZillaEngine* engine);
+	void FZCUI_PRIVATE_SYMBOL OnEngineEvent(CFileZillaEngine* engine);
 
-	void operator()(fz::event_base const& ev);
-	void on_timer(fz::timer_id const&);
-	void on_run(bool manual);
+	void FZCUI_PRIVATE_SYMBOL operator()(fz::event_base const& ev);
+	void FZCUI_PRIVATE_SYMBOL on_timer(fz::timer_id const&);
+	void FZCUI_PRIVATE_SYMBOL on_run(bool manual);
 
 	// Begin what needs to be mutexed
 	mutable fz::mutex mtx_;
