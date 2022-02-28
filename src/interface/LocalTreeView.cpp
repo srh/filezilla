@@ -18,7 +18,6 @@
 #include <wx/menu.h>
 
 #ifdef __WXMSW__
-#include <wx/msw/registry.h>
 #include <shlobj.h>
 #include <dbt.h>
 #include "volume_enumerator.h"

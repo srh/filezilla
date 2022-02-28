@@ -3,7 +3,7 @@
 
 #ifdef FZ_WINDOWS
 
-#include "../commonui/registry.h"
+#include <libfilezilla/glue/registry.hpp>
 
 wxDEFINE_EVENT(fzEVT_VOLUMEENUMERATED, wxCommandEvent);
 wxDEFINE_EVENT(fzEVT_VOLUMESENUMERATED, wxCommandEvent);
@@ -169,7 +169,7 @@ bool CVolumeDescriptionEnumeratorThread::GetDriveLabels()
 long CVolumeDescriptionEnumeratorThread::GetDrivesToHide()
 {
 	// Adhere to the NODRIVES group policy
-	uint64_t drivesToHide = regkey(HKEY_CURRENT_USER, L"Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer", true).int_value(L"NoDrives");
+	uint64_t drivesToHide = fz::regkey(HKEY_CURRENT_USER, L"Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer", true).int_value(L"NoDrives");
 	return static_cast<long>(drivesToHide);
 }
 

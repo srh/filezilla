@@ -15,7 +15,6 @@
 #include "Options.h"
 #ifdef __WXMSW__
 #include "lm.h"
-#include <wx/msw/registry.h>
 #include "volume_enumerator.h"
 #endif
 #include "dragdropmanager.h"

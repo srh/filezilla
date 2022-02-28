@@ -8,7 +8,7 @@
 #include "updater_cert.h"
 
 #ifdef FZ_WINDOWS
-#include "registry.h"
+#include <libfilezilla/glue/registry.hpp>
 #endif
 
 #include "../include/engine_context.h"
@@ -169,9 +169,9 @@ fz::uri CUpdater::GetUrl()
 
 	// Add information about package
 	// Installer always writes to 32bit section
-	auto key = regkey(HKEY_CURRENT_USER, L"Software\\FileZilla Client", true, regkey::regview_32);
+	auto key = fz::regkey(HKEY_CURRENT_USER, L"Software\\FileZilla Client", true, fz::regkey::regview_32);
 	if (!key) {
-		key.open(HKEY_LOCAL_MACHINE, L"Software\\FileZilla Client", true, regkey::regview_32);
+		key.open(HKEY_LOCAL_MACHINE, L"Software\\FileZilla Client", true, fz::regkey::regview_32);
 	}
 
 	if (key.has_value(L"Updated")) {
