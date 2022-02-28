@@ -51,7 +51,7 @@ private:
 	void FZCUI_PRIVATE_SYMBOL LoadGlobalDefaultOptions();
 	CLocalPath FZCUI_PRIVATE_SYMBOL InitSettingsDir();
 
-	virtual void FZCUI_PRIVATE_SYMBOL process_changed(watched_options const& changed) override;
+	virtual void process_changed(watched_options const& changed) override;
 	void FZCUI_PRIVATE_SYMBOL set_xml_value(pugi::xml_node& settings, size_t opt, bool clean);
 
 	void FZCUI_PRIVATE_SYMBOL set_dirty();
