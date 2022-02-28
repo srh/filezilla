@@ -193,7 +193,13 @@ GeneralSiteControls::GeneralSiteControls(wxWindow & parent, DialogLayout const& 
 	});
 
 	keyfileBrowse->Bind(wxEVT_BUTTON, [this](wxEvent const&) {
-		wxString wildcards(_T("PPK files|*.ppk|PEM files|*.pem|All files|*.*"));
+#if FZ_WINDOWS
+		wchar_t const* all = L"*.*";
+#else
+		wchar_t const* all = L"*";
+#endif
+		wxString wildcards = wxString::Format(L"%s|*.ppk|%s|*.pem|%s|%s",
+											  _("PPK files"), _("PEM files"), _("All files"), all);
 		wxFileDialog dlg(&parent_, _("Choose a key file"), wxString(), wxString(), wildcards, wxFD_OPEN|wxFD_FILE_MUST_EXIST);
 
 		if (dlg.ShowModal() == wxID_OK) {

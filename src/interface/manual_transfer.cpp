@@ -305,7 +305,12 @@ void CManualTransfer::OnLocalBrowse(wxCommandEvent&)
 		title = _("Select file to upload");
 	}
 
-	wxFileDialog dlg(this, title, _T(""), _T(""), _T("*.*"), flags);
+#if FZ_WINDOWS
+	wchar_t const* all = L"*.*";
+#else
+	wchar_t const* all = L"*";
+#endif
+	wxFileDialog dlg(this, title, _T(""), _T(""), all, flags);
 	int res = dlg.ShowModal();
 
 	if (res != wxID_OK) {
