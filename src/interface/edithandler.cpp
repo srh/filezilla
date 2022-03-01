@@ -17,16 +17,6 @@
 #include <wx/hyperlink.h>
 #include <wx/statline.h>
 
-//-------------
-
-wxDECLARE_EVENT(fzEDIT_CHANGEDFILE, wxCommandEvent);
-wxDEFINE_EVENT(fzEDIT_CHANGEDFILE, wxCommandEvent);
-
-BEGIN_EVENT_TABLE(CEditHandler, wxEvtHandler)
-EVT_TIMER(wxID_ANY, CEditHandler::OnTimerEvent)
-EVT_COMMAND(wxID_ANY, fzEDIT_CHANGEDFILE, CEditHandler::OnChangedFileEvent)
-END_EVENT_TABLE()
-
 namespace {
 Associations LoadAssociations(COptionsBase & options)
 {
@@ -103,6 +93,7 @@ CEditHandler::CEditHandler(COptionsBase & options)
 {
 	m_timer.SetOwner(this);
 	m_busyTimer.SetOwner(this);
+	m_timer.Bind(wxEVT_TIMER, [&](wxTimerEvent&) { CheckForModifications(); });
 
 #ifdef __WXMSW__
 	m_lockfile_handle = INVALID_HANDLE_VALUE;
@@ -710,18 +701,25 @@ bool CEditHandler::LaunchEditor(CEditHandler::fileType type, t_fileData& data)
 	return fz::spawn_detached_process(AssociationToCommand(cmd_with_args, data.localFile));
 }
 
-void CEditHandler::CheckForModifications(bool emitEvent)
+void CEditHandler::CheckForModifications()
 {
+	CallAfter([&]() { DoCheckForModifications(); });
+}
+
+void CEditHandler::DoCheckForModifications()
+{
+#ifdef __WXMSW__
+	// Don't check for changes if mouse is captured,
+	// e.g. if user is dragging a file
+	if (GetCapture()) {
+		return;
+	}
+#endif
+
 	static bool insideCheckForModifications = false;
 	if (insideCheckForModifications) {
 		return;
 	}
-
-	if (emitEvent) {
-		QueueEvent(new wxCommandEvent(fzEDIT_CHANGEDFILE));
-		return;
-	}
-
 	insideCheckForModifications = true;
 
 	for (int i = 0; i < 2; ++i) {
@@ -932,19 +930,6 @@ bool CEditHandler::UploadFile(fileType type, std::list<t_fileData>::iterator ite
 	return true;
 }
 
-void CEditHandler::OnTimerEvent(wxTimerEvent&)
-{
-#ifdef __WXMSW__
-	// Don't check for changes if mouse is captured,
-	// e.g. if user is dragging a file
-	if (GetCapture()) {
-		return;
-	}
-#endif
-
-	CheckForModifications(true);
-}
-
 void CEditHandler::SetTimerState()
 {
 	bool editing = GetFileCount(none, edit) != 0;
@@ -1005,11 +990,6 @@ std::vector<std::wstring> CEditHandler::GetCustomAssociation(std::wstring_view c
 		ret = it->second;
 	}
 	return ret;
-}
-
-void CEditHandler::OnChangedFileEvent(wxCommandEvent&)
-{
-	CheckForModifications();
 }
 
 std::wstring CEditHandler::GetTemporaryFile(std::wstring name)

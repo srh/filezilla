@@ -2359,7 +2359,7 @@ void CMainFrame::OnActivate(wxActivateEvent& event)
 
 	CEditHandler* pEditHandler = CEditHandler::Get();
 	if (pEditHandler) {
-		pEditHandler->CheckForModifications(true);
+		pEditHandler->CheckForModifications();
 	}
 
 	if (async_request_queue_) {

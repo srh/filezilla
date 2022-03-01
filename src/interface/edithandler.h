@@ -92,7 +92,7 @@ public:
 	void FinishTransfer(bool successful, std::wstring const& fileName);
 	void FinishTransfer(bool successful, std::wstring const& fileName, CServerPath const& remotePath, Site const& site);
 
-	void CheckForModifications(bool emitEvent = false);
+	void CheckForModifications();
 
 	void SetQueue(CQueueView* pQueue) { m_pQueue = pQueue; }
 
@@ -118,6 +118,8 @@ public:
 	std::vector<std::wstring> GetAssociation(std::wstring const& file);
 
 protected:
+	void DoCheckForModifications();
+
 	/* Checks if file can be opened. One of these conditions has to be true:
 	 * - Filetype association of system has to exist
 	 * - Custom association for that filetype
@@ -169,10 +171,6 @@ protected:
 #else
 	int m_lockfile_descriptor;
 #endif
-
-	DECLARE_EVENT_TABLE()
-	void OnTimerEvent(wxTimerEvent& event);
-	void OnChangedFileEvent(wxCommandEvent& event);
 };
 
 class CWindowStateManager;
