@@ -5,7 +5,7 @@
 
 namespace logmsg {
 	using namespace fz::logmsg;
-	auto constexpr listing = private1;
+	auto constexpr listing = custom1;
 }
 
 #endif
