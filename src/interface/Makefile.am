@@ -90,6 +90,7 @@ filezilla_SOURCES = \
 		remote_recursive_operation.cpp \
 		RemoteListView.cpp \
 		RemoteTreeView.cpp \
+		renderer.cpp \
 		search.cpp \
 		serverdata.cpp \
 		settings/optionspage.cpp \
@@ -216,6 +217,7 @@ noinst_HEADERS = \
 		remote_recursive_operation.h \
 		RemoteListView.h \
 		RemoteTreeView.h \
+		renderer.h \
 		search.h \
 		serverdata.h \
 		settings/optionspage.h \

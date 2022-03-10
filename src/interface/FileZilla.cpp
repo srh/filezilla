@@ -12,6 +12,7 @@
 #include "msgbox.h"
 #include "themeprovider.h"
 #include "wxfilesystem_blob_handler.h"
+#include "renderer.h"
 #include "../commonui/fz_paths.h"
 #include "../include/version.h"
 #include <libfilezilla/local_filesys.hpp>
@@ -166,6 +167,8 @@ bool CFileZillaApp::OnInit()
 	wxSystemOptions::SetOption(_T("mac.listctrl.always_use_generic"), 1);
 	wxSystemOptions::SetOption(_T("mac.textcontrol-use-spell-checker"), 0);
 #endif
+
+	InitRenderer();
 
 	int cmdline_result = ProcessCommandLine();
 	if (!cmdline_result) {
