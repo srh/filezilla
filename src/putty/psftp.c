@@ -679,7 +679,7 @@ int sftp_cmd_ls(struct sftp_command *cmd)
     dirh = fxp_opendir_recv(pktin, req);
 
     if (dirh == NULL) {
-        printf("Unable to open %s: %s\n", dir, fxp_error());
+        fzprintf(sftpError, "Unable to open %s: %s", dir, fxp_error());
         sfree(cdir);
         return 0;
     }
