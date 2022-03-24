@@ -357,8 +357,13 @@ int CSftpControlSocket::AddToStream(std::string const& cmd)
 		return FZ_REPLY_INTERNALERROR;
 	}
 
-	if (!process_->write(cmd)) {
-		return FZ_REPLY_ERROR | FZ_REPLY_DISCONNECTED;
+	std::string_view v = cmd;
+	while (v.empty()) {
+		fz::rwresult written = process_->write(v);
+		if (!written) {
+			return FZ_REPLY_ERROR | FZ_REPLY_DISCONNECTED;
+		}
+		v = v.substr(written.value_);
 	}
 
 	return FZ_REPLY_WOULDBLOCK;

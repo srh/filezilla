@@ -218,7 +218,7 @@ bool CFZPuttyGenInterface::Send(std::wstring const& cmd)
 			wxMessageBoxEx(_("Could not send command to fzputtygen."), _("Command failed"), wxICON_EXCLAMATION);
 			return false;
 		}
-		v.substr(written.value_);
+		v = v.substr(written.value_);
 	}
 
 	return true;
