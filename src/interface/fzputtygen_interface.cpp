@@ -209,11 +209,16 @@ bool CFZPuttyGenInterface::Send(std::wstring const& cmd)
 	}
 
 	std::string utf8 = fz::to_utf8(cmd) + "\n";
-	if (!m_process->write(utf8)) {
-		m_process.reset();
+	std::string_view v = utf8;
+	while (!v.empty()) {
+		fz::rwresult written = m_process->write(v);
+		if (!written) {
+			m_process.reset();
 
-		wxMessageBoxEx(_("Could not send command to fzputtygen."), _("Command failed"), wxICON_EXCLAMATION);
-		return false;
+			wxMessageBoxEx(_("Could not send command to fzputtygen."), _("Command failed"), wxICON_EXCLAMATION);
+			return false;
+		}
+		v.substr(written.value_);
 	}
 
 	return true;
@@ -232,14 +237,14 @@ CFZPuttyGenInterface::ReplyCode CFZPuttyGenInterface::GetReply(std::wstring & re
 	for (;;) {
 		size_t pos = input.find_first_of("\r\n");
 		if (pos == std::string::npos) {
-			int read = m_process->read(buffer, 100);
-			if (read <= 0) {
+			fz::rwresult read = m_process->read(buffer, 100);
+			if (!read || !read.value_) {
 				wxMessageBoxEx(_("Could not get reply from fzputtygen."), _("Command failed"), wxICON_EXCLAMATION);
 				m_process.reset();
 				return failure;
 			}
 
-			input.append(buffer, read);
+			input.append(buffer, read.value_);
 			continue;
 		}
 
