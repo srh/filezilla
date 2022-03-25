@@ -43,7 +43,7 @@ protected:
 
 	int SendCommand(std::wstring const& cmd, std::wstring const& show = std::wstring());
 	int AddToStream(std::wstring const& cmd);
-	int AddToStream(std::string_view const& cmd);
+	int AddToStream(std::string_view cmd);
 
 #ifndef FZ_WINDOWS
 	int shm_fd_{-1};

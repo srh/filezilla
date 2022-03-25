@@ -237,15 +237,19 @@ int CStorjControlSocket::AddToStream(std::wstring const& cmd)
 	return AddToStream(str);
 }
 
-int CStorjControlSocket::AddToStream(std::string_view const& cmd)
+int CStorjControlSocket::AddToStream(std::string_view cmd)
 {
 	if (!process_) {
 		ResetOperation(FZ_REPLY_INTERNALERROR);
 		return false;
 	}
 
-	if (!process_->write(cmd)) {
-		return FZ_REPLY_ERROR | FZ_REPLY_DISCONNECTED;
+	while (!cmd.empty()) {
+		fz::rwresult written = process_->write(cmd);
+		if (!written) {
+			return FZ_REPLY_ERROR | FZ_REPLY_DISCONNECTED;
+		}
+		cmd = cmd.substr(written.value_);
 	}
 
 	return FZ_REPLY_WOULDBLOCK;
