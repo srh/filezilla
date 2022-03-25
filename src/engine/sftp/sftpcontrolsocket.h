@@ -4,12 +4,9 @@
 #include "../controlsocket.h"
 
 #include <libfilezilla/rate_limiter.hpp>
+#include <libfilezilla/process.hpp>
 
-namespace fz {
-class process;
-}
-
-class CSftpInputThread;
+class SftpInputParser;
 struct sftp_message;
 struct sftp_list_message;
 
@@ -44,8 +41,9 @@ protected:
 	void ProcessReply(int result, std::wstring const& reply);
 
 	int SendCommand(std::wstring const& cmd, std::wstring const& show = std::wstring());
-	int AddToStream(std::wstring const& cmd);
-	int AddToStream(std::string const& cmd);
+	int AddToSendBuffer(std::wstring const& cmd);
+	int AddToSendBuffer(std::string const& cmd);
+	int SendToProcess();
 
 	virtual void wakeup(fz::direction::type const d) override;
 	void OnQuotaRequest(fz::direction::type const d);
@@ -54,12 +52,12 @@ protected:
 	int shm_fd_{-1};
 #endif
 	std::unique_ptr<fz::process> process_;
-	std::unique_ptr<CSftpInputThread> input_thread_;
+	std::unique_ptr<SftpInputParser> input_parser_;
 
 	virtual void operator()(fz::event_base const& ev) override;
 	void OnSftpEvent(sftp_message const& message);
+	void OnProcessEvent(fz::process* p, fz::process_event_flag const& f);
 	void OnSftpListEvent(sftp_list_message const& message);
-	void OnTerminate(std::wstring const& error);
 
 	std::wstring m_requestPreamble;
 	std::wstring m_requestInstruction;
@@ -68,6 +66,8 @@ protected:
 
 	int result_{};
 	std::wstring response_;
+
+	fz::buffer send_buffer_;
 
 	friend class CProtocolOpData<CSftpControlSocket>;
 	friend class CSftpChangeDirOpData;

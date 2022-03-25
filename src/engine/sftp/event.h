@@ -62,7 +62,4 @@ struct sftp_list_message
 struct sftp_list_event_type;
 typedef fz::simple_event<sftp_list_event_type, sftp_list_message> CSftpListEvent;
 
-struct terminate_event_type;
-typedef fz::simple_event<terminate_event_type, std::wstring> CTerminateEvent;
-
 #endif

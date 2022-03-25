@@ -2,7 +2,7 @@
 
 #include "connect.h"
 #include "event.h"
-#include "input_thread.h"
+#include "input_parser.h"
 #include "../proxy.h"
 
 #include "../../include/engine_options.h"
@@ -85,7 +85,7 @@ int CSftpConnectOpData::Send()
 				}
 			}
 #endif
-			controlSocket_.process_ = std::make_unique<fz::process>();
+			controlSocket_.process_ = std::make_unique<fz::process>(engine_.GetThreadPool(), controlSocket_);
 #ifndef FZ_WINDOWS
 			std::vector<int> fds;
 			fds.push_back(controlSocket_.shm_fd_);
@@ -97,12 +97,7 @@ int CSftpConnectOpData::Send()
 				return FZ_REPLY_ERROR | FZ_REPLY_DISCONNECTED;
 			}
 
-			controlSocket_.input_thread_ = std::make_unique<CSftpInputThread>(controlSocket_, *controlSocket_.process_);
-			if (!controlSocket_.input_thread_->spawn(engine_.GetThreadPool())) {
-				log(logmsg::debug_warning, L"Thread creation failed");
-				controlSocket_.input_thread_.reset();
-				return FZ_REPLY_ERROR | FZ_REPLY_DISCONNECTED;
-			}
+			controlSocket_.input_parser_ = std::make_unique<SftpInputParser>(controlSocket_, *controlSocket_.process_);
 		}
 		return FZ_REPLY_WOULDBLOCK;
 	case connect_proxy:

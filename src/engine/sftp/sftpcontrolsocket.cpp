@@ -7,7 +7,7 @@
 #include "event.h"
 #include "filetransfer.h"
 #include "list.h"
-#include "input_thread.h"
+#include "input_parser.h"
 #include "mkd.h"
 #include "rename.h"
 #include "rmd.h"
@@ -68,7 +68,7 @@ void CSftpControlSocket::OnSftpEvent(sftp_message const& message)
 		return;
 	}
 
-	if (!input_thread_) {
+	if (!input_parser_) {
 		return;
 	}
 
@@ -293,7 +293,7 @@ void CSftpControlSocket::OnSftpListEvent(sftp_list_message const& message)
 		return;
 	}
 
-	if (!input_thread_) {
+	if (!input_parser_) {
 		return;
 	}
 
@@ -306,19 +306,6 @@ void CSftpControlSocket::OnSftpListEvent(sftp_list_message const& message)
 		if (res != FZ_REPLY_WOULDBLOCK) {
 			ResetOperation(res);
 		}
-	}
-}
-
-void CSftpControlSocket::OnTerminate(std::wstring const& error)
-{
-	if (!error.empty()) {
-		log_raw(logmsg::error, error);
-	}
-	else {
-		log_raw(logmsg::debug_info, L"CSftpControlSocket::OnTerminate without error");
-	}
-	if (process_) {
-		DoClose();
 	}
 }
 
@@ -337,10 +324,10 @@ int CSftpControlSocket::SendCommand(std::wstring const& cmd, std::wstring const&
 		return FZ_REPLY_INTERNALERROR;
 	}
 
-	return AddToStream(cmd + L"\n");
+	return AddToSendBuffer(cmd + L"\n");
 }
 
-int CSftpControlSocket::AddToStream(std::wstring const& cmd)
+int CSftpControlSocket::AddToSendBuffer(std::wstring const& cmd)
 {
 	std::string const str = ConvToServer(cmd);
 	if (str.empty()) {
@@ -348,22 +335,25 @@ int CSftpControlSocket::AddToStream(std::wstring const& cmd)
 		return FZ_REPLY_ERROR;
 	}
 
-	return AddToStream(str);
+	return AddToSendBuffer(str);
 }
 
-int CSftpControlSocket::AddToStream(std::string const& cmd)
+int CSftpControlSocket::AddToSendBuffer(std::string const& cmd)
 {
 	if (!process_) {
 		return FZ_REPLY_INTERNALERROR;
 	}
 
-	std::string_view v = cmd;
-	while (v.empty()) {
-		fz::rwresult written = process_->write(v);
-		if (!written) {
-			return FZ_REPLY_ERROR | FZ_REPLY_DISCONNECTED;
-		}
-		v = v.substr(written.value_);
+
+	bool const can_send = send_buffer_.empty();
+
+	send_buffer_.append(cmd);
+
+	if (can_send) {
+		return SendToProcess();
+	}
+	else {
+		return FZ_REPLY_WOULDBLOCK;
 	}
 
 	return FZ_REPLY_WOULDBLOCK;
@@ -518,14 +508,14 @@ int CSftpControlSocket::DoClose(int nErrorCode)
 		process_->kill();
 	}
 
-	if (input_thread_) {
-		input_thread_.reset();
+	if (input_parser_) {
+		input_parser_.reset();
 
 		auto threadEventsFilter = [&](fz::event_loop::Events::value_type const& ev) -> bool {
 			if (ev.first != this) {
 				return false;
 			}
-			else if (ev.second->derived_type() == CSftpEvent::type() || ev.second->derived_type() == CTerminateEvent::type()) {
+			else if (ev.second->derived_type() == CSftpEvent::type() || ev.second->derived_type() == CSftpListEvent::type()) {
 				return true;
 			}
 			return false;
@@ -612,7 +602,7 @@ void CSftpControlSocket::OnQuotaRequest(fz::direction::type const d)
 
 	fz::rate::type bytes = available(d);
 	if (bytes == fz::rate::unlimited) {
-		AddToStream(fz::sprintf("-%d-\n", d));
+		AddToSendBuffer(fz::sprintf("-%d-\n", d));
 	}
 	else if (bytes > 0) {
 		int b;
@@ -622,17 +612,17 @@ void CSftpControlSocket::OnQuotaRequest(fz::direction::type const d)
 		else {
 			b = static_cast<int>(bytes);
 		}
-		AddToStream(fz::sprintf("-%d%d,%d\n", d, b, engine_.GetOptions().get_int(d ? OPTION_SPEEDLIMIT_OUTBOUND : OPTION_SPEEDLIMIT_INBOUND)));
+		AddToSendBuffer(fz::sprintf("-%d%d,%d\n", d, b, engine_.GetOptions().get_int(d ? OPTION_SPEEDLIMIT_OUTBOUND : OPTION_SPEEDLIMIT_INBOUND)));
 		consume(d, static_cast<fz::rate::type>(b));
 	}
 }
 
 void CSftpControlSocket::operator()(fz::event_base const& ev)
 {
-	if (fz::dispatch<CSftpEvent, CSftpListEvent, CTerminateEvent, SftpRateAvailableEvent>(ev, this,
+	if (fz::dispatch<fz::process_event, CSftpEvent, CSftpListEvent, SftpRateAvailableEvent>(ev, this,
+		&CSftpControlSocket::OnProcessEvent,
 		&CSftpControlSocket::OnSftpEvent,
 		&CSftpControlSocket::OnSftpListEvent,
-		&CSftpControlSocket::OnTerminate,
 		&CSftpControlSocket::OnQuotaRequest)) {
 		return;
 	}
@@ -648,6 +638,43 @@ void CSftpControlSocket::Push(std::unique_ptr<COpData> && pNewOpData)
 			std::unique_ptr<COpData> connOp = std::make_unique<CSftpConnectOpData>(*this);
 			connOp->topLevelOperation_ = true;
 			CControlSocket::Push(std::move(connOp));
+		}
+	}
+}
+
+int CSftpControlSocket::SendToProcess()
+{
+	if (!process_) {
+		return FZ_REPLY_INTERNALERROR;
+	}
+	while (!send_buffer_.empty()) {
+		fz::rwresult res = process_->write(send_buffer_.get(), send_buffer_.size());
+		if (res) {
+			send_buffer_.consume(res.value_);
+		}
+		else if (res.error_ == fz::rwresult::wouldblock) {
+			break;
+		}
+		else {
+			log(logmsg::error, _("Could not send command to fzsftp executable"));
+			return FZ_REPLY_ERROR | FZ_REPLY_DISCONNECTED;
+		}
+	}
+	return FZ_REPLY_WOULDBLOCK;
+}
+
+void CSftpControlSocket::OnProcessEvent(fz::process*, fz::process_event_flag const& f)
+{
+	if (f == fz::process_event_flag::write) {
+		int res = SendToProcess();
+		if (res != FZ_REPLY_WOULDBLOCK) {
+			DoClose(res);
+		}
+	}
+	else {
+		int res = input_parser_->OnData();
+		if (res != FZ_REPLY_WOULDBLOCK) {
+			DoClose(res);
 		}
 	}
 }

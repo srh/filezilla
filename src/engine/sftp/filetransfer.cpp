@@ -98,7 +98,7 @@ int CSftpFileTransferOpData::Send()
 		controlSocket_.SetWait(true);
 
 		controlSocket_.log_raw(logmsg::command, logstr);
-		return controlSocket_.AddToStream(cmd + "\r\n");
+		return controlSocket_.AddToSendBuffer(cmd + "\r\n");
 	}
 	else if (opState == filetransfer_mtime) {
 		std::wstring quotedFilename = controlSocket_.QuoteFilename(remotePath_.FormatFilename(remoteFile_, !tryAbsolutePath_));
@@ -309,7 +309,7 @@ int CSftpFileTransferOpData::SubcommandResult(int prevResult, COpData const&)
 void CSftpFileTransferOpData::OnOpenRequested(uint64_t offset)
 {
 	if (reader_ || writer_) {
-		controlSocket_.AddToStream("-0\n");
+		controlSocket_.AddToSendBuffer("-0\n");
 		return;
 	}
 
@@ -323,7 +323,7 @@ void CSftpFileTransferOpData::OnOpenRequested(uint64_t offset)
 		if (resume_) {
 			offset = writer_factory_.size();
 			if (offset == aio_base::nosize) {
-				controlSocket_.AddToStream("-1\n");
+				controlSocket_.AddToSendBuffer("-1\n");
 				return;
 			}
 		}
@@ -332,7 +332,7 @@ void CSftpFileTransferOpData::OnOpenRequested(uint64_t offset)
 		}
 		writer_ = writer_factory_.open(offset, engine_, this, shm);
 		if (!writer_) {
-			controlSocket_.AddToStream("--\n");
+			controlSocket_.AddToSendBuffer("--\n");
 			return;
 		}
 		info = writer_->shared_memory_info();
@@ -340,7 +340,7 @@ void CSftpFileTransferOpData::OnOpenRequested(uint64_t offset)
 	else {
 		reader_ = reader_factory_.open(offset, engine_, this, shm);
 		if (!reader_) {
-			controlSocket_.AddToStream("--\n");
+			controlSocket_.AddToSendBuffer("--\n");
 			return;
 		}
 		else {
@@ -355,9 +355,9 @@ void CSftpFileTransferOpData::OnOpenRequested(uint64_t offset)
 		controlSocket_.ResetOperation(FZ_REPLY_ERROR);
 		return;
 	}
-	controlSocket_.AddToStream(fz::sprintf("-%u %u %u\n", reinterpret_cast<uintptr_t>(target), std::get<2>(info), offset));
+	controlSocket_.AddToSendBuffer(fz::sprintf("-%u %u %u\n", reinterpret_cast<uintptr_t>(target), std::get<2>(info), offset));
 #else
-	controlSocket_.AddToStream(fz::sprintf("-%d %u %u\n", std::get<0>(info), std::get<2>(info), offset));
+	controlSocket_.AddToSendBuffer(fz::sprintf("-%d %u %u\n", std::get<0>(info), std::get<2>(info), offset));
 #endif
 	base_address_ = std::get<1>(info);
 }
@@ -371,10 +371,10 @@ void CSftpFileTransferOpData::OnNextBufferRequested(uint64_t processed)
 			return;
 		}
 		if (r.type_ == aio_result::error) {
-			controlSocket_.AddToStream("--1\n");
+			controlSocket_.AddToSendBuffer("--1\n");
 			return;
 		}
-		controlSocket_.AddToStream(fz::sprintf("-%d %d\n", r.buffer_.get() - base_address_, r.buffer_.size()));
+		controlSocket_.AddToSendBuffer(fz::sprintf("-%d %d\n", r.buffer_.get() - base_address_, r.buffer_.size()));
 	}
 	else if (writer_) {
 		buffer_.resize(processed);
@@ -383,14 +383,14 @@ void CSftpFileTransferOpData::OnNextBufferRequested(uint64_t processed)
 			return;
 		}
 		if (r.type_ == aio_result::error) {
-			controlSocket_.AddToStream("--1\n");
+			controlSocket_.AddToSendBuffer("--1\n");
 			return;
 		}
 		buffer_ = r.buffer_;
-		controlSocket_.AddToStream(fz::sprintf("-%d %d\n", buffer_.get() - base_address_, buffer_.capacity()));
+		controlSocket_.AddToSendBuffer(fz::sprintf("-%d %d\n", buffer_.get() - base_address_, buffer_.capacity()));
 	}
 	else {
-		controlSocket_.AddToStream("--1\n");
+		controlSocket_.AddToSendBuffer("--1\n");
 		return;
 	}
 }
@@ -404,10 +404,10 @@ void CSftpFileTransferOpData::OnFinalizeRequested(uint64_t lastWrite)
 		return;
 	}
 	else if (res == aio_result::ok) {
-		controlSocket_.AddToStream(fz::sprintf("-1\n"));
+		controlSocket_.AddToSendBuffer(fz::sprintf("-1\n"));
 	}
 	else {
-		controlSocket_.AddToStream(fz::sprintf("-0\n"));
+		controlSocket_.AddToSendBuffer(fz::sprintf("-0\n"));
 	}
 }
 
@@ -421,10 +421,10 @@ void CSftpFileTransferOpData::OnSizeRequested()
 		size = writer_->size();
 	}
 	if (size == aio_base::nosize) {
-		controlSocket_.AddToStream("--1\n");
+		controlSocket_.AddToSendBuffer("--1\n");
 	}
 	else {
-		controlSocket_.AddToStream(fz::sprintf("-%d\n", size));
+		controlSocket_.AddToSendBuffer(fz::sprintf("-%d\n", size));
 	}
 }
 

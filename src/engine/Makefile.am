@@ -58,7 +58,7 @@ libfzclient_private_la_SOURCES = \
 		sftp/cwd.cpp \
 		sftp/delete.cpp \
 		sftp/filetransfer.cpp \
-		sftp/input_thread.cpp \
+		sftp/input_parser.cpp \
 		sftp/list.cpp \
 		sftp/mkd.cpp \
 		sftp/rename.cpp \
@@ -110,7 +110,7 @@ noinst_HEADERS = \
 		sftp/delete.h \
 		sftp/event.h \
 		sftp/filetransfer.h \
-		sftp/input_thread.h \
+		sftp/input_parser.h \
 		sftp/list.h \
 		sftp/mkd.h \
 		sftp/rename.h \

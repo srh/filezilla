@@ -182,7 +182,7 @@
     <ClCompile Include="sftp\cwd.cpp" />
     <ClCompile Include="sftp\delete.cpp" />
     <ClCompile Include="sftp\filetransfer.cpp" />
-    <ClCompile Include="sftp\input_thread.cpp" />
+    <ClCompile Include="sftp\input_parser.cpp" />
     <ClCompile Include="sftp\list.cpp" />
     <ClCompile Include="sftp\mkd.cpp" />
     <ClCompile Include="sftp\rename.cpp" />
@@ -263,7 +263,7 @@
     <ClInclude Include="sftp\delete.h" />
     <ClInclude Include="sftp\event.h" />
     <ClInclude Include="sftp\filetransfer.h" />
-    <ClInclude Include="sftp\input_thread.h" />
+    <ClInclude Include="sftp\input_parser.h" />
     <ClInclude Include="sftp\list.h" />
     <ClInclude Include="sftp\mkd.h" />
     <ClInclude Include="sftp\rename.h" />
