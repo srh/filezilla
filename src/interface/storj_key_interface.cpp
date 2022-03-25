@@ -112,7 +112,7 @@ CStorjKeyInterface::ReplyCode CStorjKeyInterface::GetReply(std::wstring & reply)
 			if (!read || !read.value_) {
 				wxMessageBoxEx(_("Could not get reply from fzstorj."), _("Command failed"), wxICON_EXCLAMATION);
 				m_process.reset();
-				return failure;
+				return error;
 			}
 
 			input.append(buffer, read.value_);
