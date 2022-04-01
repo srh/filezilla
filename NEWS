@@ -10,6 +10,12 @@ Legend:
     *nix: Unix (e.g BSD) and Unix-like systems (e.g. Linux)
     macOS/OS X: Apple macOS
 
+3.59.0-rc1 (2022-04-01)
+
+- Updated to libfilezilla 0.37.0
+- Non-blocking communication with SFTP process
+- macOS, *nix: Fixed "All files" category in file picker dialogs
+
 3.58.0 (2022-02-11)
 
 - More detailed error messages if an XML file known to exist cannot be opened
