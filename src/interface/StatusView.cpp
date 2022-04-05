@@ -94,7 +94,12 @@ END_EVENT_TABLE()
 CStatusView::CStatusView(wxWindow* parent, wxWindowID id)
 	: COptionChangeEventHandler(this)
 {
-	Create(parent, id, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER);
+#if defined(__WXMAC__) && wxCHECK_VERSION(3, 1, 0)
+	int const border = wxBORDER_NONE;
+#else
+	int const border = wxBORDER_SUNKEN;
+#endif
+	Create(parent, id, wxDefaultPosition, wxDefaultSize, border);
 	m_pTextCtrl = new CFastTextCtrl(this);
 
 #ifdef __WXMAC__

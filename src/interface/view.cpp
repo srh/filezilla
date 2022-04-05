@@ -14,7 +14,12 @@ END_EVENT_TABLE()
 
 CView::CView(wxWindow* pParent)
 {
-	Create(pParent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER);
+#if defined(__WXMAC__) && wxCHECK_VERSION(3, 1, 0)
+	int const border = wxBORDER_NONE;
+#else
+	int const border = wxBORDER_SUNKEN;
+#endif
+	Create(pParent, wxID_ANY, wxDefaultPosition, wxDefaultSize, border);
 }
 
 void CView::SetStatusBar(wxStatusBar* pStatusBar)

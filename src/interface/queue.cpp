@@ -847,8 +847,16 @@ EVT_KEY_DOWN(CQueueViewBase::OnKeyDown)
 EVT_MENU(XRCID("ID_EXPORT"), CQueueViewBase::OnExport)
 END_EVENT_TABLE()
 
+namespace {
+#if defined(__WXMAC__) && wxCHECK_VERSION(3, 1, 0)
+	int constexpr border = wxBORDER_NONE;
+#else
+	int constexpr border = wxBORDER_SUNKEN;
+#endif
+}
+
 CQueueViewBase::CQueueViewBase(CQueue* parent, COptionsBase & options, int index, const wxString& title)
-	: wxListCtrlEx(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxCLIP_CHILDREN | wxLC_REPORT | wxLC_VIRTUAL | wxSUNKEN_BORDER | wxTAB_TRAVERSAL)
+	: wxListCtrlEx(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxCLIP_CHILDREN | wxLC_REPORT | wxLC_VIRTUAL | border | wxTAB_TRAVERSAL)
 	, options_(options)
 	, m_pageIndex(index)
 	, m_title(title)
