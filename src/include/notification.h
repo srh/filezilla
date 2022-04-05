@@ -351,7 +351,7 @@ public:
 	    : newServer_(server)
 	{}
 
-	CServer newServer_;
+	CServer newServer_{};
 };
 
 class FZC_PUBLIC_SYMBOL FtpTlsResumptionNotification final : public CNotificationHelper<nId_ftp_tls_resumption>
@@ -363,7 +363,7 @@ public:
 	    : server_(server)
 	{}
 
-	CServer const server_;
+	CServer const server_{};
 };
 
 class FZC_PUBLIC_SYMBOL FtpTlsNoResumptionNotification final : public CAsyncRequestNotification
