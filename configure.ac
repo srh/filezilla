@@ -190,6 +190,13 @@ if test "$buildmain" = "yes"; then
   elif test "${WX_VERSION_MAJOR}.${WX_VERSION_MINOR}" != "3.0"; then
     AC_MSG_ERROR([You must use wxWidgets 3.0.x, wxWidgets 3.2 or higher is not yet supported.])
   fi
+  
+  if test "${WX_VERSION_MAJOR}.${WX_VERSION_MINOR}" = "3.0"; then
+    MAC_REQUIRES_AQUA="YES"
+  else
+    MAC_REQUIRES_AQUA="NO"
+  fi
+  AC_SUBST(MAC_REQUIRES_AQUA)
 
   # --universal=no doesn't work correctly, it still accepts universal builds. Reject it manually here.
   if echo "$WX_CPPFLAGS" | grep __WXUNIVERSAL__ > /dev/null; then
