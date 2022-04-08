@@ -13,6 +13,7 @@ Legend:
 3.59.0 (2022-04-08)
 
 - Windows binaries: Updated zlib, used purely to cache re-scaled versions of icons shipped with FileZilla, to 1.2.12
+- Updated to libfilezilla 0.37.1
 
 3.59.0-rc1 (2022-04-01)
 
