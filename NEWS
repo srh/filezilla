@@ -10,6 +10,10 @@ Legend:
     *nix: Unix (e.g BSD) and Unix-like systems (e.g. Linux)
     macOS/OS X: Apple macOS
 
+3.59.0 (2022-04-08)
+
+- Windows binaries: Updated zlib, used purely to cache re-scaled versions of icons shipped with FileZilla, to 1.2.12
+
 3.59.0-rc1 (2022-04-01)
 
 - Updated to libfilezilla 0.37.0
