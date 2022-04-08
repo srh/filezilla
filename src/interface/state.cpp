@@ -10,6 +10,8 @@
 #include "listingcomparison.h"
 #include "xrc_helper.h"
 
+#include "../commonui/misc.h"
+
 #include "../include/FileZillaEngine.h"
 
 #include <libfilezilla/local_filesys.hpp>
@@ -1088,7 +1090,8 @@ void CState::ListingFailed(int)
 		dlg.GetSizer()->Fit(&dlg);
 		if (dlg.ShowModal() == wxID_OK) {
 			if (xrc_call(dlg, "ID_SYNCBROWSE_CREATE", &wxRadioButton::GetValue)) {
-				m_pCommandQueue->ProcessCommand(new CMkdirCommand(m_sync_browse.target_path));
+				transfer_flags const flags = GetMkdirFlags(m_site.server, m_mainFrame.GetOptions(), m_sync_browse.target_path);
+				m_pCommandQueue->ProcessCommand(new CMkdirCommand(m_sync_browse.target_path, flags));
 				m_pCommandQueue->ProcessCommand(new CListCommand(m_sync_browse.target_path));
 				m_sync_browse.target_path.clear();
 				m_changeDirFlags.compare = compare;

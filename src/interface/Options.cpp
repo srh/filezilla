@@ -42,10 +42,6 @@ unsigned int register_interface_options()
 
 		// Normal UI options
 		{ "Number of Transfers", 2, option_flags::numeric_clamp, 1, 10 },
-		{ "Ascii Binary mode", 0, option_flags::normal, 0, 2 },
-		{ "Auto Ascii files", L"ac|am|asp|bat|c|cfm|cgi|conf|cpp|css|dhtml|diff|diz|h|hpp|htm|html|in|inc|java|js|jsp|lua|m4|mak|md5|nfo|nsh|nsi|pas|patch|pem|php|phtml|pl|po|pot|py|qmail|sh|sha1|sha256|sha512|shtml|sql|svg|tcl|tpl|txt|vbs|xhtml|xml|xrc", option_flags::normal },
-		{ "Auto Ascii no extension", L"1", option_flags::normal },
-		{ "Auto Ascii dotfiles", true, option_flags::normal },
 		{ "Language Code", L"", option_flags::normal, 50 },
 		{ "Concurrent download limit", 0, option_flags::numeric_clamp, 0, 10 },
 		{ "Concurrent upload limit", 0, option_flags::numeric_clamp, 0, 10 },
@@ -78,7 +74,6 @@ unsigned int register_interface_options()
 		{ "Always use default editor", false, option_flags::normal },
 		{ "File associations (v2)", L"", option_flags::platform },
 		{ "Comparison mode", 1, option_flags::normal, 0, 1 },
-		{ "Comparison threshold", 1, option_flags::normal, 0, 1440 },
 		{ "Site Manager position", L"", option_flags::normal },
 		{ "Icon theme", L"default", option_flags::normal },
 		{ "Icon scale", 125, option_flags::numeric_clamp, 25, 400 },

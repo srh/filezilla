@@ -2,6 +2,8 @@
 #define FILEZILLA_INTERFACE_QUEUE_STORAGE_HEADER
 
 #include <vector>
+#include <stdint.h>
+#include <string>
 
 class CFileItem;
 class CServerItem;

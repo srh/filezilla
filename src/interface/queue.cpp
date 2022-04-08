@@ -236,11 +236,12 @@ int CQueueItem::GetItemIndex() const
 
 CFileItem::CFileItem(CServerItem* parent, transfer_flags const& flags,
 					 std::wstring const& sourceFile, std::wstring const& targetFile,
-					 CLocalPath const& localPath, CServerPath const& remotePath, int64_t size)
+					 CLocalPath const& localPath, CServerPath const& remotePath, int64_t size,
+					 std::wstring const& extraFlags)
 	: CQueueItem(parent)
 	, flags_(flags)
 	, m_sourceFile(sourceFile)
-	, m_targetFile(targetFile.empty() ? fz::sparse_optional<std::wstring>() : fz::sparse_optional<std::wstring>(targetFile))
+	, extra_data_(targetFile.empty() && extraFlags.empty() ? fz::sparse_optional<extra_data>() : fz::sparse_optional<extra_data>({ targetFile, extraFlags }))
 	, m_localPath(localPath)
 	, m_remotePath(remotePath)
 	, m_size(size)
@@ -312,6 +313,9 @@ void CFileItem::SaveItem(pugi::xml_node& element) const
 	if (m_defaultFileExistsAction != CFileExistsNotification::unknown) {
 		AddTextElement(file, "OverwriteAction", m_defaultFileExistsAction);
 	}
+	if (extra_data_ && !extra_data_->extraFlags_.empty()) {
+		AddTextElement(file, "ExtraFlags", extra_data_->extraFlags_);
+	}
 }
 
 bool CFileItem::TryRemoveAll()
@@ -326,11 +330,21 @@ bool CFileItem::TryRemoveAll()
 
 void CFileItem::SetTargetFile(std::wstring const& file)
 {
+	std::wstring extraFlags;
+	if (extra_data_) {
+		extraFlags = extra_data_->extraFlags_;
+	}
+
 	if (!file.empty() && file != m_sourceFile) {
-		m_targetFile = fz::sparse_optional<std::wstring>(file);
+		extra_data_ = fz::sparse_optional<extra_data>({file, extraFlags});
 	}
 	else {
-		m_targetFile.clear();
+		if (extraFlags.empty()) {
+			extra_data_.clear();
+		}
+		else {
+			extra_data_ = fz::sparse_optional<extra_data>({{}, extraFlags});
+		}
 	}
 }
 
@@ -362,12 +376,12 @@ wxString const& CFileItem::GetStatusMessage() const
 }
 
 CFolderItem::CFolderItem(CServerItem* parent, bool queued, CLocalPath const& localPath)
-	: CFileItem(parent, transfer_flags::download | (queued ? queue_flags::queued : transfer_flags{}), std::wstring(), std::wstring(), localPath, CServerPath(), -1)
+	: CFileItem(parent, transfer_flags::download | (queued ? queue_flags::queued : transfer_flags{}), std::wstring(), std::wstring(), localPath, CServerPath(), -1, {})
 {
 }
 
 CFolderItem::CFolderItem(CServerItem* parent, bool queued, CServerPath const& remotePath, std::wstring const& remoteFile)
-	: CFileItem(parent, queued ? queue_flags::queued : transfer_flags{}, std::wstring(), remoteFile, CLocalPath(), remotePath, -1)
+	: CFileItem(parent, queued ? queue_flags::queued : transfer_flags{}, std::wstring(), remoteFile, CLocalPath(), remotePath, -1, {})
 {
 }
 

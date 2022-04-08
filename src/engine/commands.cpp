@@ -55,17 +55,15 @@ bool CListCommand::valid() const
 	return true;
 }
 
-CFileTransferCommand::CFileTransferCommand(reader_factory_holder const& reader, CServerPath const& remotePath,
-										   std::wstring const& remoteFile, transfer_flags const& flags)
-	: reader_(reader), m_remotePath(remotePath), m_remoteFile(remoteFile)
-	, flags_(flags)
+CFileTransferCommand::CFileTransferCommand(reader_factory_holder const& reader,
+	CServerPath const& remotePath, std::wstring const& remoteFile, transfer_flags const& flags, std::wstring const& extraFlags)
+	: reader_(reader), m_remotePath(remotePath), m_remoteFile(remoteFile), flags_(flags), extraFlags_(extraFlags)
 {
 }
 
-CFileTransferCommand::CFileTransferCommand(writer_factory_holder const& writer, CServerPath const& remotePath,
-										   std::wstring const& remoteFile, transfer_flags const& flags)
-	: writer_(writer), m_remotePath(remotePath), m_remoteFile(remoteFile)
-	, flags_(flags)
+CFileTransferCommand::CFileTransferCommand(writer_factory_holder const& writer,
+	CServerPath const& remotePath, std::wstring const& remoteFile, transfer_flags const& flags, std::wstring const& extraFlags)
+	: writer_(writer), m_remotePath(remotePath), m_remoteFile(remoteFile), flags_(flags), extraFlags_(extraFlags)
 {
 }
 
@@ -117,8 +115,9 @@ bool CRemoveDirCommand::valid() const
 	return !GetPath().empty() && !GetSubDir().empty();
 }
 
-CMkdirCommand::CMkdirCommand(const CServerPath& path)
+CMkdirCommand::CMkdirCommand(const CServerPath& path, transfer_flags const& flags)
 	: m_path(path)
+	, flags_(flags)
 {
 }
 

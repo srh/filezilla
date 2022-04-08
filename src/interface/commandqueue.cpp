@@ -9,9 +9,7 @@
 
 #include <algorithm>
 
-wxDEFINE_EVENT(fzEVT_GRANTEXCLUSIVEENGINEACCESS, wxCommandEvent);
-
-int CCommandQueue::m_requestIdCounter = 0;
+unsigned int CCommandQueue::m_requestIdCounter = 0;
 
 CCommandQueue::CCommandQueue(CFileZillaEngine *pEngine, CMainFrame* pMainFrame, CState& state)
 	: m_pEngine(pEngine)
@@ -88,7 +86,7 @@ void CCommandQueue::ProcessNextCommand()
 
 	if (m_CommandList.empty()) {
 		if (m_exclusiveEngineRequest) {
-			GrantExclusiveEngineRequest();
+			GrantExclusiveEngineRequest(m_exclusiveHandler);
 		}
 		else {
 			m_state.NotifyHandlers(STATECHANGE_REMOTE_IDLE);
@@ -132,7 +130,9 @@ bool CCommandQueue::Cancel()
 void CCommandQueue::Finish(std::unique_ptr<COperationNotification> && pNotification)
 {
 	if (m_exclusiveEngineLock) {
-		m_pMainFrame->GetQueue()->ProcessNotification(m_pEngine, std::move(pNotification));
+		if (m_exclusiveHandler) {
+			m_exclusiveHandler->ProcessNotification(m_pEngine, std::move(pNotification));
+		}
 		return;
 	}
 
@@ -225,41 +225,41 @@ void CCommandQueue::ProcessReply(int nReplyCode, Command commandId)
 	ProcessNextCommand();
 }
 
-void CCommandQueue::RequestExclusiveEngine(bool requestExclusive)
+void CCommandQueue::RequestExclusiveEngine(CExclusiveHandler *exclusiveHandler, bool requestExclusive)
 {
 	wxASSERT(!m_exclusiveEngineLock || !requestExclusive);
 
 	if (!m_exclusiveEngineRequest && requestExclusive) {
 		m_requestId = ++m_requestIdCounter;
-		if (m_requestId < 0) {
-			m_requestIdCounter = 0;
-			m_requestId = 0;
-		}
 		if (m_CommandList.empty()) {
 			m_state.NotifyHandlers(STATECHANGE_REMOTE_IDLE);
-			GrantExclusiveEngineRequest();
+			GrantExclusiveEngineRequest(exclusiveHandler);
 			return;
 		}
 	}
 	if (!requestExclusive) {
 		m_exclusiveEngineLock = false;
+		m_exclusiveHandler = nullptr;
 	}
 	m_exclusiveEngineRequest = requestExclusive;
 	m_state.NotifyHandlers(STATECHANGE_REMOTE_IDLE);
 }
 
-void CCommandQueue::GrantExclusiveEngineRequest()
+void CCommandQueue::GrantExclusiveEngineRequest(CExclusiveHandler *exclusiveHandler)
 {
 	wxASSERT(!m_exclusiveEngineLock);
 	m_exclusiveEngineLock = true;
 	m_exclusiveEngineRequest = false;
+	m_exclusiveHandler = exclusiveHandler;
 
-	wxCommandEvent *evt = new wxCommandEvent(fzEVT_GRANTEXCLUSIVEENGINEACCESS);
-	evt->SetId(m_requestId);
-	m_pMainFrame->GetQueue()->GetEventHandler()->QueueEvent(evt);
+	if (m_exclusiveHandler) {
+		m_pMainFrame->CallAfter([this]() {
+			m_exclusiveHandler->OnExclusiveEngineRequestGranted(m_requestId);
+		});
+	}
 }
 
-CFileZillaEngine* CCommandQueue::GetEngineExclusive(int requestId)
+CFileZillaEngine* CCommandQueue::GetEngineExclusive(unsigned int requestId)
 {
 	if (!m_exclusiveEngineLock) {
 		return 0;
@@ -272,12 +272,14 @@ CFileZillaEngine* CCommandQueue::GetEngineExclusive(int requestId)
 	return m_pEngine;
 }
 
-
-void CCommandQueue::ReleaseEngine()
+void CCommandQueue::ReleaseEngine(CExclusiveHandler *exclusiveHandler)
 {
-	m_exclusiveEngineLock = false;
+	if (exclusiveHandler == m_exclusiveHandler) {
+		m_exclusiveEngineLock = false;
+		m_exclusiveHandler = nullptr;
 
-	ProcessNextCommand();
+		ProcessNextCommand();
+	}
 }
 
 bool CCommandQueue::Quit()

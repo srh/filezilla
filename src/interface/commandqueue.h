@@ -8,7 +8,13 @@ class CMainFrame;
 
 #include <wx/event.h>
 
-wxDECLARE_EVENT(fzEVT_GRANTEXCLUSIVEENGINEACCESS, wxCommandEvent);
+class CExclusiveHandler
+{
+public:
+	virtual ~CExclusiveHandler() = default;
+	virtual void ProcessNotification(CFileZillaEngine *pEngine, std::unique_ptr<CNotification>&& pNotification) = 0;
+	virtual void OnExclusiveEngineRequestGranted(unsigned int requestId) = 0;
+};
 
 class CCommandQueue final
 {
@@ -29,10 +35,10 @@ public:
 	bool Quit();
 	void Finish(std::unique_ptr<COperationNotification> && pNotification);
 
-	void RequestExclusiveEngine(bool requestExclusive);
+	void RequestExclusiveEngine(CExclusiveHandler* exclusiveHandler, bool requestExclusive);
 
-	CFileZillaEngine* GetEngineExclusive(int requestId);
-	void ReleaseEngine();
+	CFileZillaEngine* GetEngineExclusive(unsigned int requestId);
+	void ReleaseEngine(CExclusiveHandler *exclusiveHandler);
 	bool EngineLocked() const { return m_exclusiveEngineLock; }
 
 	void ProcessDirectoryListing(CDirectoryListingNotification const& listingNotification);
@@ -40,15 +46,16 @@ public:
 protected:
 	void ProcessReply(int nReplyCode, Command commandId);
 
-	void GrantExclusiveEngineRequest();
+	void GrantExclusiveEngineRequest(CExclusiveHandler *exclusiveHandler);
 
-	CFileZillaEngine *m_pEngine;
+	CFileZillaEngine* m_pEngine;
 	CMainFrame* m_pMainFrame;
 	CState& m_state;
 	bool m_exclusiveEngineRequest{};
 	bool m_exclusiveEngineLock{};
-	int m_requestId{};
-	static int m_requestIdCounter;
+	unsigned int m_requestId{};
+	static unsigned int m_requestIdCounter;
+	CExclusiveHandler* m_exclusiveHandler{};
 
 	// Used to make this class reentrance-safe
 	int m_inside_commandqueue{};

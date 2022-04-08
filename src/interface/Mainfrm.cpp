@@ -3,7 +3,6 @@
 
 #include "aboutdialog.h"
 #include "asyncrequestqueue.h"
-#include "auto_ascii_files.h"
 #include "bookmarks_dialog.h"
 #include "buildinfo.h"
 #include "clearprivatedata.h"
@@ -51,6 +50,7 @@
 #include "window_state_manager.h"
 #include "../include/version.h"
 #include "verifycertdialog.h"
+#include "../commonui/auto_ascii_files.h"
 
 #if FZ_MANUALUPDATECHECK
 #include "overlay.h"
@@ -533,7 +533,7 @@ CMainFrame::CMainFrame(COptions& options)
 
 	CEditHandler::Create()->SetQueue(m_pQueueView);
 
-	CAutoAsciiFiles::SettingsChanged();
+	CAutoAsciiFiles::SettingsChanged(options_);
 
 	FixTabOrder();
 
@@ -2111,7 +2111,7 @@ void CMainFrame::CheckChangedSettings()
 {
 	async_request_queue_->RecheckDefaults();
 
-	CAutoAsciiFiles::SettingsChanged();
+	CAutoAsciiFiles::SettingsChanged(options_);
 
 #if FZ_MANUALUPDATECHECK
 	if (m_pUpdater) {

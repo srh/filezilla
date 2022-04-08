@@ -4,6 +4,7 @@
 #include "aui_notebook_ex.h"
 #include "listctrlex.h"
 #include "edithandler.h"
+
 #include <libfilezilla/optional.hpp>
 
 enum class QueuePriority : unsigned char {
@@ -159,7 +160,8 @@ class CFileItem : public CQueueItem
 public:
 	CFileItem(CServerItem* parent, transfer_flags const& flags,
 		std::wstring const& sourceFile, std::wstring const& targetFile,
-		CLocalPath const& localPath, CServerPath const& remotePath, int64_t size);
+		CLocalPath const& localPath, CServerPath const& remotePath, int64_t size,
+		std::wstring const& extraFlags);
 
 	virtual ~CFileItem();
 
@@ -167,10 +169,15 @@ public:
 	void SetPriorityRaw(QueuePriority priority);
 	QueuePriority GetPriority() const;
 
-	std::wstring const& GetLocalFile() const { return !Download() ? GetSourceFile() : (m_targetFile ? *m_targetFile : m_sourceFile); }
-	std::wstring const& GetRemoteFile() const { return Download() ? GetSourceFile() : (m_targetFile ? *m_targetFile : m_sourceFile); }
+	struct extra_data {
+		std::wstring targetFile_;
+		std::wstring extraFlags_;
+	};
+
+	std::wstring const& GetLocalFile() const { return !Download() ? GetSourceFile() : (extra_data_ && !extra_data_->targetFile_.empty() ? extra_data_->targetFile_ : m_sourceFile); }
+	std::wstring const& GetRemoteFile() const { return Download() ? GetSourceFile() : (extra_data_ && !extra_data_->targetFile_.empty() ? extra_data_->targetFile_ : m_sourceFile); }
 	std::wstring const& GetSourceFile() const { return m_sourceFile; }
-	fz::sparse_optional<std::wstring> const& GetTargetFile() const { return m_targetFile; }
+	fz::sparse_optional<extra_data> const& GetExtraData() const { return extra_data_; }
 	CLocalPath const& GetLocalPath() const { return m_localPath; }
 	CServerPath const& GetRemotePath() const { return m_remotePath; }
 	int64_t GetSize() const { return m_size; }
@@ -240,14 +247,12 @@ public:
 	QueuePriority m_priority{QueuePriority::normal};
 
 protected:
-
 	transfer_flags flags_;
 	Status m_status{};
 
 public:
 	unsigned char m_errorCount{};
 	t_EngineData* m_pEngineData{};
-
 
 	inline bool made_progress() const { return flags_ & queue_flags::made_progess; }
 	inline void set_made_progress(bool made_progress)
@@ -262,7 +267,7 @@ public:
 
 protected:
 	std::wstring const m_sourceFile;
-	fz::sparse_optional<std::wstring> m_targetFile;
+	fz::sparse_optional<extra_data> extra_data_;
 	CLocalPath const m_localPath;
 	CServerPath const m_remotePath;
 	int64_t m_size{};

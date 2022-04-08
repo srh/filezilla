@@ -6,6 +6,8 @@
 #include "Options.h"
 #include "queue.h"
 
+#include "../commonui/misc.h"
+
 #include <libfilezilla/local_filesys.hpp>
 #include <libfilezilla/recursive_remove.hpp>
 
@@ -78,9 +80,6 @@ void CRemoteRecursiveOperation::operation_finished()
 {
 	m_state.RefreshRemote();
 }
-
-// Defined in RemoteListView.cpp
-std::wstring StripVMSRevision(std::wstring const& name);
 
 void CRemoteRecursiveOperation::handle_file(std::wstring const& sourceFile, CLocalPath const& localPath, CServerPath const& remotePath, int64_t size)
 {

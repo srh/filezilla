@@ -107,7 +107,11 @@ enum class ProtocolFeature
 	ServerAssignedHome,
 	TemporaryUrl,
 	Security, // Encryption, integrity protection and authentication
-	UnixChmod
+	UnixChmod,
+	ProExclusive,
+	ListVersions,
+	DownloadVersion,
+	DeleteVersion
 };
 
 enum class CaseSensitivity

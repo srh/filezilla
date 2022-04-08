@@ -38,14 +38,20 @@ unsigned int register_common_options()
 {
 	// Note: A few options are versioned due to a changed
 	// option syntax or past, unhealthy defaults
-	static int const value = register_options({
-		// Default/internal options
-		{ "Config Location", L"", option_flags::predefined_only | option_flags::platform },
+	static int const value = register_options({ { "Config Location", L"", option_flags::predefined_only | option_flags::platform },
 		{ "Kiosk mode", 0, option_flags::predefined_priority, 0, 2 },
 
 		{ "Master password encryptor", L"", option_flags::normal },
-		{ "Trust system trust store", false, option_flags::normal }
+		{ "Trust system trust store", false, option_flags::normal },
+
+		{ "Ascii Binary mode", 0, option_flags::normal, 0, 2 },
+		{ "Auto Ascii files", L"ac|am|asp|bat|c|cfm|cgi|conf|cpp|css|dhtml|diff|diz|h|hpp|htm|html|in|inc|java|js|jsp|lua|m4|mak|md5|nfo|nsh|nsi|pas|patch|pem|php|phtml|pl|po|pot|py|qmail|sh|sha1|sha256|sha512|shtml|sql|svg|tcl|tpl|txt|vbs|xhtml|xml|xrc", option_flags::normal },
+		{ "Auto Ascii no extension", L"1", option_flags::normal },
+		{ "Auto Ascii dotfiles", true, option_flags::normal },
+
+		{ "Comparison threshold", 1, option_flags::normal, 0, 1440 }
 	});
+
 	return value;
 }
 

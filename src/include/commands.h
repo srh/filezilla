@@ -173,14 +173,14 @@ enum class transfer_flags : unsigned short
 	none = 0,
 
 	interface_reserved_mask = 0x08u, // The engine will never touch these
-	
+
 	download = 0x10,
 	fsync = 0x20,
 
 	// Free bits in the middle
 
-	protocol_reserved_mask = 0xfe00,
-	protocol_reserved_max = 0x8000
+	protocol_reserved_mask = 0xff00,
+	protocol_reserved_max = 0x8000 // The highest bit
 };
 
 inline bool operator&(transfer_flags lhs, transfer_flags rhs)
@@ -223,24 +223,27 @@ namespace ftp_transfer_flags
 class FZC_PUBLIC_SYMBOL CFileTransferCommand final : public CCommandHelper<CFileTransferCommand, Command::transfer>
 {
 public:
-	CFileTransferCommand(reader_factory_holder const& reader, CServerPath const& remotePath, std::wstring const& remoteFile, transfer_flags const& flags);
-	CFileTransferCommand(writer_factory_holder const& writer, CServerPath const& remotePath, std::wstring const& remoteFile, transfer_flags const& flags);
+	CFileTransferCommand(reader_factory_holder const& reader, CServerPath const& remotePath, std::wstring const& remoteFile, transfer_flags const& flags, std::wstring const& extraflags = {});
+	CFileTransferCommand(writer_factory_holder const& writer, CServerPath const& remotePath, std::wstring const& remoteFile, transfer_flags const& flags, std::wstring const& extraFlags = {});
 
 	CServerPath GetRemotePath() const;
 	std::wstring GetRemoteFile() const;
 	bool Download() const { return flags_ & transfer_flags::download; }
 	transfer_flags const& GetFlags() const { return flags_; }
+	std::wstring const& GetExtraFlags() const { return extraFlags_; }
 
 	bool valid() const;
 
 	reader_factory_holder const& GetReader() const { return reader_; }
 	writer_factory_holder const& GetWriter() const { return writer_; }
+
 protected:
 	reader_factory_holder const reader_;
 	writer_factory_holder const writer_;
 	CServerPath const m_remotePath;
 	std::wstring const m_remoteFile;
 	transfer_flags const flags_;
+	std::wstring const extraFlags_;
 };
 
 class FZC_PUBLIC_SYMBOL CHttpRequestCommand final : public CCommandHelper<CHttpRequestCommand, Command::httprequest>
@@ -286,6 +289,7 @@ public:
 	std::vector<std::wstring>&& ExtractFiles() { return std::move(files_); }
 
 	bool valid() const { return !GetPath().empty() && !GetFiles().empty(); }
+
 protected:
 	CServerPath const m_path;
 	std::vector<std::wstring> files_;
@@ -311,14 +315,16 @@ protected:
 class FZC_PUBLIC_SYMBOL CMkdirCommand final : public CCommandHelper<CMkdirCommand, Command::mkdir>
 {
 public:
-	explicit CMkdirCommand(CServerPath const& path);
+	explicit CMkdirCommand(CServerPath const& path, transfer_flags const& flags);
 
 	CServerPath GetPath() const { return m_path; }
+	transfer_flags const& GetFlags() const { return flags_; }
 
 	bool valid() const;
 
 protected:
 	CServerPath const m_path;
+	transfer_flags const flags_;
 };
 
 class FZC_PUBLIC_SYMBOL CRenameCommand final : public CCommandHelper<CRenameCommand, Command::rename>

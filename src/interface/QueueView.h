@@ -5,6 +5,7 @@
 #include "local_recursive_operation.h"
 #include "option_change_event_handler.h"
 #include "queue.h"
+#include "commandqueue.h"
 #include "queue_storage.h"
 #include "state.h"
 
@@ -107,7 +108,8 @@ private:
 	bool trigger_{};
 };
 
-class CQueueView final : public CQueueViewBase, public COptionChangeEventHandler, public CGlobalStateEventHandler
+class CQueueView final : public CQueueViewBase,
+	public COptionChangeEventHandler, public CGlobalStateEventHandler, public CExclusiveHandler
 {
 	friend class CQueueViewDropTarget;
 	friend class CQueueViewFailed;
@@ -121,7 +123,9 @@ public:
 		std::wstring const& sourceFile, std::wstring const& targetFile,
 		CLocalPath const& localPath, CServerPath const& remotePath,
 		Site const& site, int64_t size, CEditHandler::fileType edit = CEditHandler::none,
-		QueuePriority priority = QueuePriority::normal);
+		QueuePriority priority = QueuePriority::normal, transfer_flags custom_flags = transfer_flags::none,
+		transfer_flags custom_flags_mask = transfer_flags::none,
+		std::wstring const& extraFlags = {});
 
 	void QueueFile_Finish(const bool start); // Need to be called after QueueFile
 	bool QueueFiles(const bool queueOnly, CLocalPath const& localPath, const CRemoteDataObject& dataObject);
@@ -146,7 +150,7 @@ public:
 
 	virtual void CommitChanges() override;
 
-	void ProcessNotification(CFileZillaEngine* pEngine, std::unique_ptr<CNotification>&& pNotification);
+	virtual void ProcessNotification(CFileZillaEngine* pEngine, std::unique_ptr<CNotification>&& pNotification) override;
 
 	void RenameFileInTransfer(CFileZillaEngine *pEngine, std::wstring const& newName, bool local, writer_factory_holder & new_writer);
 
@@ -297,7 +301,7 @@ protected:
 
 	void OnSetPriority(wxCommandEvent& event);
 
-	void OnExclusiveEngineRequestGranted(wxCommandEvent& event);
+	virtual void OnExclusiveEngineRequestGranted(unsigned int requestId) override;
 
 	void OnActionAfter(wxCommandEvent& event);
 	void OnActionAfterTimerTick();

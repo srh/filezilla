@@ -30,7 +30,6 @@ filezilla_SOURCES = \
 		asksavepassworddialog.cpp \
 		asyncrequestqueue.cpp \
 		aui_notebook_ex.cpp \
-		auto_ascii_files.cpp \
 		bookmarks_dialog.cpp \
 		buildinfo.cpp \
 		chmoddialog.cpp \
@@ -156,7 +155,6 @@ noinst_HEADERS = \
 		asksavepassworddialog.h \
 		asyncrequestqueue.h \
 		aui_notebook_ex.h \
-		auto_ascii_files.h \
 		bookmarks_dialog.h \
 		buildinfo.h \
 		chmoddialog.h \

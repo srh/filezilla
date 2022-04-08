@@ -612,6 +612,39 @@ bool CServer::ProtocolHasFeature(ServerProtocol const protocol, ProtocolFeature 
 		break;
 	case ProtocolFeature::Security:
 		return protocol != HTTP && protocol != INSECURE_FTP && protocol != INSECURE_WEBDAV;
+	case ProtocolFeature::ProExclusive:
+		switch (protocol) {
+			case FTP:
+			case FTPS:
+			case FTPES:
+			case INSECURE_FTP:
+			case SFTP:
+			case HTTP:
+			case HTTPS:
+			case STORJ:
+			case STORJ_GRANT:
+				return false;
+			default:
+				return true;
+		}
+		break;
+	case ProtocolFeature::ListVersions:
+		if (protocol == B2 || protocol == BOX || protocol == DROPBOX ||
+			protocol == ONEDRIVE || protocol == GOOGLE_DRIVE || protocol == S3) {
+			return true;
+		}
+		break;
+	case ProtocolFeature::DownloadVersion:
+		if (protocol == B2 || protocol == BOX || protocol == DROPBOX ||
+			protocol == GOOGLE_DRIVE || protocol == S3) {
+			return true;
+		}
+		break;
+	case ProtocolFeature::DeleteVersion:
+		if (protocol == B2 || protocol == BOX || protocol == GOOGLE_DRIVE || protocol == S3) {
+			return true;
+		}
+		break;
 	}
 	return false;
 }

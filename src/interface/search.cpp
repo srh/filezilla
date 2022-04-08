@@ -17,6 +17,7 @@
 #include "customheightlistctrl.h"
 
 #include "../commonui/ipcmutex.h"
+#include "../commonui/misc.h"
 
 #include <libfilezilla/process.hpp>
 #include <libfilezilla/uri.hpp>
@@ -156,9 +157,6 @@ private:
 BEGIN_EVENT_TABLE(CSearchDialogFileList, CFileListCtrl<CGenericFileData>)
 EVT_LIST_COL_CLICK(wxID_ANY, CSearchDialogFileList::OnColumnClicked)
 END_EVENT_TABLE()
-
-// Defined in RemoteListView.cpp
-std::wstring StripVMSRevision(std::wstring const& name);
 
 CSearchDialogFileList::CSearchDialogFileList(CSearchDialog* pParent, CQueueView* pQueue, COptionsBase & options)
 	: CFileListCtrl<CGenericFileData>(pParent, pQueue, options, true),

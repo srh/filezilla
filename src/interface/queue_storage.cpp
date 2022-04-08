@@ -93,7 +93,8 @@ namespace file_table_column_names
 		error_count,
 		priority,
 		flags,
-		default_exists_action
+		default_exists_action,
+		extra_flags,
 	};
 }
 
@@ -108,7 +109,8 @@ _column file_table_columns[] = {
 	{ "error_count", Column_type::integer, 0 },
 	{ "priority", Column_type::integer, 0 },
 	{ "flags", Column_type::integer, 0 },
-	{ "default_exists_action", Column_type::integer, 0 }
+	{ "default_exists_action", Column_type::integer, 0 },
+	{ "extra_flags", Column_type::text, 0 }
 };
 
 namespace path_table_column_names
@@ -293,7 +295,7 @@ bool CQueueStorage::Impl::MigrateSchema()
 	bool ret = sqlite3_exec(db_, "PRAGMA user_version", int_callback, &version, 0) == SQLITE_OK;
 
 	if (ret) {
-		if (version > 6) {
+		if (version > 7) {
 			ret = false;
 		}
 		else if (version > 0) {
@@ -320,9 +322,21 @@ bool CQueueStorage::Impl::MigrateSchema()
 				ret &= sqlite3_exec(db_, "DROP TABLE files", 0, 0, 0) == SQLITE_OK;
 				ret &= sqlite3_exec(db_, "ALTER TABLE files2 RENAME TO files", 0, 0, 0) == SQLITE_OK;
 			}
+			if (ret && version < 7) {
+				std::string query("CREATE TABLE IF NOT EXISTS files2 ");
+				query += CreateColumnDefs(file_table_columns, sizeof(file_table_columns) / sizeof(_column));
+				ret = sqlite3_exec(db_, query.c_str(), 0, 0, 0) == SQLITE_OK;
+				ret &= sqlite3_exec(db_, "CREATE INDEX IF NOT EXISTS server_index ON files2 (server)", 0, 0, 0) == SQLITE_OK;
+				query =
+					"INSERT INTO files2 (id, server, source_file, target_file, local_path, remote_path, size, error_count, priority, default_exists_action, flags) "
+					"SELECT id, server, source_file, target_file, local_path, remote_path, size, error_count, priority, default_exists_action, flags FROM files";
+				ret &= sqlite3_exec(db_, query.c_str(), 0, 0, 0) == SQLITE_OK;
+				ret &= sqlite3_exec(db_, "DROP TABLE files", 0, 0, 0) == SQLITE_OK;
+				ret &= sqlite3_exec(db_, "ALTER TABLE files2 RENAME TO files", 0, 0, 0) == SQLITE_OK;
+			}
 		}
-		if (ret && version != 6) {
-			ret = sqlite3_exec(db_, "PRAGMA user_version = 6", 0, 0, 0) == SQLITE_OK;
+		if (ret && version != 7) {
+			ret = sqlite3_exec(db_, "PRAGMA user_version = 7", 0, 0, 0) == SQLITE_OK;
 		}
 	}
 
@@ -641,7 +655,7 @@ bool CQueueStorage::Impl::SaveServer(CServerItem const& item)
 	if (logonType != LogonType::anonymous) {
 		Bind(insertServerQuery_, server_table_column_names::user, site.server.GetUser());
 
-		if (logonType == LogonType::normal || logonType == LogonType::account) {
+		if (logonType == LogonType::normal || logonType == LogonType::account || logonType == LogonType::profile) {
 			if (kiosk_mode) {
 				logonType = LogonType::ask;
 				BindNull(insertServerQuery_, server_table_column_names::password);
@@ -801,12 +815,25 @@ bool CQueueStorage::Impl::SaveFile(CFileItem const& file)
 	}
 
 	Bind(insertFileQuery_, file_table_column_names::source_file, file.GetSourceFile());
-	auto const& targetFile = file.GetTargetFile();
-	if (targetFile) {
-		Bind(insertFileQuery_, file_table_column_names::target_file, *targetFile);
+	auto const& extra_data = file.GetExtraData();
+	if (extra_data) {
+		if (!extra_data->targetFile_.empty()) {
+			Bind(insertFileQuery_, file_table_column_names::target_file, extra_data->targetFile_);
+		}
+		else {
+			BindNull(insertFileQuery_, file_table_column_names::target_file);
+		}
+
+		if (!extra_data->extraFlags_.empty()) {
+			Bind(insertFileQuery_, file_table_column_names::extra_flags, extra_data->extraFlags_);
+		}
+		else {
+			BindNull(insertFileQuery_, file_table_column_names::extra_flags);
+		}
 	}
 	else {
 		BindNull(insertFileQuery_, file_table_column_names::target_file);
+		BindNull(insertFileQuery_, file_table_column_names::extra_flags);
 	}
 
 	int64_t localPathId = SaveLocalPath(file.GetLocalPath());
@@ -1109,6 +1136,8 @@ int64_t CQueueStorage::Impl::ParseFileFromRow(CFileItem** pItem)
 		unsigned char errorCount = static_cast<unsigned char>(GetColumnInt(selectFilesQuery_, file_table_column_names::error_count));
 		int priority = GetColumnInt(selectFilesQuery_, file_table_column_names::priority, static_cast<int>(QueuePriority::normal));
 
+		std::wstring extraFlags = GetColumnText(selectFilesQuery_, file_table_column_names::extra_flags);
+
 		int overwrite_action = GetColumnInt(selectFilesQuery_, file_table_column_names::default_exists_action, CFileExistsNotification::unknown);
 
 		if (sourceFile.empty() || localPath.empty() ||
@@ -1119,7 +1148,7 @@ int64_t CQueueStorage::Impl::ParseFileFromRow(CFileItem** pItem)
 			return INVALID_DATA;
 		}
 
-		CFileItem* fileItem = new CFileItem(0, flags | queue_flags::queued, sourceFile, targetFile, localPath, remotePath, size);
+		CFileItem* fileItem = new CFileItem(0, flags | queue_flags::queued, sourceFile, targetFile, localPath, remotePath, size, extraFlags);
 		*pItem = fileItem;
 		fileItem->SetPriorityRaw(QueuePriority(priority));
 		fileItem->m_errorCount = errorCount;

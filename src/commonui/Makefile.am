@@ -13,6 +13,7 @@ libfzclient_commonui_private_la_LDFLAGS += ../engine/libfzclient-private.la $(LI
 libfzclient_commonui_private_la_DEPENDENCIES = ../engine/libfzclient-private.la
 
 libfzclient_commonui_private_la_SOURCES = \
+	auto_ascii_files.cpp \
 	buildinfo.cpp \
 	cert_store.cpp \
 	chmod_data.cpp \
@@ -22,6 +23,7 @@ libfzclient_commonui_private_la_SOURCES = \
 	ipcmutex.cpp \
 	local_recursive_operation.cpp \
 	login_manager.cpp \
+	misc.cpp \
 	remote_recursive_operation.cpp \
 	options.cpp \
 	site.cpp \
@@ -32,6 +34,7 @@ libfzclient_commonui_private_la_SOURCES = \
 	xml_file.cpp
 
 noinst_HEADERS = \
+	auto_ascii_files.h \
 	buildinfo.h \
 	cert_store.h \
 	chmod_data.h \
@@ -41,6 +44,7 @@ noinst_HEADERS = \
 	ipcmutex.h \
 	local_recursive_operation.h \
 	login_manager.h \
+	misc.h \
 	options.h \
 	recursive_operation.h \
 	remote_recursive_operation.h \

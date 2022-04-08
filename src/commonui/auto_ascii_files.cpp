@@ -1,15 +1,15 @@
-#include "filezilla.h"
+#include "options.h"
+#include "misc.h"
 #include "auto_ascii_files.h"
-#include "Options.h"
 
 #include <libfilezilla/local_filesys.hpp>
 
 std::vector<std::wstring> CAutoAsciiFiles::ascii_extensions_;
 
-void CAutoAsciiFiles::SettingsChanged()
+void CAutoAsciiFiles::SettingsChanged(COptionsBase& options)
 {
 	ascii_extensions_.clear();
-	std::wstring extensions = COptions::Get()->get_string(OPTION_ASCIIFILES);
+	std::wstring extensions = options.get_string(OPTION_ASCIIFILES);
 	std::wstring ext;
 	size_t pos = extensions.find('|');
 	while (pos != std::wstring::npos) {
@@ -39,23 +39,20 @@ void CAutoAsciiFiles::SettingsChanged()
 	}
 }
 
-// Defined in RemoteListView.cpp
-std::wstring StripVMSRevision(std::wstring const& name);
-
-bool CAutoAsciiFiles::TransferLocalAsAscii(std::wstring const& local_file, ServerType server_type)
+bool CAutoAsciiFiles::TransferLocalAsAscii(COptionsBase& options, std::wstring const& local_file, ServerType server_type)
 {
 	size_t pos = local_file.rfind(fz::local_filesys::path_separator);
 
 	// Identical implementation, only difference is for the local one to strip path.
-	return TransferRemoteAsAscii(
+	return TransferRemoteAsAscii(options,
 		(pos != std::wstring::npos) ? local_file.substr(pos + 1) : local_file,
 		server_type
 	);
 }
 
-bool CAutoAsciiFiles::TransferRemoteAsAscii(std::wstring const& remote_file, ServerType server_type)
+bool CAutoAsciiFiles::TransferRemoteAsAscii(COptionsBase& options, std::wstring const& remote_file, ServerType server_type)
 {
-	int mode = COptions::Get()->get_int(OPTION_ASCIIBINARY);
+	int mode = options.get_int(OPTION_ASCIIBINARY);
 	if (mode == 1) {
 		return true;
 	}
@@ -64,16 +61,16 @@ bool CAutoAsciiFiles::TransferRemoteAsAscii(std::wstring const& remote_file, Ser
 	}
 
 	if (server_type == VMS) {
-		return TransferRemoteAsAscii(StripVMSRevision(remote_file), DEFAULT);
+		return TransferRemoteAsAscii(options, StripVMSRevision(remote_file), DEFAULT);
 	}
 
 	if (!remote_file.empty() && remote_file[0] == '.') {
-		return COptions::Get()->get_int(OPTION_ASCIIDOTFILE) != 0;
+		return options.get_int(OPTION_ASCIIDOTFILE) != 0;
 	}
 
 	size_t pos = remote_file.rfind('.');
 	if (pos == std::wstring::npos || pos + 1 == remote_file.size()) {
-		return COptions::Get()->get_int(OPTION_ASCIINOEXT) != 0;
+		return options.get_int(OPTION_ASCIINOEXT) != 0;
 	}
 	std::wstring ext = remote_file.substr(pos + 1);
 

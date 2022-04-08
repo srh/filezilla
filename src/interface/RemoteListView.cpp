@@ -20,6 +20,7 @@
 #include "remote_recursive_operation.h"
 #include "sizeformatting.h"
 #include "timeformatting.h"
+#include "../commonui/misc.h"
 
 #include <wx/clipbrd.h>
 #include <wx/menu.h>
@@ -863,33 +864,6 @@ void CRemoteListView::SetDirectoryListing(std::shared_ptr<CDirectoryListing> con
 	}
 }
 
-// Filenames on VMS systems have a revision suffix, e.g.
-// foo.bar;1
-// foo.bar;2
-// foo.bar;3
-std::wstring StripVMSRevision(std::wstring const& name)
-{
-	size_t pos = name.rfind(';');
-	if (pos == std::wstring::npos || !pos) {
-		return name;
-	}
-
-	if (pos == name.size() - 1) {
-		return name;
-	}
-
-	size_t p = pos;
-	while (++p < name.size()) {
-		wchar_t const& c = name[p];
-		if (c < '0' || c > '9') {
-			return name;
-		}
-	}
-
-	return name.substr(0, pos);
-}
-
-
 void CRemoteListView::OnItemActivated(wxListEvent &event)
 {
 	int const action = options_.get_int(OPTION_DOUBLECLICK_ACTION_DIRECTORY);
@@ -1250,7 +1224,7 @@ void CRemoteListView::OnMenuDownload(wxCommandEvent& event)
 	TransferSelectedFiles(localDir, event.GetId() == XRCID("ID_ADDTOQUEUE"));
 }
 
-void CRemoteListView::TransferSelectedFiles(const CLocalPath& local_parent, bool queue_only)
+void CRemoteListView::TransferSelectedFiles(const CLocalPath& local_parent, bool queue_only, transfer_flags custom_flags, transfer_flags custom_flags_mask)
 {
 	bool idle = m_state.IsRemoteIdle();
 
@@ -1307,7 +1281,8 @@ void CRemoteListView::TransferSelectedFiles(const CLocalPath& local_parent, bool
 			}
 			m_pQueue->QueueFile(queue_only, true,
 				name, (name == localFile) ? std::wstring() : localFile,
-				local_parent, m_pDirectoryListing->path, site, entry.size);
+				local_parent, m_pDirectoryListing->path, site, entry.size, CEditHandler::none,
+				QueuePriority::normal, custom_flags, custom_flags_mask);
 			added = true;
 		}
 	}
@@ -1384,7 +1359,8 @@ CServerPath CRemoteListView::MenuMkdir()
 		return CServerPath();
 	}
 
-	m_state.m_pCommandQueue->ProcessCommand(new CMkdirCommand(path));
+	transfer_flags const flags = GetMkdirFlags(m_state.GetSite().server, options_, path);
+	m_state.m_pCommandQueue->ProcessCommand(new CMkdirCommand(path, flags));
 
 	// Return name of the New Directory
 	return path;

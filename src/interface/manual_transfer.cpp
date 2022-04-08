@@ -1,6 +1,6 @@
 #include "filezilla.h"
 #include "manual_transfer.h"
-#include "auto_ascii_files.h"
+#include "../commonui/auto_ascii_files.h"
 #include "state.h"
 #include "Options.h"
 #include "sitemanager.h"
@@ -265,7 +265,7 @@ void CManualTransfer::SetAutoAsciiState()
 		impl_->type_label_->Hide();
 	}
 	else {
-		if (impl_->download_->GetValue() ? CAutoAsciiFiles::TransferRemoteAsAscii(file, s.server.GetType()) : CAutoAsciiFiles::TransferLocalAsAscii(file, s.server.GetType())) {
+		if (impl_->download_->GetValue() ? CAutoAsciiFiles::TransferRemoteAsAscii(*COptions::Get(), file, s.server.GetType()) : CAutoAsciiFiles::TransferLocalAsAscii(*COptions::Get(), file, s.server.GetType())) {
 			impl_->type_label_->SetLabel(_("Entered file would transfer as ASCII"));
 		}
 		else {

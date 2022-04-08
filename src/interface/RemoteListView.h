@@ -83,7 +83,7 @@ protected:
 	std::shared_ptr<CDirectoryListing> m_pDirectoryListing;
 
 	// Caller is responsible to check selection is valid!
-	void TransferSelectedFiles(const CLocalPath& local_parent, bool queue_only);
+	void TransferSelectedFiles(const CLocalPath& local_parent, bool queue_only, transfer_flags custom_flags = transfer_flags::none, transfer_flags custom_flags_mask = transfer_flags::none);
 
 	void HandleGenericChmod(ChmodUICommand &command);
 

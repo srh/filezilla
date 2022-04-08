@@ -13,6 +13,7 @@
 #include "RemoteTreeView.h"
 #include "remote_recursive_operation.h"
 #include "themeprovider.h"
+#include "../commonui/misc.h"
 
 #include <libfilezilla/uri.hpp>
 
@@ -1324,7 +1325,8 @@ CServerPath CRemoteTreeView::MenuMkdir()
 		return CServerPath();
 	}
 
-	m_state.m_pCommandQueue->ProcessCommand(new CMkdirCommand(newPath));
+	transfer_flags const flags = GetMkdirFlags(m_state.GetSite().server, *COptions::Get(), newPath);
+	m_state.m_pCommandQueue->ProcessCommand(new CMkdirCommand(newPath, flags));
 
 	return newPath;
 }

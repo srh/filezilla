@@ -19,12 +19,13 @@
 #include "commandqueue.h"
 #include "statusbar.h"
 #include "remote_recursive_operation.h"
-#include "auto_ascii_files.h"
 #include "dragdropmanager.h"
 #include "drop_target_ex.h"
 
 #include "../commonui/cert_store.h"
 #include "../commonui/ipcmutex.h"
+#include "../commonui/auto_ascii_files.h"
+#include "../commonui/misc.h"
 
 #include <libfilezilla/glue/wxinvoker.hpp>
 
@@ -203,8 +204,6 @@ EVT_MENU(XRCID("ID_PRIORITY_NORMAL"), CQueueView::OnSetPriority)
 EVT_MENU(XRCID("ID_PRIORITY_LOW"), CQueueView::OnSetPriority)
 EVT_MENU(XRCID("ID_PRIORITY_LOWEST"), CQueueView::OnSetPriority)
 
-EVT_COMMAND(wxID_ANY, fzEVT_GRANTEXCLUSIVEENGINEACCESS, CQueueView::OnExclusiveEngineRequestGranted)
-
 EVT_SIZE(CQueueView::OnSize)
 
 EVT_LIST_COL_CLICK(wxID_ANY, CQueueView::OnColumnClicked)
@@ -265,7 +264,8 @@ bool CQueueView::QueueFile(bool const queueOnly, bool const download,
 						   std::wstring const& sourceFile, std::wstring const& targetFile,
 						   CLocalPath const& localPath, CServerPath const& remotePath,
 						   Site const& site, int64_t size, CEditHandler::fileType edit,
-						   QueuePriority priority)
+						   QueuePriority priority, transfer_flags custom_flags, transfer_flags custom_flags_mask,
+						   std::wstring const& extraFlags)
 {
 	CServerItem* pServerItem = CreateServerItem(site);
 
@@ -289,19 +289,12 @@ bool CQueueView::QueueFile(bool const queueOnly, bool const download,
 		if (queueOnly) {
 			flags |= queue_flags::queued;
 		}
-		if (site.server.HasFeature(ProtocolFeature::DataTypeConcept)) {
-			if (download) {
-				if (CAutoAsciiFiles::TransferRemoteAsAscii(sourceFile, remotePath.GetType())) {
-					flags |= ftp_transfer_flags::ascii;
-				}
-			}
-			else {
-				if (CAutoAsciiFiles::TransferLocalAsAscii(sourceFile, remotePath.GetType())) {
-					flags |= ftp_transfer_flags::ascii;
-				}
-			}
-		}
-		fileItem = new CFileItem(pServerItem, flags, sourceFile, targetFile, localPath, remotePath, size);
+
+		flags |= GetTransferFlags(download, site.server, *COptions::Get(), sourceFile, remotePath);
+		flags -= custom_flags_mask;
+		flags |= custom_flags;
+
+		fileItem = new CFileItem(pServerItem, flags, sourceFile, targetFile, localPath, remotePath, size, extraFlags);
 		fileItem->m_edit = edit;
 		if (edit != CEditHandler::none) {
 			fileItem->m_onetime_action = CFileExistsNotification::overwrite;
@@ -340,16 +333,11 @@ void CQueueView::QueueFile_Finish(const bool start)
 	}
 }
 
-// Defined in RemoteListView.cpp
-std::wstring StripVMSRevision(std::wstring const& name);
-
 bool CQueueView::QueueFiles(const bool queueOnly, const CLocalPath& localPath, const CRemoteDataObject& dataObject)
 {
 	CServerItem* pServerItem = CreateServerItem(dataObject.GetSite());
 
 	std::vector<CRemoteDataObject::t_fileInfo> const& files = dataObject.GetFiles();
-
-	bool const hasDataTypeConcept = dataObject.GetSite().server.HasFeature(ProtocolFeature::DataTypeConcept);
 
 	for (auto const& fileInfo : files) {
 		if (fileInfo.dir) {
@@ -365,12 +353,12 @@ bool CQueueView::QueueFiles(const bool queueOnly, const CLocalPath& localPath, c
 		if (queueOnly) {
 			flags |= queue_flags::queued;
 		}
-		if (hasDataTypeConcept && CAutoAsciiFiles::TransferRemoteAsAscii(fileInfo.name, dataObject.GetServerPath().GetType())) {
-			flags |= ftp_transfer_flags::ascii;
-		}
+
+		flags |= GetTransferFlags(true, dataObject.GetSite().server, *COptions::Get(), fileInfo.name, dataObject.GetServerPath());
+
 		CFileItem* fileItem = new CFileItem(pServerItem, flags,
 			fileInfo.name, (fileInfo.name != localFile) ? localFile : std::wstring(),
-			localPath, dataObject.GetServerPath(), fileInfo.size);
+			localPath, dataObject.GetServerPath(), fileInfo.size, {});
 
 		InsertItem(pServerItem, fileItem);
 	}
@@ -391,19 +379,16 @@ bool CQueueView::QueueFiles(const bool queueOnly, Site const& site, CLocalRecurs
 		InsertItem(pServerItem, fileItem);
 	}
 	else {
-		bool const hasDataTypeConcept = site.server.HasFeature(ProtocolFeature::DataTypeConcept);
-
 		for (auto const& file : files) {
 			transfer_flags flags{};
 			if (queueOnly) {
 				flags |= queue_flags::queued;
 			}
-			if (hasDataTypeConcept && CAutoAsciiFiles::TransferLocalAsAscii(file.name, listing.remotePath.GetType())) {
-				flags |= ftp_transfer_flags::ascii;
-			}
+
+			flags |= GetTransferFlags(false, site.server, *COptions::Get(), file.name, listing.remotePath);
 			CFileItem* fileItem = new CFileItem(pServerItem, flags,
 				file.name, std::wstring(),
-				listing.localPath, listing.remotePath, file.size);
+				listing.localPath, listing.remotePath, file.size, {});
 
 			InsertItem(pServerItem, fileItem);
 		}
@@ -441,18 +426,18 @@ void CQueueView::ProcessNotification(CFileZillaEngine* pEngine, std::unique_ptr<
 	}
 }
 
-void CQueueView::ProcessNotification(t_EngineData* pEngineData, std::unique_ptr<CNotification> && pNotification)
+void CQueueView::ProcessNotification(t_EngineData *pEngineData, std::unique_ptr<CNotification>&& pNotification)
 {
 	switch (pNotification->GetID())
 	{
 	case nId_logmsg:
-		m_pMainFrame->GetStatusView()->AddToLog(std::move(static_cast<CLogmsgNotification&>(*pNotification.get())));
+		m_pMainFrame->GetStatusView()->AddToLog(std::move(static_cast<CLogmsgNotification&>(*pNotification)));
 		if (options_.get_int(OPTION_MESSAGELOG_POSITION) == 2) {
 			m_pQueue->Highlight(3);
 		}
 		break;
 	case nId_operation:
-		ProcessReply(pEngineData, static_cast<COperationNotification&>(*pNotification.get()));
+		ProcessReply(pEngineData, static_cast<COperationNotification&>(*pNotification));
 		break;
 	case nId_asyncrequest:
 		{
@@ -461,7 +446,7 @@ void CQueueView::ProcessNotification(t_EngineData* pEngineData, std::unique_ptr<
 				switch (asyncRequestNotification->GetRequestID()) {
 					case reqId_fileexists:
 						{
-							CFileExistsNotification& fileExistsNotification = static_cast<CFileExistsNotification&>(*asyncRequestNotification.get());
+							CFileExistsNotification& fileExistsNotification = static_cast<CFileExistsNotification&>(*asyncRequestNotification);
 							fileExistsNotification.overwriteAction = pEngineData->pItem->m_defaultFileExistsAction;
 
 							if (pEngineData->pItem->GetType() == QueueItemType::File) {
@@ -501,7 +486,7 @@ void CQueueView::ProcessNotification(t_EngineData* pEngineData, std::unique_ptr<
 		break;
 	case nId_transferstatus:
 		if (pEngineData->pItem && pEngineData->pStatusLineCtrl) {
-			auto const& transferStatusNotification = static_cast<CTransferStatusNotification const&>(*pNotification.get());
+			auto const& transferStatusNotification = static_cast<CTransferStatusNotification const&>(*pNotification);
 			CTransferStatus const& status = transferStatusNotification.GetStatus();
 			if (pEngineData->active) {
 				if (status && status.madeProgress && !status.list &&
@@ -516,7 +501,7 @@ void CQueueView::ProcessNotification(t_EngineData* pEngineData, std::unique_ptr<
 		break;
 	case nId_local_dir_created:
 		{
-			auto const& localDirCreatedNotification = static_cast<CLocalDirCreatedNotification const&>(*pNotification.get());
+			auto const& localDirCreatedNotification = static_cast<CLocalDirCreatedNotification const&>(*pNotification);
 			std::vector<CState*> const* pStates = CContextManager::Get()->GetAllStates();
 			for (auto state : *pStates) {
 				state->LocalDirCreated(localDirCreatedNotification.dir);
@@ -525,7 +510,7 @@ void CQueueView::ProcessNotification(t_EngineData* pEngineData, std::unique_ptr<
 		break;
 	case nId_listing:
 		{
-			auto const& listingNotification = static_cast<CDirectoryListingNotification const&>(*pNotification.get());
+			auto const& listingNotification = static_cast<CDirectoryListingNotification const&>(*pNotification);
 			if (!listingNotification.GetPath().empty() && !listingNotification.Failed() && pEngineData->pEngine) {
 				std::shared_ptr<CDirectoryListing> pListing = std::make_shared<CDirectoryListing>();
 				if (pEngineData->pEngine->CacheLookup(listingNotification.GetPath(), *pListing) == FZ_REPLY_OK) {
@@ -535,7 +520,7 @@ void CQueueView::ProcessNotification(t_EngineData* pEngineData, std::unique_ptr<
 		}
 		break;
 	case nId_ftp_tls_resumption: {
-		auto const& notification = static_cast<FtpTlsResumptionNotification const&>(*pNotification.get());
+		auto const& notification = static_cast<FtpTlsResumptionNotification const&>(*pNotification);
 		cert_store_.SetSessionResumptionSupport(fz::to_utf8(notification.server_.GetHost()), notification.server_.GetPort(), true, true);
 		break;
 	}
@@ -1118,7 +1103,7 @@ void CQueueView::ResetEngine(t_EngineData& data, const ResetReason reason)
 			}
 			CCommandQueue* pCommandQueue = pState->m_pCommandQueue;
 			if (pCommandQueue) {
-				pCommandQueue->RequestExclusiveEngine(false);
+				pCommandQueue->RequestExclusiveEngine(this, false);
 			}
 			break;
 		}
@@ -1189,7 +1174,7 @@ void CQueueView::SendNextCommand(t_EngineData& engineData)
 			}
 
 			CCommandQueue* pCommandQueue = pState->m_pCommandQueue;
-			pCommandQueue->RequestExclusiveEngine(true);
+			pCommandQueue->RequestExclusiveEngine(this, true);
 			return;
 		}
 
@@ -1263,15 +1248,21 @@ void CQueueView::SendNextCommand(t_EngineData& engineData)
 			fileItem->SetStatusMessage(CFileItem::Status::transferring);
 			RefreshItem(engineData.pItem);
 
+			std::wstring extraFlags;
+			auto extraData = fileItem->GetExtraData();
+			if (extraData) {
+				extraFlags = extraData->extraFlags_;
+			}
+
 			int res;
 			if (!fileItem->Download()) {
 				auto cmd = CFileTransferCommand(file_reader_factory(fileItem->GetLocalPath().GetPath() + fileItem->GetLocalFile()),
-					fileItem->GetRemotePath(), fileItem->GetRemoteFile(), fileItem->flags());
+					fileItem->GetRemotePath(), fileItem->GetRemoteFile(), fileItem->flags(), extraFlags);
 				res = engineData.pEngine->Execute(cmd);
 			}
 			else {
 				auto cmd = CFileTransferCommand(file_writer_factory(fileItem->GetLocalPath().GetPath() + fileItem->GetLocalFile()),
-					fileItem->GetRemotePath(), fileItem->GetRemoteFile(), fileItem->flags());
+					fileItem->GetRemotePath(), fileItem->GetRemoteFile(), fileItem->flags(), extraFlags);
 				res = engineData.pEngine->Execute(cmd);
 			}
 
@@ -1297,7 +1288,8 @@ void CQueueView::SendNextCommand(t_EngineData& engineData)
 			fileItem->SetStatusMessage(CFileItem::Status::creating_dir);
 			RefreshItem(engineData.pItem);
 
-			int res = engineData.pEngine->Execute(CMkdirCommand(fileItem->GetRemotePath()));
+			transfer_flags const flags = GetMkdirFlags(static_cast<CServerItem*>(fileItem->GetParent())->GetSite().server, options_, fileItem->GetRemotePath());
+			int res = engineData.pEngine->Execute(CMkdirCommand(fileItem->GetRemotePath(), flags));
 
 			wxASSERT((res & FZ_REPLY_BUSY) != FZ_REPLY_BUSY);
 			if (res == FZ_REPLY_WOULDBLOCK) {
@@ -1677,6 +1669,8 @@ void CQueueView::ImportQueue(pugi::xml_node element, bool updateSelections)
 				}
 				int overwrite_action = GetTextElementInt(file, "OverwriteAction", CFileExistsNotification::unknown);
 
+				std::wstring extraFlags = GetTextElement(file, "ExtraFlags");
+
 				CServerPath remotePath;
 				if (!localFile.empty() && !remoteFile.empty() && remotePath.SetSafePath(safeRemotePath) &&
 					size >= -1 && priority < static_cast<int>(QueuePriority::count))
@@ -1700,7 +1694,7 @@ void CQueueView::ImportQueue(pugi::xml_node element, bool updateSelections)
 					CFileItem* fileItem = new CFileItem(pServerItem, flags,
 						(flags & transfer_flags::download) ? remoteFile : localFileName,
 						(remoteFile != localFileName) ? ((flags & transfer_flags::download) ? localFileName : remoteFile) : std::wstring(),
-						previousLocalPath, previousRemotePath, size);
+						previousLocalPath, previousRemotePath, size, extraFlags);
 					fileItem->SetPriorityRaw(QueuePriority(priority));
 					fileItem->m_errorCount = errorCount;
 					InsertItem(pServerItem, fileItem);
@@ -2601,7 +2595,7 @@ void CQueueView::OnSetPriority(wxCommandEvent& event)
 	RefreshListOnly();
 }
 
-void CQueueView::OnExclusiveEngineRequestGranted(wxCommandEvent& event)
+void CQueueView::OnExclusiveEngineRequestGranted(unsigned int requestId)
 {
 	CFileZillaEngine* pEngine = 0;
 	CState* pState = 0;
@@ -2614,7 +2608,7 @@ void CQueueView::OnExclusiveEngineRequestGranted(wxCommandEvent& event)
 			continue;
 		}
 
-		pEngine = pCommandQueue->GetEngineExclusive(event.GetId());
+		pEngine = pCommandQueue->GetEngineExclusive(requestId);
 		if (!pEngine) {
 			continue;
 		}
@@ -2629,7 +2623,7 @@ void CQueueView::OnExclusiveEngineRequestGranted(wxCommandEvent& event)
 	t_EngineData* pEngineData = GetEngineData(pEngine);
 	wxASSERT(!pEngineData || pEngineData->transient);
 	if (!pEngineData || !pEngineData->transient || !pEngineData->active) {
-		pCommandQueue->ReleaseEngine();
+		pCommandQueue->ReleaseEngine(this);
 		return;
 	}
 
@@ -2646,7 +2640,7 @@ void CQueueView::OnExclusiveEngineRequestGranted(wxCommandEvent& event)
 
 	if (!currentSite || currentSite.server != pServerItem->GetSite().server) {
 		if (pState->m_pCommandQueue) {
-			pState->m_pCommandQueue->ReleaseEngine();
+			pState->m_pCommandQueue->ReleaseEngine(this);
 		}
 		ResetEngine(*pEngineData, ResetReason::retry);
 		return;
@@ -2993,7 +2987,7 @@ void CQueueView::ReleaseExclusiveEngineLock(CFileZillaEngine* pEngine)
 		}
 		CCommandQueue *pCommandQueue = pState->m_pCommandQueue;
 		if (pCommandQueue) {
-			pCommandQueue->ReleaseEngine();
+			pCommandQueue->ReleaseEngine(this);
 		}
 
 		break;
