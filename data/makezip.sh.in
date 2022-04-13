@@ -64,21 +64,22 @@ cp dlls_gui/*.dll "$targetdir/"
 
 echo Copying locales
 
-mkdir -p $targetdir/locales || exit 1
-for i in $FILEZILLA_LINGUAS; do
+if [ "${FILEZILLA_LINGUAS}" != "" ]; then
+  mkdir -p $targetdir/locales || exit 1
+  for i in $FILEZILLA_LINGUAS; do
 
-  mkdir -p "$targetdir/locales/$i" || exit 1
+    mkdir -p "$targetdir/locales/$i" || exit 1
 
-  cp "$top_builddir/locales/$i.mo" "$targetdir/locales/$i/filezilla.mo" || exit 1
-done
+    cp "$top_builddir/locales/$i.mo" "$targetdir/locales/$i/filezilla.mo" || exit 1
+  done
 
-lfz_prefix=`pkg-config --variable=prefix libfilezilla`
-for i in "${lfz_prefix}"/share/locale/*/LC_MESSAGES/libfilezilla.mo; do
-  locale=`echo $i | sed 's/.*\/\([^\/\]*\)\/LC_MESSAGES\/libfilezilla.mo/\1/'`
-  mkdir -p "$targetdir/locales/$i" || exit 1
-  cp "$i" "$targetdir/locales/$locale/libfilezilla.mo" || exit 1
-done
-
+  lfz_prefix=`pkg-config --variable=prefix libfilezilla`
+  for i in "${lfz_prefix}"/share/locale/*/LC_MESSAGES/libfilezilla.mo; do
+    locale=`echo $i | sed 's/.*\/\([^\/\]*\)\/LC_MESSAGES\/libfilezilla.mo/\1/'`
+    mkdir -p "$targetdir/locales/$locale" || exit 1
+    cp "$i" "$targetdir/locales/$locale/libfilezilla.mo" || exit 1
+  done
+fi
 
 echo Copying resources
 cp -r "$install_prefix/share/filezilla/resources" "$targetdir/resources" || exit 1
