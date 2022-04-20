@@ -91,8 +91,6 @@ enum interfaceOptions : unsigned int
 	OPTIONS_NUM
 };
 
-unsigned int register_interface_options();
-
 optionsIndex mapOption(interfaceOptions opt);
 
 class COptions final : public wxEvtHandler, public XmlOptions

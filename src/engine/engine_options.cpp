@@ -1,8 +1,6 @@
 #include "../include/engine_options.h"
 
 namespace {
-option_registrator r(&register_engine_options);
-}
 
 unsigned int register_engine_options()
 {
@@ -83,4 +81,18 @@ unsigned int register_engine_options()
 		{ "Minimum TLS Version", 2, option_flags::numeric_clamp, 0, 3 }
 	});
 	return value;
+}
+
+option_registrator r(&register_engine_options);
+}
+
+optionsIndex mapOption(engineOptions opt)
+{
+	static unsigned int const offset = register_engine_options();
+
+	auto ret = optionsIndex::invalid;
+	if (opt < OPTIONS_ENGINE_NUM) {
+		return static_cast<optionsIndex>(opt + offset);
+	}
+	return ret;
 }

@@ -84,17 +84,6 @@ enum engineOptions : unsigned int
 	OPTIONS_ENGINE_NUM
 };
 
-unsigned int FZC_PUBLIC_SYMBOL register_engine_options();
-
-inline optionsIndex mapOption(engineOptions opt)
-{
-	static unsigned int const offset = register_engine_options();
-
-	auto ret = optionsIndex::invalid;
-	if (opt < OPTIONS_ENGINE_NUM) {
-		return static_cast<optionsIndex>(opt + offset);
-	}
-	return ret;
-}
+optionsIndex FZC_PUBLIC_SYMBOL mapOption(engineOptions opt);
 
 #endif

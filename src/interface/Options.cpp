@@ -29,10 +29,9 @@ namespace {
 	auto const platform_name = "unix";
 #endif
 
-option_registrator r(&register_interface_options);
 std::string const product_name{};
-}
-unsigned int register_interface_options()
+
+static unsigned int register_interface_options()
 {
 	// Note: A few options are versioned due to a changed
 	// option syntax or past, unhealthy defaults
@@ -119,6 +118,9 @@ unsigned int register_interface_options()
 		{ "Highest shown overlay id", 0, option_flags::normal }
 	});
 	return value;
+}
+
+option_registrator r(&register_interface_options);
 }
 
 optionsIndex mapOption(interfaceOptions opt)

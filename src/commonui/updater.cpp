@@ -29,9 +29,6 @@ namespace {
 struct run_event_type;
 typedef fz::simple_event<run_event_type, bool> run_event;
 
-option_registrator r(&register_updater_options);
-}
-
 unsigned int register_updater_options()
 {
 	static int const value = register_options({
@@ -45,6 +42,20 @@ unsigned int register_updater_options()
 		{ "Update Check Check Beta", 0, option_flags::normal, 0, 2 },
 	});
 	return value;
+}
+
+option_registrator r(&register_updater_options);
+}
+
+optionsIndex mapOption(updaterOptions opt)
+{
+	static unsigned int const offset = register_updater_options();
+
+	auto ret = optionsIndex::invalid;
+	if (opt < OPTIONS_UPDATER_NUM) {
+		return static_cast<optionsIndex>(opt + offset);
+	}
+	return ret;
 }
 
 static CUpdater* instance = 0;
