@@ -91,9 +91,8 @@ CEditHandler* CEditHandler::m_pEditHandler = 0;
 CEditHandler::CEditHandler(COptionsBase & options)
     : options_(options)
 {
-	m_timer.SetOwner(this);
-	m_busyTimer.SetOwner(this);
 	m_timer.Bind(wxEVT_TIMER, [&](wxTimerEvent&) { CheckForModifications(); });
+	m_busyTimer.Bind(wxEVT_TIMER, [&](wxTimerEvent&) { CheckForModifications(); });
 
 #ifdef __WXMSW__
 	m_lockfile_handle = INVALID_HANDLE_VALUE;
