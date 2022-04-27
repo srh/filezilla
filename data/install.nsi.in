@@ -17,6 +17,8 @@
   !define PUBLISHER     "Tim Kosse"
   !define WEBSITE_URL   "https://filezilla-project.org/"
   !addplugindir         @srcdir@
+  !define INSTALLER_REGKEY "Software\FileZilla Client"
+  !define UNINSTALLER_REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\FileZilla Client"
 
 ;--------------------------------
 ; General
@@ -36,7 +38,7 @@
   !endif
 
   ; Get installation folder from registry if available
-  InstallDirRegKey HKLM "Software\FileZilla Client" ""
+  InstallDirRegKey HKLM "${INSTALLER_REGKEY}" ""
 
   RequestExecutionLevel user
 
@@ -128,7 +130,7 @@
 ;--------------------------------
 
 !define MEMENTO_REGISTRY_ROOT SHELL_CONTEXT
-!define MEMENTO_REGISTRY_KEY "Software\FileZilla Client"
+!define MEMENTO_REGISTRY_KEY "${INSTALLER_REGKEY}"
 
 ;--------------------------------
 ; Pages
@@ -154,7 +156,7 @@
 
   ; Start Menu Folder Page Configuration
   !define MUI_STARTMENUPAGE_REGISTRY_ROOT "SHCTX"
-  !define MUI_STARTMENUPAGE_REGISTRY_KEY "Software\FileZilla Client"
+  !define MUI_STARTMENUPAGE_REGISTRY_KEY "${INSTALLER_REGKEY}"
   !define MUI_STARTMENUPAGE_REGISTRY_VALUENAME "Startmenu"
   !define MUI_STARTMENUPAGE_DEFAULTFOLDER "FileZilla FTP Client"
 
@@ -262,13 +264,13 @@ FunctionEnd
 
 Function ReadPreviousVersion
 
-  ReadRegStr $PREVIOUS_INSTALLDIR HKLM "Software\FileZilla Client" ""
+  ReadRegStr $PREVIOUS_INSTALLDIR HKLM "${INSTALLER_REGKEY}" ""
 
   Call CheckPrevInstallDirExists
 
   ${If} $PREVIOUS_INSTALLDIR != ""
     ; Detect version
-    ReadRegStr $PREVIOUS_VERSION HKLM "Software\FileZilla Client" "Version"
+    ReadRegStr $PREVIOUS_VERSION HKLM "${INSTALLER_REGKEY}" "Version"
     ${If} $PREVIOUS_VERSION != ""
       StrCpy $ALL_USERS 1
       SetShellVarContext all
@@ -276,13 +278,13 @@ Function ReadPreviousVersion
     ${EndIf}
   ${EndIf}
 
-  ReadRegStr $PREVIOUS_INSTALLDIR HKCU "Software\FileZilla Client" ""
+  ReadRegStr $PREVIOUS_INSTALLDIR HKCU "${INSTALLER_REGKEY}" ""
 
   Call CheckPrevInstallDirExists
 
   ${If} $PREVIOUS_INSTALLDIR != ""
     ; Detect version
-    ReadRegStr $PREVIOUS_VERSION HKCU "Software\FileZilla Client" "Version"
+    ReadRegStr $PREVIOUS_VERSION HKCU "${INSTALLER_REGKEY}" "Version"
     ${If} $PREVIOUS_VERSION != ""
       StrCpy $ALL_USERS 0
       SetShellVarContext current
@@ -747,9 +749,9 @@ FunctionEnd
 Function RunUninstaller
 
   ${If} $ALL_USERS_DEFAULT == 1
-    ReadRegStr $R1 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\FileZilla Client" "UninstallString"
+    ReadRegStr $R1 HKLM "${UNINSTALLER_REGKEY}" "UninstallString"
   ${Else}
-    ReadRegStr $R1 HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\FileZilla Client" "UninstallString"
+    ReadRegStr $R1 HKCU "${UNINSTALLER_REGKEY}" "UninstallString"
   ${EndIf}
 
   ${If} $R1 == ""
@@ -1120,45 +1122,45 @@ Section "FileZilla Client" SecMain
   ; Create uninstaller
   WriteUninstaller "$INSTDIR\uninstall.exe"
 
-  WriteRegStr SHCTX "Software\FileZilla Client" "" $INSTDIR
-  WriteRegStr SHCTX "Software\FileZilla Client" "Version" "${VERSION}"
+  WriteRegStr SHCTX "${INSTALLER_REGKEY}" "" $INSTDIR
+  WriteRegStr SHCTX "${INSTALLER_REGKEY}" "Version" "${VERSION}"
 
   ${If} $PERFORM_UPDATE == 0
     ; Open question: How to deal with non-installer packages, e.g. the zip archive?
 !ifdef ENABLE_OFFERS
-    WriteRegDWORD SHCTX "Software\FileZilla Client" "Package" 2
+    WriteRegDWORD SHCTX "${INSTALLER_REGKEY}" "Package" 2
 !else
-    WriteRegDWORD SHCTX "Software\FileZilla Client" "Package" 1
+    WriteRegDWORD SHCTX "${INSTALLER_REGKEY}" "Package" 1
 !endif
 
     ClearErrors
     ${GetOptions} $CommandLine "/channel" $R1
     ${Unless} ${Errors}
-      WriteRegStr SHCTX "Software\FileZilla Client" "Channel" $R1
+      WriteRegStr SHCTX "${INSTALLER_REGKEY}" "Channel" $R1
     ${EndUnless}
 
   ${EndIf}
 
-  WriteRegDWORD SHCTX "Software\FileZilla Client" "Updated" $PERFORM_UPDATE
+  WriteRegDWORD SHCTX "${INSTALLER_REGKEY}" "Updated" $PERFORM_UPDATE
 
   ${StrRep} $R0 "$INSTDIR\uninstall.exe" '"' '""'
-  WriteRegExpandStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\FileZilla Client" "UninstallString" '"$R0"'
+  WriteRegExpandStr SHCTX "${UNINSTALLER_REGKEY}" "UninstallString" '"$R0"'
 
-  WriteRegExpandStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\FileZilla Client" "InstallLocation" "$INSTDIR"
-  WriteRegStr   SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\FileZilla Client"   "DisplayName"    "FileZilla Client ${VERSION}"
-  WriteRegStr   SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\FileZilla Client"   "DisplayIcon"    "$INSTDIR\FileZilla.exe"
-  WriteRegStr   SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\FileZilla Client"   "DisplayVersion" "${VERSION}"
-  WriteRegStr   SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\FileZilla Client"   "URLInfoAbout"   "${WEBSITE_URL}"
-  WriteRegStr   SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\FileZilla Client"   "URLUpdateInfo"  "${WEBSITE_URL}"
-  WriteRegStr   SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\FileZilla Client"   "HelpLink"       "${WEBSITE_URL}"
-  WriteRegStr   SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\FileZilla Client"   "Publisher"      "${PUBLISHER}"
-  WriteRegDWORD SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\FileZilla Client"   "VersionMajor"   "${VERSION_MAJOR}"
-  WriteRegDWORD SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\FileZilla Client"   "VersionMinor"   "${VERSION_MINOR}"
-  WriteRegDWORD SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\FileZilla Client"   "NoModify"       "1"
-  WriteRegDWORD SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\FileZilla Client"   "NoRepair"       "1"
+  WriteRegExpandStr SHCTX "${UNINSTALLER_REGKEY}" "InstallLocation" "$INSTDIR"
+  WriteRegStr   SHCTX "${UNINSTALLER_REGKEY}"   "DisplayName"    "FileZilla ${VERSION}"
+  WriteRegStr   SHCTX "${UNINSTALLER_REGKEY}"   "DisplayIcon"    "$INSTDIR\FileZilla.exe"
+  WriteRegStr   SHCTX "${UNINSTALLER_REGKEY}"   "DisplayVersion" "${VERSION}"
+  WriteRegStr   SHCTX "${UNINSTALLER_REGKEY}"   "URLInfoAbout"   "${WEBSITE_URL}"
+  WriteRegStr   SHCTX "${UNINSTALLER_REGKEY}"   "URLUpdateInfo"  "${WEBSITE_URL}"
+  WriteRegStr   SHCTX "${UNINSTALLER_REGKEY}"   "HelpLink"       "${WEBSITE_URL}"
+  WriteRegStr   SHCTX "${UNINSTALLER_REGKEY}"   "Publisher"      "${PUBLISHER}"
+  WriteRegDWORD SHCTX "${UNINSTALLER_REGKEY}"   "VersionMajor"   "${VERSION_MAJOR}"
+  WriteRegDWORD SHCTX "${UNINSTALLER_REGKEY}"   "VersionMinor"   "${VERSION_MINOR}"
+  WriteRegDWORD SHCTX "${UNINSTALLER_REGKEY}"   "NoModify"       "1"
+  WriteRegDWORD SHCTX "${UNINSTALLER_REGKEY}"   "NoRepair"       "1"
 
   Call GetInstalledSize
-  WriteRegDWORD SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\FileZilla Client" "EstimatedSize" "$GetInstalledSize.total" ; Create/Write the reg key with the dword value
+  WriteRegDWORD SHCTX "${UNINSTALLER_REGKEY}" "EstimatedSize" "$GetInstalledSize.total" ; Create/Write the reg key with the dword value
 
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
 
@@ -1393,21 +1395,21 @@ FunctionEnd
 
 Function un.ReadPreviousVersion
 
-  ReadRegStr $R0 HKLM "Software\FileZilla Client" ""
+  ReadRegStr $R0 HKLM "${INSTALLER_REGKEY}" ""
 
   ${If} $R0 != ""
     ; Detect version
-    ReadRegStr $R2 HKLM "Software\FileZilla Client" "Version"
+    ReadRegStr $R2 HKLM "${INSTALLER_REGKEY}" "Version"
     ${If} $R2 == ""
       StrCpy $R0 ""
     ${EndIf}
   ${EndIf}
 
-  ReadRegStr $R1 HKCU "Software\FileZilla Client" ""
+  ReadRegStr $R1 HKCU "${INSTALLER_REGKEY}" ""
 
   ${If} $R1 != ""
     ; Detect version
-    ReadRegStr $R2 HKCU "Software\FileZilla Client" "Version"
+    ReadRegStr $R2 HKCU "${INSTALLER_REGKEY}" "Version"
     ${If} $R2 == ""
       StrCpy $R1 ""
     ${EndIf}
@@ -1638,17 +1640,17 @@ Section "Uninstall"
   ${If} ${Errors}
     RMDir /REBOOTOK "$INSTDIR"
 
-    DeleteRegValue SHCTX "Software\FileZilla Client" "Package"
-    DeleteRegValue SHCTX "Software\FileZilla Client" "Updated"
-	DeleteRegValue SHCTX "Software\FileZilla Client" "Channel"
+    DeleteRegValue SHCTX "${INSTALLER_REGKEY}" "Package"
+    DeleteRegValue SHCTX "${INSTALLER_REGKEY}" "Updated"
+    DeleteRegValue SHCTX "${INSTALLER_REGKEY}" "Channel"
   ${EndIf}
 
   ${If} $un.REMOVE_ALL_USERS == 1
     SetShellVarContext all
     Call un.RemoveStartmenu
 
-    DeleteRegKey /ifempty HKLM "Software\FileZilla Client"
-    DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\FileZilla Client"
+    DeleteRegKey /ifempty HKLM "${INSTALLER_REGKEY}"
+    DeleteRegKey HKLM "${UNINSTALLER_REGKEY}"
 
     Delete "$DESKTOP\FileZilla Client.lnk"
 
@@ -1677,8 +1679,8 @@ Section "Uninstall"
     SetShellVarContext current
     Call un.RemoveStartmenu
 
-    DeleteRegKey /ifempty HKCU "Software\FileZilla Client"
-    DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\FileZilla Client"
+    DeleteRegKey /ifempty HKCU "${INSTALLER_REGKEY}"
+    DeleteRegKey HKCU "${UNINSTALLER_REGKEY}"
 
     Delete "$DESKTOP\FileZilla Client.lnk"
   ${EndIf}
