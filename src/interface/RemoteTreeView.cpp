@@ -22,7 +22,6 @@
 
 #include <algorithm>
 
-
 class CItemData : public wxTreeItemData
 {
 public:
@@ -79,34 +78,35 @@ public:
 			pDragDropManager->pDropTarget = m_pRemoteTreeView;
 		}
 
-		auto const format = m_pDataObject->GetReceivedFormat();
+		auto const format = GetReceivedFormat();
 		if (format == m_pFileDataObject->GetFormat()) {
 			m_pRemoteTreeView->m_state.UploadDroppedFiles(m_pFileDataObject, path, false);
 		}
-		else if (format == m_pLocalDataObject->GetFormat()) {
-			m_pRemoteTreeView->m_state.UploadDroppedFiles(m_pLocalDataObject, path, false);
+		else if (format == LocalDataObjectFormat()) {
+			m_pRemoteTreeView->m_state.UploadDroppedFiles(GetLocalDataObject(), path, false);
 		}
 		else {
-			if (m_pRemoteDataObject->GetProcessId() != (int)wxGetProcessId()) {
+			auto * obj = GetRemoteDataObject();
+			if (obj->GetProcessId() != (int)wxGetProcessId()) {
 				wxMessageBoxEx(_("Drag&drop between different instances of FileZilla has not been implemented yet."));
 				return wxDragNone;
 			}
 
-			if (!m_pRemoteTreeView->m_state.GetSite() || m_pRemoteDataObject->GetSite().server != m_pRemoteTreeView->m_state.GetSite().server) {
+			if (!m_pRemoteTreeView->m_state.GetSite() || obj->GetSite().server != m_pRemoteTreeView->m_state.GetSite().server) {
 				wxMessageBoxEx(_("Drag&drop between different servers has not been implemented yet."));
 				return wxDragNone;
 			}
 
 			// Make sure path path is valid
-			if (path == m_pRemoteDataObject->GetServerPath()) {
+			if (path == obj->GetServerPath()) {
 				wxMessageBoxEx(_("Source and path of the drop operation are identical"));
 				return wxDragNone;
 			}
 
-			std::vector<CRemoteDataObject::t_fileInfo> const& files = m_pRemoteDataObject->GetFiles();
+			std::vector<CRemoteDataObject::t_fileInfo> const& files = obj->GetFiles();
 			for (auto const& info : files) {
 				if (info.dir) {
-					CServerPath dir = m_pRemoteDataObject->GetServerPath();
+					CServerPath dir = obj->GetServerPath();
 					dir.AddSegment(info.name);
 					if (dir == path) {
 						return wxDragNone;
@@ -120,7 +120,7 @@ public:
 
 			for (auto const& info : files) {
 				m_pRemoteTreeView->m_state.m_pCommandQueue->ProcessCommand(
-					new CRenameCommand(m_pRemoteDataObject->GetServerPath(), info.name, path, info.name)
+					new CRenameCommand(obj->GetServerPath(), info.name, path, info.name)
 					);
 			}
 
@@ -132,7 +132,7 @@ public:
 
 	virtual bool OnDrop(wxCoord x, wxCoord y)
 	{
-		if (!CScrollableDropTarget<wxTreeCtrlEx>::OnDrop(x, y)) {
+		if (!CScrollableDropTarget::OnDrop(x, y)) {
 			return false;
 		}
 		m_pRemoteTreeView->ClearDropHighlight();
@@ -172,7 +172,7 @@ public:
 
 	virtual wxDragResult OnDragOver(wxCoord x, wxCoord y, wxDragResult def)
 	{
-		def = CScrollableDropTarget<wxTreeCtrlEx>::OnDragOver(x, y, def);
+		def = CScrollableDropTarget::OnDragOver(x, y, def);
 
 		if (def == wxDragError ||
 			def == wxDragNone ||
@@ -196,13 +196,13 @@ public:
 
 	virtual void OnLeave()
 	{
-		CScrollableDropTarget<wxTreeCtrlEx>::OnLeave();
+		CScrollableDropTarget::OnLeave();
 		m_pRemoteTreeView->ClearDropHighlight();
 	}
 
 	virtual wxDragResult OnEnter(wxCoord x, wxCoord y, wxDragResult def)
 	{
-		def = CScrollableDropTarget<wxTreeCtrlEx>::OnEnter(x, y, def);
+		def = CScrollableDropTarget::OnEnter(x, y, def);
 		return OnDragOver(x, y, def);
 	}
 
@@ -862,11 +862,11 @@ void CRemoteTreeView::OnBeginDrag(wxTreeEvent& event)
 	pDragDropManager->pDragSource = this;
 	pDragDropManager->site = site;
 	pDragDropManager->remoteParent = parent;
+	pDragDropManager->dragDataObject = pRemoteDataObject;
 
-	wxDropSource source(this);
+	DropSource source(this);
 	source.SetData(object);
-
-	int res = source.DoDragDrop();
+	int res = source.DoFileDragDrop();
 
 	pDragDropManager->Release();
 
@@ -874,24 +874,39 @@ void CRemoteTreeView::OnBeginDrag(wxTreeEvent& event)
 		return;
 	}
 
+#if FZ3_USESHELLEXT || defined(__WXMAC__)
 #if FZ3_USESHELLEXT
 	if (ext) {
 		if (!pRemoteDataObject->DidSendData()) {
+#else
+	if (!source.m_OutDir.IsEmpty()) {
+#endif
 			Site newSite = m_state.GetSite();
 			if (!newSite || !m_state.IsRemoteIdle() || site != newSite) {
 				wxBell();
 				return;
 			}
 
+#if FZ3_USESHELLEXT
 			CLocalPath target(ext->GetTarget().ToStdWstring());
+#else
+			// wxMessageBoxEx(source.m_OutDir);
+			CLocalPath target(source.m_OutDir.ToStdWstring());
+#endif
 			if (target.empty()) {
+#if FZ3_USESHELLEXT
 				ext.reset(); // Release extension before the modal message box
 				wxMessageBoxEx(_("Could not determine the target of the Drag&Drop operation.\nEither the shell extension is not installed properly or you didn't drop the files into an Explorer window."));
+#else
+				wxMessageBoxEx(_("Could not determine the target of the Drag&Drop operation."));
+#endif
 				return;
 			}
 
 			m_state.DownloadDroppedFiles(pRemoteDataObject, target);
+#if FZ3_USESHELLEXT
 		}
+#endif
 	}
 #endif
 }

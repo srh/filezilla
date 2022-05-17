@@ -1,11 +1,24 @@
 #include "filezilla.h"
 #include "dndobjects.h"
+#include "dragdropmanager.h"
 
 #include "listctrlex.h"
 #include "treectrlex.h"
 
+wxDataFormat LocalDataObjectFormat()
+{
+	static wxDataFormat const fmt = wxDataFormat(L"FileZilla3LocalDataObject");
+	return fmt;
+}
+	
+wxDataFormat RemoteDataObjectFormat()
+{
+	static wxDataFormat const fmt = wxDataFormat(L"FileZilla3RemoteDataObject");
+	return fmt;
+}
+
 CLocalDataObject::CLocalDataObject()
-	: wxDataObjectSimple(wxDataFormat(_T("FileZilla3LocalDataObject")))
+	: wxDataObjectSimple(LocalDataObjectFormat())
 {
 }
 
@@ -430,11 +443,8 @@ void CRemoteDataObject::AddFile(std::wstring const& name, bool dir, int64_t size
 }
 
 
-
-template<class Control>
-CFileDropTarget<Control>::CFileDropTarget(Control* ctrl)
-	: CScrollableDropTarget<Control>(ctrl)
-	, m_pLocalDataObject(new CLocalDataObject())
+FileDropTargetBase::FileDropTargetBase()
+	: m_pLocalDataObject(new CLocalDataObject())
 	, m_pFileDataObject(new wxFileDataObject())
 	, m_pRemoteDataObject(new CRemoteDataObject())
 	, m_pDataObject(new wxDataObjectComposite)
@@ -442,7 +452,47 @@ CFileDropTarget<Control>::CFileDropTarget(Control* ctrl)
 	m_pDataObject->Add(m_pRemoteDataObject, true);
 	m_pDataObject->Add(m_pLocalDataObject, false);
 	m_pDataObject->Add(m_pFileDataObject, false);
-	this->SetDataObject(m_pDataObject);
+	SetDataObject(m_pDataObject);
+}
+
+wxDataFormat FileDropTargetBase::GetReceivedFormat()
+{
+	auto format = m_pDataObject->GetReceivedFormat();
+#ifdef __WXMAC__
+	auto dndmgr = CDragDropManager::Get();
+	if (format == wxDF_FILENAME && dndmgr && dndmgr->dragDataObject) {
+		format = dndmgr->dragDataObject->GetPreferredFormat();
+	}
+#endif
+        return format;
+}
+
+CLocalDataObject* FileDropTargetBase::GetLocalDataObject()
+{
+#ifdef __WXMAC__
+	auto dndmgr = CDragDropManager::Get();
+	if (dndmgr && dndmgr->dragDataObject && dndmgr->dragDataObject->GetPreferredFormat() == wxDataFormat(L"FileZilla3LocalDataObject")) {
+		return static_cast<CLocalDataObject *>(dndmgr->dragDataObject);
+	}
+#endif
+	return m_pLocalDataObject;
+}
+
+CRemoteDataObject* FileDropTargetBase::GetRemoteDataObject()
+{
+#ifdef __WXMAC__
+	auto dndmgr = CDragDropManager::Get();
+	if (dndmgr && dndmgr->dragDataObject && dndmgr->dragDataObject->GetPreferredFormat() == wxDataFormat(L"FileZilla3RemoteDataObject")) {
+		return static_cast<CRemoteDataObject *>(dndmgr->dragDataObject);
+	}
+#endif
+	return m_pRemoteDataObject;
+}
+
+template<class Control>
+CFileDropTarget<Control>::CFileDropTarget(Control* ctrl)
+	: CScrollableDropTarget<Control, FileDropTargetBase>(ctrl)
+{
 }
 
 template class CFileDropTarget<wxTreeCtrlEx>;

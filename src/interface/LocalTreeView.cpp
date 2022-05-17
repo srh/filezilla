@@ -101,26 +101,27 @@ public:
 			pDragDropManager->pDropTarget = m_pLocalTreeView;
 		}
 
-		auto const format = m_pDataObject->GetReceivedFormat();
+		auto const format = GetReceivedFormat();
 		if (format == m_pFileDataObject->GetFormat()) {
 			m_pLocalTreeView->m_state.HandleDroppedFiles(m_pFileDataObject, path, def == wxDragCopy);
 		}
-		else if (format == m_pLocalDataObject->GetFormat()) {
-			m_pLocalTreeView->m_state.HandleDroppedFiles(m_pLocalDataObject, path, def == wxDragCopy);
+		else if (format == LocalDataObjectFormat()) {
+			m_pLocalTreeView->m_state.HandleDroppedFiles(GetLocalDataObject(), path, def == wxDragCopy);
 		}
 		else {
-			if (m_pRemoteDataObject->GetProcessId() != (int)wxGetProcessId()) {
+			auto * obj = GetRemoteDataObject();
+			if (obj->GetProcessId() != (int)wxGetProcessId()) {
 				wxMessageBoxEx(_("Drag&drop between different instances of FileZilla has not been implemented yet."));
 				return wxDragNone;
 			}
 
 			auto & state = m_pLocalTreeView->m_state;
-			if (!state.GetSite() || m_pRemoteDataObject->GetSite().server != state.GetSite().server) {
+			if (!state.GetSite() || obj->GetSite().server != state.GetSite().server) {
 				wxMessageBoxEx(_("Drag&drop between different servers has not been implemented yet."));
 				return wxDragNone;
 			}
 
-			if (!state.DownloadDroppedFiles(m_pRemoteDataObject, path)) {
+			if (!state.DownloadDroppedFiles(obj, path)) {
 				return wxDragNone;
 			}
 		}
@@ -130,7 +131,7 @@ public:
 
 	virtual bool OnDrop(wxCoord x, wxCoord y)
 	{
-		if (!CScrollableDropTarget<wxTreeCtrlEx>::OnDrop(x, y)) {
+		if (!CFileDropTarget::OnDrop(x, y)) {
 			return false;
 		}
 
@@ -172,7 +173,7 @@ public:
 
 	virtual wxDragResult OnDragOver(wxCoord x, wxCoord y, wxDragResult def)
 	{
-		def = CScrollableDropTarget<wxTreeCtrlEx>::OnDragOver(x, y, def);
+		def = CScrollableDropTarget::OnDragOver(x, y, def);
 
 		if (def == wxDragError ||
 			def == wxDragNone ||
@@ -196,13 +197,13 @@ public:
 
 	virtual void OnLeave()
 	{
-		CScrollableDropTarget<wxTreeCtrlEx>::OnLeave();
+		CScrollableDropTarget::OnLeave();
 		m_pLocalTreeView->ClearDropHighlight();
 	}
 
 	virtual wxDragResult OnEnter(wxCoord x, wxCoord y, wxDragResult def)
 	{
-		def = CScrollableDropTarget<wxTreeCtrlEx>::OnEnter(x, y, def);
+		def = CScrollableDropTarget::OnEnter(x, y, def);
 		return OnDragOver(x, y, def);
 	}
 
@@ -956,21 +957,22 @@ void CLocalTreeView::OnBeginDrag(wxTreeEvent& event)
 	}
 #endif
 
-	CDragDropManager* pDragDropManager = CDragDropManager::Init();
-	pDragDropManager->pDragSource = this;
-
 #ifdef __WXMAC__
 	// Don't use wxFileDataObject on Mac, crashes on Mojave, wx bug #18232
 	CLocalDataObject obj;
-	obj.AddFile(dir);
 #else
 	wxFileDataObject obj;
-	obj.AddFile(dir);
 #endif
 
-	wxDropSource source(this);
+	CDragDropManager* pDragDropManager = CDragDropManager::Init();
+	pDragDropManager->pDragSource = this;
+
+	obj.AddFile(dir);
+	pDragDropManager->dragDataObject = &obj;
+
+	DropSource source(this);
 	source.SetData(obj);
-	int res = source.DoDragDrop(wxDrag_AllowMove);
+	int res = source.DoFileDragDrop();
 
 	bool handled_internally = pDragDropManager->pDropTarget != 0;
 
@@ -981,6 +983,13 @@ void CLocalTreeView::OnBeginDrag(wxTreeEvent& event)
 		// externally, the internal handlers do this for us already
 		m_state.RefreshLocal();
 	}
+
+#ifdef __WXMAC__
+	if (!source.m_OutDir.IsEmpty()) {
+		CLocalPath target(source.m_OutDir.ToStdWstring());
+		m_state.HandleDroppedFiles(&obj, target, true);
+	}
+#endif
 }
 
 #ifdef __WXMSW__

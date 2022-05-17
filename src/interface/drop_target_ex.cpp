@@ -1,26 +1,27 @@
 #include "filezilla.h"
 #include "drop_target_ex.h"
+#include "dndobjects.h"
 
 #include "listctrlex.h"
 #include "treectrlex.h"
 
-template<class Control>
-CScrollableDropTarget<Control>::CScrollableDropTarget(Control* pCtrl)
+template<class Control, class Base>
+CScrollableDropTarget<Control, Base>::CScrollableDropTarget(Control* pCtrl)
 	: m_pCtrl(pCtrl)
 {
 	m_timer.SetOwner(this);
 }
 
 
-template<class Control>
-bool CScrollableDropTarget<Control>::OnDrop(wxCoord, wxCoord)
+template<class Control, class Base>
+bool CScrollableDropTarget<Control, Base>::OnDrop(wxCoord, wxCoord)
 {
 	m_timer.Stop();
 	return true;
 }
 
-template<class Control>
-wxDragResult CScrollableDropTarget<Control>::OnDragOver(wxCoord x, wxCoord y, wxDragResult def)
+template<class Control, class Base>
+wxDragResult CScrollableDropTarget<Control, Base>::OnDragOver(wxCoord x, wxCoord y, wxDragResult def)
 {
 	def = FixupDragResult(def);
 	if (!m_timer.IsRunning() && IsScroll(wxPoint(x, y))) {
@@ -30,14 +31,14 @@ wxDragResult CScrollableDropTarget<Control>::OnDragOver(wxCoord x, wxCoord y, wx
 	return def;
 }
 
-template<class Control>
-void CScrollableDropTarget<Control>::OnLeave()
+template<class Control, class Base>
+void CScrollableDropTarget<Control, Base>::OnLeave()
 {
 	m_timer.Stop();
 }
 
-template<class Control>
-wxDragResult CScrollableDropTarget<Control>::OnEnter(wxCoord x, wxCoord y, wxDragResult def)
+template<class Control, class Base>
+wxDragResult CScrollableDropTarget<Control, Base>::OnEnter(wxCoord x, wxCoord y, wxDragResult def)
 {
 	def = FixupDragResult(def);
 	if (!m_timer.IsRunning() && IsScroll(wxPoint(x, y))) {
@@ -47,14 +48,14 @@ wxDragResult CScrollableDropTarget<Control>::OnEnter(wxCoord x, wxCoord y, wxDra
 	return def;
 }
 
-template<class Control>
-bool CScrollableDropTarget<Control>::IsScroll(wxPoint p) const
+template<class Control, class Base>
+bool CScrollableDropTarget<Control, Base>::IsScroll(wxPoint p) const
 {
 	return IsTopScroll(p) || IsBottomScroll(p);
 }
 
-template<class Control>
-bool CScrollableDropTarget<Control>::IsTopScroll(wxPoint p) const
+template<class Control, class Base>
+bool CScrollableDropTarget<Control, Base>::IsTopScroll(wxPoint p) const
 {
 	if (!m_pCtrl->GetItemCount()) {
 		return false;
@@ -92,8 +93,8 @@ bool CScrollableDropTarget<Control>::IsTopScroll(wxPoint p) const
 	return true;
 }
 
-template<class Control>
-bool CScrollableDropTarget<Control>::IsBottomScroll(wxPoint p) const
+template<class Control, class Base>
+bool CScrollableDropTarget<Control, Base>::IsBottomScroll(wxPoint p) const
 {
 	if (!m_pCtrl->GetItemCount()) {
 		return false;
@@ -129,8 +130,8 @@ bool CScrollableDropTarget<Control>::IsBottomScroll(wxPoint p) const
 	return true;
 }
 
-template<class Control>
-void CScrollableDropTarget<Control>::OnTimer(wxTimerEvent& /*event*/)
+template<class Control, class Base>
+void CScrollableDropTarget<Control, Base>::OnTimer(wxTimerEvent& /*event*/)
 {
 	if (!m_pCtrl->GetItemCount()) {
 		return;
@@ -164,8 +165,8 @@ void CScrollableDropTarget<Control>::OnTimer(wxTimerEvent& /*event*/)
 	m_timer.Start(100 - m_count, true);
 }
 
-template<class Control>
-wxDragResult CScrollableDropTarget<Control>::FixupDragResult(wxDragResult res)
+template<class Control, class Base>
+wxDragResult CScrollableDropTarget<Control, Base>::FixupDragResult(wxDragResult res)
 {
 #ifdef __WXMAC__
 	if (res == wxDragNone && wxGetKeyState(WXK_CONTROL)) {
@@ -180,9 +181,10 @@ wxDragResult CScrollableDropTarget<Control>::FixupDragResult(wxDragResult res)
 	return res;
 }
 
-BEGIN_EVENT_TABLE_TEMPLATE1(CScrollableDropTarget, wxEvtHandler, Control)
+BEGIN_EVENT_TABLE_TEMPLATE2(CScrollableDropTarget, wxEvtHandler, Control, Base)
 EVT_TIMER(wxID_ANY, CScrollableDropTarget::OnTimer)
 END_EVENT_TABLE()
 
-template class CScrollableDropTarget<wxTreeCtrlEx>;
-template class CScrollableDropTarget<wxListCtrlEx>;
+template class CScrollableDropTarget<wxTreeCtrlEx, wxDropTarget>;
+template class CScrollableDropTarget<wxTreeCtrlEx, FileDropTargetBase>;
+template class CScrollableDropTarget<wxListCtrlEx, FileDropTargetBase>;

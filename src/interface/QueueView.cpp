@@ -73,8 +73,8 @@ public:
 			pDragDropManager->pDropTarget = m_pQueueView;
 		}
 
-		auto const format = m_pDataObject->GetReceivedFormat();
-		if (format == m_pFileDataObject->GetFormat() || format == m_pLocalDataObject->GetFormat()) {
+		auto const format = GetReceivedFormat();
+		if (format == m_pFileDataObject->GetFormat() || format == LocalDataObjectFormat()) {
 			CState* const pState = CContextManager::Get()->GetCurrentContext();
 			if (!pState) {
 				return wxDragNone;
@@ -88,16 +88,16 @@ public:
 			if (path.empty()) {
 				return wxDragNone;
 			}
-
 			if (format == m_pFileDataObject->GetFormat()) {
 				pState->UploadDroppedFiles(m_pFileDataObject, path, true);
 			}
 			else {
-				pState->UploadDroppedFiles(m_pLocalDataObject, path, true);
+				pState->UploadDroppedFiles(GetLocalDataObject(), path, true);
 			}
 		}
 		else {
-			if (m_pRemoteDataObject->GetProcessId() != (int)wxGetProcessId()) {
+			auto * obj = GetRemoteDataObject();
+			if (obj->GetProcessId() != (int)wxGetProcessId()) {
 				wxMessageBoxEx(_("Drag&drop between different instances of FileZilla has not been implemented yet."));
 				return wxDragNone;
 			}
@@ -111,7 +111,7 @@ public:
 				return wxDragNone;
 			}
 
-			if (site.server != m_pRemoteDataObject->GetSite().server) {
+			if (site.server != obj->GetSite().server) {
 				wxMessageBoxEx(_("Drag&drop between different servers has not been implemented yet."));
 				return wxDragNone;
 			}
@@ -122,7 +122,7 @@ public:
 				return wxDragNone;
 			}
 
-			if (!pState->DownloadDroppedFiles(m_pRemoteDataObject, target, true)) {
+			if (!pState->DownloadDroppedFiles(obj, target, true)) {
 				return wxDragNone;
 			}
 		}
@@ -137,7 +137,7 @@ public:
 
 	virtual wxDragResult OnDragOver(wxCoord x, wxCoord y, wxDragResult def)
 	{
-		def = CScrollableDropTarget<wxListCtrlEx>::OnDragOver(x, y, def);
+		def = CScrollableDropTarget::OnDragOver(x, y, def);
 		if (def == wxDragError ||
 			def == wxDragNone ||
 			def == wxDragCancel)
@@ -168,7 +168,7 @@ public:
 
 	virtual wxDragResult OnEnter(wxCoord x, wxCoord y, wxDragResult def)
 	{
-		def = CScrollableDropTarget<wxListCtrlEx>::OnEnter(x, y, def);
+		def = CScrollableDropTarget::OnEnter(x, y, def);
 		return OnDragOver(x, y, def);
 	}
 

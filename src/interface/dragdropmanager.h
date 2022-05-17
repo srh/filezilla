@@ -18,13 +18,15 @@ public:
 	static CDragDropManager* Init();
 	void Release();
 
-	const wxWindow* pDragSource;
-	const wxWindow* pDropTarget;
+	const wxWindow* pDragSource{};
+	const wxWindow* pDropTarget{};
 
 	CLocalPath localParent;
 
 	Site site;
 	CServerPath remoteParent;
+
+	wxDataObject * dragDataObject{};
 
 protected:
 	CDragDropManager();

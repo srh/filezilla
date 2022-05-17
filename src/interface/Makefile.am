@@ -21,7 +21,6 @@ filezilla_DEPENDENCIES += libfzmac.a
 libfzmac_a_SOURCES = \
 	power_management_osx.mm \
 	toolbar.mm
-
 endif
 
 # the application source, library search path, and link libraries
@@ -43,6 +42,7 @@ filezilla_SOURCES = \
 		dialogex.cpp \
 		dndobjects.cpp \
 		dragdropmanager.cpp \
+		dropsource.cpp \
 		drop_target_ex.cpp \
 		edithandler.cpp \
 		encoding_converter.cpp \
@@ -168,6 +168,7 @@ noinst_HEADERS = \
 		dialogex.h \
 		dndobjects.h \
 		dragdropmanager.h \
+		dropsource.h \
 		drop_target_ex.h \
 		edithandler.h \
 		encoding_converter.h \

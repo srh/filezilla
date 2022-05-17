@@ -8,11 +8,15 @@
 #endif
 
 #include "drop_target_ex.h"
+#include "dropsource.h"
 #include "xmlfunctions.h"
 
 #include <wx/dnd.h>
 
 #include <memory>
+
+wxDataFormat LocalDataObjectFormat();
+wxDataFormat RemoteDataObjectFormat();
 
 class CLocalDataObject final : public wxDataObjectSimple
 {
@@ -114,16 +118,29 @@ protected:
 
 #endif
 
-template<typename Control>
-class CFileDropTarget : public CScrollableDropTarget<Control>
+class FileDropTargetBase : public wxDropTarget
 {
-protected:
-	CFileDropTarget(Control* ctrl);
+public:
+        FileDropTargetBase();
 
-	CLocalDataObject* m_pLocalDataObject{};
-	wxFileDataObject* m_pFileDataObject{};
-	CRemoteDataObject* m_pRemoteDataObject{};
-	wxDataObjectComposite* m_pDataObject{};
+	CLocalDataObject* GetLocalDataObject();
+	CRemoteDataObject* GetRemoteDataObject();
+	wxDataFormat GetReceivedFormat();
+
+protected:
+	wxFileDataObject *const m_pFileDataObject{};
+
+private:
+	wxDataObjectComposite *const m_pDataObject{};
+	CLocalDataObject *const m_pLocalDataObject{};
+	CRemoteDataObject *const m_pRemoteDataObject{};
+};
+
+template<typename Control>
+class CFileDropTarget : public CScrollableDropTarget<Control, FileDropTargetBase>
+{
+public:
+       CFileDropTarget(Control* ctrl);
 };
 
 #endif

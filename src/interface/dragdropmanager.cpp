@@ -5,8 +5,6 @@ CDragDropManager* CDragDropManager::m_pDragDropManager = 0;
 
 CDragDropManager::CDragDropManager()
 {
-	pDragSource = 0;
-	pDropTarget = 0;
 }
 
 CDragDropManager* CDragDropManager::Init()

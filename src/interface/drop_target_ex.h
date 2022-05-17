@@ -4,8 +4,8 @@
 #include <wx/dnd.h>
 #include <wx/timer.h>
 
-template<class Control>
-class CScrollableDropTarget : public wxEvtHandler, public wxDropTarget
+template<class Control, class Base = wxDropTarget>
+class CScrollableDropTarget : public wxEvtHandler, public Base
 {
 public:
 	CScrollableDropTarget(Control* pCtrl);
