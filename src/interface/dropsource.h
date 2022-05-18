@@ -6,7 +6,7 @@
 class DropSource final : public wxDropSource
 {
 public:
-	DropSource(wxWindow *win = NULL);
+	DropSource(wxWindow *win = nullptr);
 	virtual ~DropSource();
 
 	wxDragResult DoFileDragDrop(int flags = wxDrag_CopyOnly) {
