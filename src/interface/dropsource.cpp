@@ -10,3 +10,10 @@ DropSource::~DropSource()
 {
 }
 
+#ifndef __WXMAC__
+wxDragResult DropSource::DoFileDragDrop(int flags)
+{
+	return DoDragDrop(flags);
+}
+#endif
+

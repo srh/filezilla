@@ -9,9 +9,7 @@ public:
 	DropSource(wxWindow *win = nullptr);
 	virtual ~DropSource();
 
-	wxDragResult DoFileDragDrop(int flags = wxDrag_CopyOnly) {
-		return DoDragDrop(flags);
-	}
+	wxDragResult DoFileDragDrop(int flags = wxDrag_CopyOnly);
 
 #ifdef __WXMAC__
 	wxString m_OutDir;
