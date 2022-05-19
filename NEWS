@@ -10,6 +10,11 @@ Legend:
     *nix: Unix (e.g BSD) and Unix-like systems (e.g. Linux)
     macOS/OS X: Apple macOS
 
+3.60.0-rc1 (2022-05-19)
+
++ macOS: Remote files can now be dragged into Finder
+- Fixed file change detection when editing files
+
 3.59.0 (2022-04-08)
 
 - Windows binaries: Updated zlib, used purely to cache re-scaled versions of icons shipped with FileZilla, to 1.2.12
