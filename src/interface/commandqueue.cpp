@@ -9,8 +9,6 @@
 
 #include <algorithm>
 
-unsigned int CCommandQueue::m_requestIdCounter = 0;
-
 CCommandQueue::CCommandQueue(CFileZillaEngine *pEngine, CMainFrame* pMainFrame, CState& state)
 	: m_pEngine(pEngine)
 	, m_pMainFrame(pMainFrame)
@@ -20,7 +18,7 @@ CCommandQueue::CCommandQueue(CFileZillaEngine *pEngine, CMainFrame* pMainFrame, 
 
 bool CCommandQueue::Idle(command_origin origin) const
 {
-	if (m_exclusiveEngineLock) {
+	if (exclusive_lock_) {
 		return false;
 	}
 
@@ -52,7 +50,7 @@ void CCommandQueue::ProcessNextCommand()
 		return;
 	}
 
-	if (m_exclusiveEngineLock) {
+	if (exclusive_lock_) {
 		return;
 	}
 
@@ -85,11 +83,11 @@ void CCommandQueue::ProcessNextCommand()
 	--m_inside_commandqueue;
 
 	if (m_CommandList.empty()) {
-		if (m_exclusiveEngineRequest) {
-			GrantExclusiveEngineRequest(m_exclusiveHandler);
+		if (exclusive_requests_.empty()) {
+			m_state.NotifyHandlers(STATECHANGE_REMOTE_IDLE);
 		}
 		else {
-			m_state.NotifyHandlers(STATECHANGE_REMOTE_IDLE);
+			GrantExclusiveEngineRequest();
 		}
 
 		if (!m_state.SuccessfulConnect()) {
@@ -100,7 +98,7 @@ void CCommandQueue::ProcessNextCommand()
 
 bool CCommandQueue::Cancel()
 {
-	if (m_exclusiveEngineLock) {
+	if (exclusive_lock_) {
 		return false;
 	}
 
@@ -129,9 +127,9 @@ bool CCommandQueue::Cancel()
 
 void CCommandQueue::Finish(std::unique_ptr<COperationNotification> && pNotification)
 {
-	if (m_exclusiveEngineLock) {
-		if (m_exclusiveHandler) {
-			m_exclusiveHandler->ProcessNotification(m_pEngine, std::move(pNotification));
+	if (exclusive_lock_) {
+		if (!exclusive_requests_.empty()) {
+			exclusive_requests_.front()->ProcessNotification(m_pEngine, std::move(pNotification));
 		}
 		return;
 	}
@@ -225,43 +223,37 @@ void CCommandQueue::ProcessReply(int nReplyCode, Command commandId)
 	ProcessNextCommand();
 }
 
-void CCommandQueue::RequestExclusiveEngine(CExclusiveHandler *exclusiveHandler, bool requestExclusive)
+void CCommandQueue::RequestExclusiveEngine(CExclusiveHandler *exclusiveHandler)
 {
-	wxASSERT(!m_exclusiveEngineLock || !requestExclusive);
-
-	if (!m_exclusiveEngineRequest && requestExclusive) {
-		m_requestId = ++m_requestIdCounter;
-		if (m_CommandList.empty()) {
-			m_state.NotifyHandlers(STATECHANGE_REMOTE_IDLE);
-			GrantExclusiveEngineRequest(exclusiveHandler);
+	for (auto const* h : exclusive_requests_) {
+		if (h == exclusiveHandler) {
 			return;
 		}
 	}
-	if (!requestExclusive) {
-		m_exclusiveEngineLock = false;
-		m_exclusiveHandler = nullptr;
+
+	exclusive_requests_.emplace_back(exclusiveHandler);
+	if (!exclusive_lock_ && m_CommandList.empty()) {
+		m_state.NotifyHandlers(STATECHANGE_REMOTE_IDLE);
+		GrantExclusiveEngineRequest();
 	}
-	m_exclusiveEngineRequest = requestExclusive;
-	m_state.NotifyHandlers(STATECHANGE_REMOTE_IDLE);
 }
 
-void CCommandQueue::GrantExclusiveEngineRequest(CExclusiveHandler *exclusiveHandler)
+void CCommandQueue::GrantExclusiveEngineRequest()
 {
-	wxASSERT(!m_exclusiveEngineLock);
-	m_exclusiveEngineLock = true;
-	m_exclusiveEngineRequest = false;
-	m_exclusiveHandler = exclusiveHandler;
-
-	if (m_exclusiveHandler) {
-		m_pMainFrame->CallAfter([this]() {
-			m_exclusiveHandler->OnExclusiveEngineRequestGranted(m_requestId);
-		});
+	if (exclusive_lock_ || exclusive_requests_.empty()) {
+		return;
 	}
+
+	exclusive_lock_ = true;
+	++m_requestId;
+	m_pMainFrame->CallAfter([this, id = m_requestId]() {
+		exclusive_requests_.front()->OnExclusiveEngineRequestGranted(id);
+	});
 }
 
 CFileZillaEngine* CCommandQueue::GetEngineExclusive(unsigned int requestId)
 {
-	if (!m_exclusiveEngineLock) {
+	if (!exclusive_lock_) {
 		return 0;
 	}
 
@@ -274,10 +266,15 @@ CFileZillaEngine* CCommandQueue::GetEngineExclusive(unsigned int requestId)
 
 void CCommandQueue::ReleaseEngine(CExclusiveHandler *exclusiveHandler)
 {
-	if (exclusiveHandler == m_exclusiveHandler) {
-		m_exclusiveEngineLock = false;
-		m_exclusiveHandler = nullptr;
+	auto it = std::find(exclusive_requests_.begin(), exclusive_requests_.end(), exclusiveHandler);
+	if (it == exclusive_requests_.end()) {
+			return;
+	}
+	bool first = it == exclusive_requests_.begin();
+	exclusive_requests_.erase(it);
 
+	if (first) {
+		exclusive_lock_ = false;
 		ProcessNextCommand();
 	}
 }

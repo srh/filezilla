@@ -1103,7 +1103,7 @@ void CQueueView::ResetEngine(t_EngineData& data, const ResetReason reason)
 			}
 			CCommandQueue* pCommandQueue = pState->m_pCommandQueue;
 			if (pCommandQueue) {
-				pCommandQueue->RequestExclusiveEngine(this, false);
+				pCommandQueue->ReleaseEngine(this);
 			}
 			break;
 		}
@@ -1174,7 +1174,7 @@ void CQueueView::SendNextCommand(t_EngineData& engineData)
 			}
 
 			CCommandQueue* pCommandQueue = pState->m_pCommandQueue;
-			pCommandQueue->RequestExclusiveEngine(this, true);
+			pCommandQueue->RequestExclusiveEngine(this);
 			return;
 		}
 

@@ -35,27 +35,26 @@ public:
 	bool Quit();
 	void Finish(std::unique_ptr<COperationNotification> && pNotification);
 
-	void RequestExclusiveEngine(CExclusiveHandler* exclusiveHandler, bool requestExclusive);
+	void RequestExclusiveEngine(CExclusiveHandler* exclusiveHandler);
 
 	CFileZillaEngine* GetEngineExclusive(unsigned int requestId);
 	void ReleaseEngine(CExclusiveHandler *exclusiveHandler);
-	bool EngineLocked() const { return m_exclusiveEngineLock; }
+	bool EngineLocked() const { return exclusive_lock_; }
 
 	void ProcessDirectoryListing(CDirectoryListingNotification const& listingNotification);
 
 protected:
 	void ProcessReply(int nReplyCode, Command commandId);
 
-	void GrantExclusiveEngineRequest(CExclusiveHandler *exclusiveHandler);
+	void GrantExclusiveEngineRequest();
 
 	CFileZillaEngine* m_pEngine;
 	CMainFrame* m_pMainFrame;
 	CState& m_state;
-	bool m_exclusiveEngineRequest{};
-	bool m_exclusiveEngineLock{};
+
 	unsigned int m_requestId{};
-	static unsigned int m_requestIdCounter;
-	CExclusiveHandler* m_exclusiveHandler{};
+	bool exclusive_lock_{};
+	std::vector<CExclusiveHandler*> exclusive_requests_;
 
 	// Used to make this class reentrance-safe
 	int m_inside_commandqueue{};
