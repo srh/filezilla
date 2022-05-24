@@ -176,7 +176,7 @@ wxBitmap const& CTheme::LoadBitmapWithSpecificSizeAndScale(CLocalPath const& cac
 
 		// Save in cache
 		if (!cacheFile.empty()) {
-			if (fz::mkdir(fz::to_native(cacheDir.GetPath()), true, fz::mkdir_permissions::cur_user)) {
+			if (fz::mkdir(fz::to_native(cacheDir.GetPath()), true, fz::mkdir_permissions::cur_user_and_admins)) {
 				image.SaveFile(cacheFile, wxBITMAP_TYPE_PNG);
 			}
 		}

@@ -326,7 +326,7 @@ CLocalPath XmlOptions::InitSettingsDir()
 	}
 
 	if (!p.empty() && !p.Exists()) {
-		fz::mkdir(fz::to_native(p.GetPath()), true, fz::mkdir_permissions::cur_user);
+		fz::mkdir(fz::to_native(p.GetPath()), true, fz::mkdir_permissions::cur_user_and_admins);
 	}
 
 	set(OPTION_DEFAULT_SETTINGSDIR, p.GetPath(), true);
