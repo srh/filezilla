@@ -10,6 +10,11 @@ Legend:
     *nix: Unix (e.g BSD) and Unix-like systems (e.g. Linux)
     macOS/OS X: Apple macOS
 
+3.60.0 (2022-05-27)
+
+- SFTP: Fixed error handling if reading from child process fails
+- Fixed transfers following recursive operations not starting if the connection limit has been set to 1 in the Site Manager
+
 3.60.0-rc1 (2022-05-19)
 
 + macOS: Remote files can now be dragged into Finder
