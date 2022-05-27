@@ -78,11 +78,15 @@ int SftpInputParser::OnData()
 					return FZ_REPLY_DISCONNECTED;
 				}
 				recv_buffer_.add(res.value_);
+				need_read = false;
 			}
 			else if (res.error_ == fz::rwresult::wouldblock) {
 				return FZ_REPLY_WOULDBLOCK;
 			}
-			need_read = false;
+			else {
+				owner_.log(logmsg::debug_warning, "Could not read from child process with error %d, raw error %d", res.error_, res.raw_);
+				return FZ_REPLY_DISCONNECTED;
+			}
 		}
 
 		else if (event_ || listEvent_) {
