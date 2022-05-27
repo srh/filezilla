@@ -444,8 +444,8 @@ void CRemoteDataObject::AddFile(std::wstring const& name, bool dir, int64_t size
 
 
 FileDropTargetBase::FileDropTargetBase()
-	: m_pLocalDataObject(new CLocalDataObject())
-	, m_pFileDataObject(new wxFileDataObject())
+	: m_pFileDataObject(new wxFileDataObject())
+	, m_pLocalDataObject(new CLocalDataObject())
 	, m_pRemoteDataObject(new CRemoteDataObject())
 	, m_pDataObject(new wxDataObjectComposite)
 {

@@ -131,9 +131,9 @@ protected:
 	wxFileDataObject *const m_pFileDataObject{};
 
 private:
-	wxDataObjectComposite *const m_pDataObject{};
 	CLocalDataObject *const m_pLocalDataObject{};
 	CRemoteDataObject *const m_pRemoteDataObject{};
+	wxDataObjectComposite *const m_pDataObject{};
 };
 
 template<typename Control>
