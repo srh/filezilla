@@ -7,13 +7,13 @@
 # Tadashi Jokagi <elf at elf.no-ip.org>, 2010.
 # Yuki Shira <shirayuking at gmail.com>, 2012-2017.
 # Rukoto Luther <rukotolucies at hotmail.com>, 2017-2022.
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: FileZilla Client 3.59.0\n"
+"Project-Id-Version: FileZilla Client 3.60.0\n"
 "Report-Msgid-Bugs-To: https://trac.filezilla-project.org/\n"
-"POT-Creation-Date: 2022-04-08 15:11+0200\n"
-"PO-Revision-Date: 2022-04-01 12:30+0900\n"
+"POT-Creation-Date: 2022-05-27 15:47+0200\n"
+"PO-Revision-Date: 2022-05-21 12:30+0900\n"
 "Last-Translator: Rukoto Luther <rukotolucies at hotmail.com>\n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -49,17 +49,16 @@ msgid "%d directory"
 msgid_plural "%d directories"
 msgstr[0] "%d 個のディレクトリ"
 
-#: ../src/interface/RemoteListView.cpp:1424 ../src/interface/search.cpp:1289
-#: ../src/interface/search.cpp:1691
+#: ../src/interface/search.cpp:1289 ../src/interface/search.cpp:1691
+#: ../src/interface/RemoteListView.cpp:1424
 #, c-format
 msgid "%d directory with its contents"
 msgid_plural "%d directories with their contents"
 msgstr[0] "%d 個の空でないディレクトリ"
 
 #: ../src/interface/filelist_statusbar.cpp:57
-#: ../src/interface/filelist_statusbar.cpp:82
-#: ../src/interface/RemoteListView.cpp:1423 ../src/interface/search.cpp:1288
-#: ../src/interface/search.cpp:1690
+#: ../src/interface/filelist_statusbar.cpp:82 ../src/interface/search.cpp:1288
+#: ../src/interface/search.cpp:1690 ../src/interface/RemoteListView.cpp:1423
 #, c-format
 msgid "%d file"
 msgid_plural "%d files"
@@ -218,7 +217,7 @@ msgstr "ブックマークの追加(&A)..."
 msgid "&Add directory..."
 msgstr "ディレクトリの追加(&A)..."
 
-#: ../src/interface/LocalListView.cpp:812
+#: ../src/interface/LocalListView.cpp:813
 #: ../src/interface/RemoteListView.cpp:1055
 msgid "&Add files to queue"
 msgstr "キューにファイルを追加(&A)"
@@ -227,8 +226,8 @@ msgstr "キューにファイルを追加(&A)"
 msgid "&Add key file..."
 msgstr "鍵ファイルの追加(&A)..."
 
-#: ../src/interface/LocalTreeView.cpp:1099
-#: ../src/interface/RemoteTreeView.cpp:907
+#: ../src/interface/LocalTreeView.cpp:1108
+#: ../src/interface/RemoteTreeView.cpp:922
 msgid "&Add to queue"
 msgstr "キューに追加(&A)"
 
@@ -259,7 +258,7 @@ msgstr "常にこのホストを信用し、この鍵をキャッシュに追加
 msgid "&Always use default editor"
 msgstr "常にデフォルトのエディターを使用(&A)"
 
-#: ../src/interface/edithandler.cpp:1786
+#: ../src/interface/edithandler.cpp:1785
 msgid "&Always use selection for all unassociated files"
 msgstr "関連付けされていないすべてのファイルに対して常にこの選択を使用する(&A)"
 
@@ -271,9 +270,8 @@ msgstr "常にこのアクションを使用する(&A)"
 msgid "&Ask your operating system for the external IP address"
 msgstr "オペレーティング システムに外部 IP アドレスを尋ねる(&A)"
 
-#: ../src/interface/menu_bar.cpp:100
 #: ../src/interface/settings/optionspage_filetype.cpp:48
-#: ../src/interface/statusbar.cpp:585
+#: ../src/interface/menu_bar.cpp:100 ../src/interface/statusbar.cpp:585
 msgid "&Auto"
 msgstr "自動(&A)"
 
@@ -285,9 +283,8 @@ msgstr "自動検出(&A)"
 msgid "&Background color:"
 msgstr "背景色(&B):"
 
-#: ../src/interface/menu_bar.cpp:102
 #: ../src/interface/settings/optionspage_filetype.cpp:52
-#: ../src/interface/statusbar.cpp:587
+#: ../src/interface/menu_bar.cpp:102 ../src/interface/statusbar.cpp:587
 msgid "&Binary"
 msgstr "バイナリ(&B)"
 
@@ -299,17 +296,17 @@ msgstr "SI 接頭辞 (2進数) (例: 1 KB = 1024 バイト)(&B)"
 msgid "&Bookmarks"
 msgstr "ブックマーク(&B)"
 
-#: ../src/interface/manual_transfer.cpp:93
 #: ../src/interface/settings/optionspage_logging.cpp:53
+#: ../src/interface/manual_transfer.cpp:93
 msgid "&Browse"
 msgstr "参照(&B)"
 
 #: ../src/interface/resources/xrc/dialogs.xrc:681
 #: ../src/interface/resources/xrc/dialogs.xrc:775
-#: ../src/interface/edithandler.cpp:1808
 #: ../src/interface/settings/optionspage_edit.cpp:71
-#: ../src/interface/sitemanager_controls.cpp:924
 #: ../src/interface/sitemanager_dialog.cpp:276
+#: ../src/interface/sitemanager_controls.cpp:924
+#: ../src/interface/edithandler.cpp:1807
 msgid "&Browse..."
 msgstr "参照(&B)..."
 
@@ -361,10 +358,10 @@ msgstr "現在の接続をサイト マネージャーにコピー(&C)..."
 msgid "&Copy to clipboard"
 msgstr "クリップボードにコピー(&C)"
 
-#: ../src/interface/LocalListView.cpp:822
-#: ../src/interface/LocalTreeView.cpp:1107
+#: ../src/interface/LocalListView.cpp:823
+#: ../src/interface/LocalTreeView.cpp:1116
 #: ../src/interface/RemoteListView.cpp:1062
-#: ../src/interface/RemoteTreeView.cpp:912
+#: ../src/interface/RemoteTreeView.cpp:927
 msgid "&Create directory"
 msgstr "ディレクトリの作成(&C)"
 
@@ -393,9 +390,10 @@ msgid "&Delay between failed login attempts:"
 msgstr "ログイン失敗時の待機時間(&D):"
 
 #: ../src/interface/bookmarks_dialog.cpp:276
-#: ../src/interface/filteredit.cpp:100 ../src/interface/LocalListView.cpp:827
-#: ../src/interface/LocalTreeView.cpp:1111
+#: ../src/interface/filteredit.cpp:100
 #: ../src/interface/sitemanager_dialog.cpp:333
+#: ../src/interface/LocalListView.cpp:828
+#: ../src/interface/LocalTreeView.cpp:1120
 msgid "&Delete"
 msgstr "削除(&D)"
 
@@ -425,7 +423,7 @@ msgid ""
 "&Disable synchronized browsing and continue changing the remote directory"
 msgstr "同期ブラウジングを無効にしてリモート ディレクトリの移動を継続(&D)"
 
-#: ../src/interface/edithandler.cpp:1204
+#: ../src/interface/edithandler.cpp:1203
 msgid "&Discard local file then download and edit file anew"
 msgstr "ローカル ファイルを破棄して新たにファイルをダウンロード/編集(&D)"
 
@@ -462,7 +460,7 @@ msgid "&Double-click action on files:"
 msgstr "ファイルをダブルクリックしたときのアクション(&D):"
 
 #: ../src/interface/RemoteListView.cpp:1052
-#: ../src/interface/RemoteTreeView.cpp:904
+#: ../src/interface/RemoteTreeView.cpp:919
 msgid "&Download"
 msgstr "ダウンロード(&D)"
 
@@ -483,7 +481,7 @@ msgstr "ダウンロード(&D):"
 msgid "&Duplicate"
 msgstr "複製(&D)"
 
-#: ../src/interface/LocalListView.cpp:819 ../src/interface/menu_bar.cpp:50
+#: ../src/interface/menu_bar.cpp:50 ../src/interface/LocalListView.cpp:820
 msgid "&Edit"
 msgstr "編集(&E)"
 
@@ -491,8 +489,8 @@ msgstr "編集(&E)"
 msgid "&Edit filter rules..."
 msgstr "フィルター ルールの編集(&E)..."
 
-#: ../src/interface/Mainfrm.cpp:2440 ../src/interface/menu_bar.cpp:71
-#: ../src/interface/menu_bar.cpp:110 ../src/interface/statusbar.cpp:575
+#: ../src/interface/menu_bar.cpp:71 ../src/interface/menu_bar.cpp:110
+#: ../src/interface/statusbar.cpp:575 ../src/interface/Mainfrm.cpp:2440
 msgid "&Enable"
 msgstr "有効(&E)"
 
@@ -542,7 +540,7 @@ msgstr "アクティブモードに戻す(&F)"
 msgid "&File"
 msgstr "ファイル(&F)"
 
-#: ../src/interface/RemoteTreeView.cpp:925
+#: ../src/interface/RemoteTreeView.cpp:940
 msgid "&File Attributes..."
 msgstr "パーミッションの変更(&F)..."
 
@@ -570,11 +568,11 @@ msgstr "フィルター(&F)"
 msgid "&Filters:"
 msgstr "フィルター(&F):"
 
-#: ../src/interface/edithandler.cpp:846
+#: ../src/interface/edithandler.cpp:845
 msgid "&Finish editing"
 msgstr "編集を終了(&F)"
 
-#: ../src/interface/edithandler.cpp:850
+#: ../src/interface/edithandler.cpp:849
 msgid "&Finish editing and delete local file"
 msgstr "編集を終了してローカル ファイルを削除する(&F)"
 
@@ -618,7 +616,7 @@ msgstr "HTTP/1.1 の CONNECT メソッド(&H)"
 msgid "&Help"
 msgstr "ヘルプ(&H)"
 
-#: ../src/interface/Mainfrm.cpp:2447 ../src/interface/menu_bar.cpp:76
+#: ../src/interface/menu_bar.cpp:76 ../src/interface/Mainfrm.cpp:2447
 #: ../src/interface/search.cpp:705
 msgid "&Hide identical files"
 msgstr "同一ファイルを非表示(&H)"
@@ -631,9 +629,9 @@ msgstr "最高(&H)"
 msgid "&Highest available port:"
 msgstr "利用可能なポートの最大値(&H):"
 
-#: ../src/interface/quickconnectbar.cpp:40
 #: ../src/interface/sitemanager_controls.cpp:94
 #: ../src/interface/sitemanager_controls.cpp:357
+#: ../src/interface/quickconnectbar.cpp:40
 msgid "&Host:"
 msgstr "ホスト(&H):"
 
@@ -758,13 +756,13 @@ msgstr "新バージョンを利用できます!(&N)"
 msgid "&Next >"
 msgstr "次へ(&N) >"
 
-#: ../src/interface/edithandler.cpp:859 ../src/interface/edithandler.cpp:1237
+#: ../src/interface/edithandler.cpp:858 ../src/interface/edithandler.cpp:1236
 msgid "&No"
 msgstr "いいえ(&N)"
 
-#: ../src/interface/QueueView.cpp:1798
-#: ../src/interface/settings/optionspage_ftpproxy.cpp:49
 #: ../src/interface/settings/optionspage_proxy.cpp:48
+#: ../src/interface/settings/optionspage_ftpproxy.cpp:49
+#: ../src/interface/QueueView.cpp:1798
 msgid "&None"
 msgstr "なし(&N)"
 
@@ -776,19 +774,19 @@ msgstr "通常(&N)"
 msgid "&Numeric value:"
 msgstr "属性値(&N):"
 
-#: ../src/interface/asksavepassworddialog.cpp:65
 #: ../src/interface/bookmarks_dialog.cpp:281
 #: ../src/interface/chmoddialog.cpp:155
 #: ../src/interface/defaultfileexistsdlg.cpp:72
-#: ../src/interface/fileexistsdlg.cpp:99 ../src/interface/inputdialog.cpp:27
+#: ../src/interface/inputdialog.cpp:27 ../src/interface/fileexistsdlg.cpp:99
+#: ../src/interface/osx_sandbox_userdirs.cpp:308
+#: ../src/interface/verifycertdialog.cpp:638
+#: ../src/interface/verifycertdialog.cpp:706
+#: ../src/interface/speedlimits_dialog.cpp:71
+#: ../src/interface/asksavepassworddialog.cpp:65
+#: ../src/interface/sitemanager_dialog.cpp:345
 #: ../src/interface/loginmanager.cpp:72 ../src/interface/loginmanager.cpp:238
 #: ../src/interface/loginmanager.cpp:349
 #: ../src/interface/manual_transfer.cpp:179
-#: ../src/interface/osx_sandbox_userdirs.cpp:308
-#: ../src/interface/sitemanager_dialog.cpp:345
-#: ../src/interface/speedlimits_dialog.cpp:71
-#: ../src/interface/verifycertdialog.cpp:638
-#: ../src/interface/verifycertdialog.cpp:706
 msgid "&OK"
 msgstr "OK(&O)"
 
@@ -796,8 +794,8 @@ msgstr "OK(&O)"
 msgid "&OPEN"
 msgstr "OPEN(&O)"
 
-#: ../src/interface/LocalListView.cpp:818
-#: ../src/interface/LocalTreeView.cpp:1104
+#: ../src/interface/LocalListView.cpp:819
+#: ../src/interface/LocalTreeView.cpp:1113
 msgid "&Open"
 msgstr "開く(&O)"
 
@@ -817,8 +815,8 @@ msgstr "パスワード(&P):"
 msgid "&Play sound"
 msgstr "音を鳴らす(&P)"
 
-#: ../src/interface/quickconnectbar.cpp:56
 #: ../src/interface/sitemanager_controls.cpp:99
+#: ../src/interface/quickconnectbar.cpp:56
 msgid "&Port:"
 msgstr "ポート(&P):"
 
@@ -858,7 +856,7 @@ msgstr "再接続(&R)"
 msgid "&Reconnect information"
 msgstr "再接続の情報(&R)"
 
-#: ../src/interface/context_control.cpp:505 ../src/interface/menu_bar.cpp:62
+#: ../src/interface/menu_bar.cpp:62 ../src/interface/context_control.cpp:505
 msgid "&Refresh"
 msgstr "最新の情報に更新(&R)"
 
@@ -897,11 +895,12 @@ msgid "&Remove selected"
 msgstr "選択したアイテムを削除(&R)"
 
 #: ../src/interface/bookmarks_dialog.cpp:275
-#: ../src/interface/filteredit.cpp:101 ../src/interface/LocalListView.cpp:828
-#: ../src/interface/LocalTreeView.cpp:1112
-#: ../src/interface/RemoteListView.cpp:1069
-#: ../src/interface/RemoteTreeView.cpp:917
+#: ../src/interface/filteredit.cpp:101
 #: ../src/interface/sitemanager_dialog.cpp:332
+#: ../src/interface/LocalListView.cpp:829
+#: ../src/interface/LocalTreeView.cpp:1121
+#: ../src/interface/RemoteListView.cpp:1069
+#: ../src/interface/RemoteTreeView.cpp:932
 msgid "&Rename"
 msgstr "名前の変更(&R)"
 
@@ -909,7 +908,7 @@ msgstr "名前の変更(&R)"
 msgid "&Rename..."
 msgstr "名前の変更(&R)..."
 
-#: ../src/interface/edithandler.cpp:1202
+#: ../src/interface/edithandler.cpp:1201
 msgid "&Reopen local file"
 msgstr "ローカル ファイルを再び開く(&R)"
 
@@ -985,7 +984,7 @@ msgstr "言語の選択(&S):"
 msgid "&Select the columns that should be displayed:"
 msgstr "表示する列の選択(&S):"
 
-#: ../src/interface/manual_transfer.cpp:120 ../src/interface/menu_bar.cpp:118
+#: ../src/interface/menu_bar.cpp:118 ../src/interface/manual_transfer.cpp:120
 msgid "&Server"
 msgstr "サーバー(&S)"
 
@@ -1083,7 +1082,7 @@ msgstr "ドットファイルを ASCII ファイルとして扱う(&T)"
 msgid "&Trust this certificate on the listed alternative hostnames."
 msgstr "記載されている代替ホスト名でこの証明書を信頼する(&T)"
 
-#: ../src/interface/edithandler.cpp:1489
+#: ../src/interface/edithandler.cpp:1488
 msgid "&Unedit"
 msgstr "編集中を解除(&U)"
 
@@ -1091,8 +1090,8 @@ msgstr "編集中を解除(&U)"
 msgid "&Update cached key for this host"
 msgstr "このホストのキャッシュされた鍵を更新(&U)"
 
-#: ../src/interface/LocalListView.cpp:809
-#: ../src/interface/LocalTreeView.cpp:1096
+#: ../src/interface/LocalListView.cpp:810
+#: ../src/interface/LocalTreeView.cpp:1105
 msgid "&Upload"
 msgstr "アップロード(&U)"
 
@@ -1109,7 +1108,7 @@ msgstr "アップロード(&U)..."
 msgid "&Uploads:"
 msgstr "アップロード(&U):"
 
-#: ../src/interface/edithandler.cpp:1791
+#: ../src/interface/edithandler.cpp:1790
 msgid "&Use custom program"
 msgstr "カスタム プログラムを使用(&U)"
 
@@ -1161,7 +1160,7 @@ msgstr "バージョン 3(&V)"
 msgid "&View"
 msgstr "表示(&V)"
 
-#: ../src/interface/RemoteListView.cpp:1059 ../src/interface/search.cpp:1238
+#: ../src/interface/search.cpp:1238 ../src/interface/RemoteListView.cpp:1059
 msgid "&View/Edit"
 msgstr "表示/編集(&V)"
 
@@ -1177,7 +1176,7 @@ msgstr "アップデートの確認対象(&W):"
 msgid "&Write"
 msgstr "書き込み(&W)"
 
-#: ../src/interface/edithandler.cpp:856 ../src/interface/edithandler.cpp:1234
+#: ../src/interface/edithandler.cpp:855 ../src/interface/edithandler.cpp:1233
 msgid "&Yes"
 msgstr "はい(&Y)"
 
@@ -1376,8 +1375,8 @@ msgstr ""
 msgid "A default editor needs to be set."
 msgstr "デフォルトのエディターを設定する必要があります。"
 
-#: ../src/interface/RemoteListView.cpp:169
-#: ../src/interface/RemoteTreeView.cpp:115 ../src/interface/state.cpp:894
+#: ../src/interface/state.cpp:894 ../src/interface/RemoteListView.cpp:169
+#: ../src/interface/RemoteTreeView.cpp:115
 msgid "A directory cannot be dragged into one of its subdirectories."
 msgstr "ディレクトリを自身のサブディレクトリにドラッグすることはできません。"
 
@@ -1391,15 +1390,15 @@ msgstr ""
 "ん。そのような場合アクティブモードを使用するべきです。アクティブモードでは、"
 "FileZilla はポートを開いてサーバーからの接続を受け付けます。"
 
-#: ../src/interface/edithandler.cpp:815
+#: ../src/interface/edithandler.cpp:814
 msgid "A file previously opened has been changed."
 msgstr "以前開かれたファイルは変更されています。"
 
-#: ../src/interface/edithandler.cpp:1166
+#: ../src/interface/edithandler.cpp:1165
 msgid "A file with that name is already being transferred."
 msgstr "その名前のファイルは既に転送されています。"
 
-#: ../src/interface/edithandler.cpp:1170
+#: ../src/interface/edithandler.cpp:1169
 msgid ""
 "A file with that name is still being edited. Please close it and try again."
 msgstr "その名前のファイルはまだ編集中です。閉じてから再度試してください。"
@@ -1419,8 +1418,8 @@ msgstr ""
 "す。\n"
 "以降このセッションでは警告を表示しません。"
 
-#: ../src/interface/asksavepassworddialog.cpp:61
 #: ../src/interface/settings/optionspage_passwords.cpp:60
+#: ../src/interface/asksavepassworddialog.cpp:61
 msgid ""
 "A lost master password cannot be recovered! Please thoroughly memorize your "
 "password."
@@ -1456,9 +1455,8 @@ msgstr ""
 "リモート操作が進行中で同期ブラウジングが有効です。\n"
 "同期ブラウジングを無効にしてローカル ディレクトリの変更を継続しますか?"
 
-#: ../src/interface/menu_bar.cpp:101
 #: ../src/interface/settings/optionspage_filetype.cpp:50
-#: ../src/interface/statusbar.cpp:586
+#: ../src/interface/menu_bar.cpp:101 ../src/interface/statusbar.cpp:586
 msgid "A&SCII"
 msgstr "ASCII(&S)"
 
@@ -1532,11 +1530,11 @@ msgstr "アカウント"
 msgid "Action after queue &completion"
 msgstr "キュー完了後のアクション(&C)"
 
-#: ../src/interface/edithandler.cpp:1484
+#: ../src/interface/edithandler.cpp:1483
 msgid "Action on selected file:"
 msgstr "選択したファイルの操作:"
 
-#: ../src/interface/edithandler.cpp:1200
+#: ../src/interface/edithandler.cpp:1199
 msgid "Action to perform:"
 msgstr "実行するアクション:"
 
@@ -1583,12 +1581,12 @@ msgstr "アクティブモード IP"
 msgid "Add files to &queue only"
 msgstr "キューにのみファイルを追加(&Q)"
 
-#: ../src/interface/LocalTreeView.cpp:1099
-#: ../src/interface/RemoteTreeView.cpp:907
+#: ../src/interface/LocalTreeView.cpp:1108
+#: ../src/interface/RemoteTreeView.cpp:922
 msgid "Add selected directory to the transfer queue"
 msgstr "選択したディレクトリを転送キューへ追加"
 
-#: ../src/interface/LocalListView.cpp:812
+#: ../src/interface/LocalListView.cpp:813
 #: ../src/interface/RemoteListView.cpp:1055
 msgid "Add selected files and folders to the transfer queue"
 msgstr "選択したファイルとフォルダーを転送キューへ追加"
@@ -1831,7 +1829,7 @@ msgstr "基本的な使用手順"
 msgid "Behaviour"
 msgstr "挙動"
 
-#: ../src/interface/edithandler.cpp:1436 ../src/interface/edithandler.cpp:1463
+#: ../src/interface/edithandler.cpp:1435 ../src/interface/edithandler.cpp:1462
 msgid "Being edited"
 msgstr "編集中"
 
@@ -1905,13 +1903,13 @@ msgstr "すべてクリア(&L)"
 msgid "C&omparative search"
 msgstr "比較検索(&O)"
 
-#: ../src/interface/RemoteListView.cpp:1070
-#: ../src/interface/RemoteTreeView.cpp:918 ../src/interface/search.cpp:1245
+#: ../src/interface/search.cpp:1245 ../src/interface/RemoteListView.cpp:1070
+#: ../src/interface/RemoteTreeView.cpp:933
 msgid "C&opy URL(s) to clipboard"
 msgstr "URL をクリップボードにコピー(&O)"
 
-#: ../src/interface/RemoteListView.cpp:1071
-#: ../src/interface/RemoteTreeView.cpp:919 ../src/interface/search.cpp:1242
+#: ../src/interface/search.cpp:1242 ../src/interface/RemoteListView.cpp:1071
+#: ../src/interface/RemoteTreeView.cpp:934
 msgid "C&opy URL(s) with password to clipboard"
 msgstr "パスワード付き URL をクリップボードにコピー(&O)"
 
@@ -1945,23 +1943,23 @@ msgstr "サーバーのタイムゾーン オフセットを計算していま�
 #: ../src/interface/resources/xrc/dialogs.xrc:997
 #: ../src/interface/resources/xrc/dialogs.xrc:1072
 #: ../src/interface/resources/xrc/dialogs.xrc:1127
-#: ../src/interface/asksavepassworddialog.cpp:69
 #: ../src/interface/bookmarks_dialog.cpp:285
 #: ../src/interface/chmoddialog.cpp:160
 #: ../src/interface/defaultfileexistsdlg.cpp:76
-#: ../src/interface/edithandler.cpp:1230 ../src/interface/edithandler.cpp:1816
-#: ../src/interface/fileexistsdlg.cpp:103 ../src/interface/filteredit.cpp:143
 #: ../src/interface/filter_manager.cpp:126 ../src/interface/inputdialog.cpp:31
-#: ../src/interface/listctrlex.cpp:739 ../src/interface/loginmanager.cpp:76
-#: ../src/interface/loginmanager.cpp:242 ../src/interface/loginmanager.cpp:354
-#: ../src/interface/manual_transfer.cpp:184
+#: ../src/interface/fileexistsdlg.cpp:103 ../src/interface/filteredit.cpp:143
 #: ../src/interface/osx_sandbox_userdirs.cpp:312
 #: ../src/interface/settings/settingsdialog.cpp:76
-#: ../src/interface/sitemanager_dialog.cpp:348
-#: ../src/interface/speedlimits_dialog.cpp:76
 #: ../src/interface/verifycertdialog.cpp:398
 #: ../src/interface/verifycertdialog.cpp:645
 #: ../src/interface/verifycertdialog.cpp:713
+#: ../src/interface/speedlimits_dialog.cpp:76
+#: ../src/interface/asksavepassworddialog.cpp:69
+#: ../src/interface/sitemanager_dialog.cpp:348
+#: ../src/interface/listctrlex.cpp:739 ../src/interface/loginmanager.cpp:76
+#: ../src/interface/loginmanager.cpp:242 ../src/interface/loginmanager.cpp:354
+#: ../src/interface/manual_transfer.cpp:184
+#: ../src/interface/edithandler.cpp:1229 ../src/interface/edithandler.cpp:1815
 msgid "Cancel"
 msgstr "キャンセル"
 
@@ -2010,17 +2008,17 @@ msgstr ""
 msgid "Cannot create new filter"
 msgstr "新しいフィルターを作成できません"
 
-#: ../src/interface/edithandler.cpp:1112 ../src/interface/edithandler.cpp:1338
-#: ../src/interface/LocalListView.cpp:1930 ../src/interface/search.cpp:1634
-#: ../src/interface/search.cpp:2078
+#: ../src/interface/search.cpp:1634 ../src/interface/search.cpp:2078
+#: ../src/interface/edithandler.cpp:1111 ../src/interface/edithandler.cpp:1337
+#: ../src/interface/LocalListView.cpp:1938
 msgid "Cannot edit file"
 msgstr "ファイルを編集できません"
 
-#: ../src/interface/LocalListView.cpp:1809
+#: ../src/interface/LocalListView.cpp:1817
 msgid "Cannot edit file, not connected to any server."
 msgstr "どのサーバーにも接続されていないため、ファイルを編集できません。"
 
-#: ../src/interface/LocalListView.cpp:1818
+#: ../src/interface/LocalListView.cpp:1826
 msgid "Cannot edit file, remote path unknown."
 msgstr "リモート パスが不明のため、ファイルを編集できません。"
 
@@ -2054,17 +2052,17 @@ msgstr "フィルターセットを保存できません"
 msgid "Cannot select filter"
 msgstr "フィルターを選択できません"
 
-#: ../src/interface/edithandler.cpp:1862 ../src/interface/edithandler.cpp:1867
-#: ../src/interface/edithandler.cpp:1881
+#: ../src/interface/edithandler.cpp:1861 ../src/interface/edithandler.cpp:1866
+#: ../src/interface/edithandler.cpp:1880
 msgid "Cannot set file association"
 msgstr "ファイルの関連付けを設定できません"
 
-#: ../src/interface/edithandler.cpp:1388
+#: ../src/interface/edithandler.cpp:1387
 msgid "Cannot show dialog"
 msgstr "ダイアログを表示できません"
 
-#: ../src/interface/edithandler.cpp:1147 ../src/interface/edithandler.cpp:1166
-#: ../src/interface/edithandler.cpp:1312
+#: ../src/interface/edithandler.cpp:1146 ../src/interface/edithandler.cpp:1165
+#: ../src/interface/edithandler.cpp:1311
 msgid "Cannot view/edit selected file"
 msgstr "選択したファイルは表示/編集できません"
 
@@ -2113,7 +2111,7 @@ msgid "Change file attributes"
 msgstr "パーミッションの変更"
 
 #: ../src/interface/RemoteListView.cpp:1072
-#: ../src/interface/RemoteTreeView.cpp:925
+#: ../src/interface/RemoteTreeView.cpp:940
 msgid "Change the file permissions."
 msgstr "パーミッションを変更します。"
 
@@ -2173,12 +2171,12 @@ msgstr "正しい外部 IP アドレスをチェック中"
 msgid "Checking for updates..."
 msgstr "アップデートの確認中..."
 
-#: ../src/commonui/updater.cpp:879
+#: ../src/commonui/updater.cpp:890
 #, c-format
 msgid "Checksum match on file %s\n"
 msgstr "ファイル %s のチェックサムが一致しました。\n"
 
-#: ../src/commonui/updater.cpp:875
+#: ../src/commonui/updater.cpp:886
 #, c-format
 msgid "Checksum mismatch on file %s\n"
 msgstr "ファイル %s のチェックサムが一致しません。\n"
@@ -2205,7 +2203,7 @@ msgstr "チャンク データが不正に終了しました"
 msgid "Cipher:"
 msgstr "暗号化方式:"
 
-#: ../src/interface/context_control.cpp:501 ../src/interface/menu_bar.cpp:37
+#: ../src/interface/menu_bar.cpp:37 ../src/interface/context_control.cpp:501
 msgid "Cl&ose tab"
 msgstr "タブを閉じる(&O)"
 
@@ -2258,8 +2256,8 @@ msgstr "閉じる"
 msgid "Close &all other tabs"
 msgstr "他のタブをすべて閉じる(&A)"
 
-#: ../src/interface/Mainfrm.cpp:1262 ../src/interface/Mainfrm.cpp:1284
-#: ../src/interface/menu_bar.cpp:46
+#: ../src/interface/menu_bar.cpp:46 ../src/interface/Mainfrm.cpp:1262
+#: ../src/interface/Mainfrm.cpp:1284
 msgid "Close FileZilla"
 msgstr "FileZilla を閉じる"
 
@@ -2324,11 +2322,11 @@ msgstr "共有名:"
 msgid "Communication tainted by router or firewall"
 msgstr "ルーターまたはファイアウォールによって通信を失いました"
 
-#: ../src/interface/Mainfrm.cpp:2444 ../src/interface/menu_bar.cpp:74
+#: ../src/interface/menu_bar.cpp:74 ../src/interface/Mainfrm.cpp:2444
 msgid "Compare &modification time"
 msgstr "更新日時で比較(&M)"
 
-#: ../src/interface/Mainfrm.cpp:2443 ../src/interface/menu_bar.cpp:73
+#: ../src/interface/menu_bar.cpp:73 ../src/interface/Mainfrm.cpp:2443
 msgid "Compare file&size"
 msgstr "ファイル サイズで比較(&S)"
 
@@ -2400,11 +2398,11 @@ msgstr "FileZilla とネットワークの設定"
 msgid "Confirm deletion"
 msgstr "削除の確認"
 
-#: ../src/interface/edithandler.cpp:1124 ../src/interface/file_utils.h:43
-#: ../src/interface/LocalListView.cpp:1895
+#: ../src/interface/file_utils.h:43 ../src/interface/search.cpp:1646
+#: ../src/interface/search.cpp:2042 ../src/interface/edithandler.cpp:1123
+#: ../src/interface/LocalListView.cpp:1903
 #: ../src/interface/RemoteListView.cpp:1428
-#: ../src/interface/RemoteTreeView.cpp:1099 ../src/interface/search.cpp:1646
-#: ../src/interface/search.cpp:2042
+#: ../src/interface/RemoteTreeView.cpp:1114
 msgid "Confirmation needed"
 msgstr "必要な確認"
 
@@ -2443,13 +2441,13 @@ msgstr "接続中"
 msgid "Connecting to %s"
 msgstr "%s に接続中"
 
-#: ../src/engine/controlsocket.cpp:879 ../src/engine/ftp/logon.cpp:99
+#: ../src/engine/ftp/logon.cpp:99 ../src/engine/controlsocket.cpp:879
 #, c-format
 msgid "Connecting to %s through %s proxy"
 msgstr "%s にプロキシ %s を使用して接続中"
 
-#: ../src/engine/controlsocket.cpp:813 ../src/engine/sftp/connect.cpp:38
-#: ../src/engine/storj/connect.cpp:31
+#: ../src/engine/sftp/connect.cpp:38 ../src/engine/storj/connect.cpp:31
+#: ../src/engine/controlsocket.cpp:813
 #, c-format
 msgid "Connecting to %s..."
 msgstr "%s に接続中..."
@@ -2560,13 +2558,13 @@ msgid "Copy of %s"
 msgstr "%s - コピー"
 
 #: ../src/interface/RemoteListView.cpp:1071
-#: ../src/interface/RemoteTreeView.cpp:919
+#: ../src/interface/RemoteTreeView.cpp:934
 msgid "Copy the URLs of the selected items to clipboard, including password."
 msgstr ""
 "選択したアイテムのパスワードを含む URL をクリップボードにコピーします。"
 
 #: ../src/interface/RemoteListView.cpp:1070
-#: ../src/interface/RemoteTreeView.cpp:918
+#: ../src/interface/RemoteTreeView.cpp:933
 msgid "Copy the URLs of the selected items to clipboard."
 msgstr "選択したアイテムの URL をクリップボードにコピーします。"
 
@@ -2623,8 +2621,8 @@ msgstr "コマンドをサーバーの文字コードに変換できません"
 msgid "Could not convert private key"
 msgstr "秘密鍵を変換できません"
 
-#: ../src/interface/RemoteListView.cpp:2671
-#: ../src/interface/RemoteTreeView.cpp:1464 ../src/interface/search.cpp:1934
+#: ../src/interface/search.cpp:1934 ../src/interface/RemoteListView.cpp:2685
+#: ../src/interface/RemoteTreeView.cpp:1479
 msgid "Could not copy URLs"
 msgstr "URL をコピーできません"
 
@@ -2642,7 +2640,7 @@ msgstr "パス %s から CFURL を作成できません"
 msgid "Could not create URI for this transfer."
 msgstr "この転送の URI を作成できません。"
 
-#: ../src/commonui/updater.cpp:536
+#: ../src/commonui/updater.cpp:547
 #, c-format
 msgid "Could not create local file %s\n"
 msgstr "ローカル ファイル %s に書き込めません\n"
@@ -2657,12 +2655,17 @@ msgstr "ロギング ミューテックスを作成できません: %s"
 msgid "Could not create security-scoped bookmark from URL:"
 msgstr "URL からセキュリティ スコープ付きブックマークを作成できません:"
 
-#: ../src/interface/edithandler.cpp:1312
+#: ../src/interface/edithandler.cpp:1311
 msgid "Could not create temporary file name."
 msgstr "一時ファイル名を作成できません。"
 
-#: ../src/interface/RemoteListView.cpp:2311
-#: ../src/interface/RemoteTreeView.cpp:889
+#: ../src/interface/RemoteListView.cpp:2322
+#: ../src/interface/RemoteTreeView.cpp:901
+msgid "Could not determine the target of the Drag&Drop operation."
+msgstr "ドラッグ＆ドロップ操作のターゲットを決定できません。"
+
+#: ../src/interface/RemoteListView.cpp:2320
+#: ../src/interface/RemoteTreeView.cpp:899
 msgid ""
 "Could not determine the target of the Drag&Drop operation.\n"
 "Either the shell extension is not installed properly or you didn't drop the "
@@ -2691,8 +2694,8 @@ msgstr ""
 msgid "Could not generate custom login sequence."
 msgstr "カスタム ログイン シーケンスを生成できません。"
 
-#: ../src/interface/asksavepassworddialog.cpp:111
 #: ../src/interface/settings/optionspage_passwords.cpp:149
+#: ../src/interface/asksavepassworddialog.cpp:111
 msgid "Could not generate key"
 msgstr "鍵を生成できません"
 
@@ -2722,11 +2725,11 @@ msgstr "fzstorj からの結果を取得できません。"
 msgid "Could not get size of '%s'"
 msgstr "「%s」のサイズを取得できません"
 
-#: ../src/interface/edithandler.cpp:1112 ../src/interface/search.cpp:1634
+#: ../src/interface/search.cpp:1634 ../src/interface/edithandler.cpp:1111
 msgid "Could not get temporary directory to download file into."
 msgstr "ファイルをダウンロードする一時ディレクトリを取得できません。"
 
-#: ../src/interface/LocalListView.cpp:399
+#: ../src/interface/LocalListView.cpp:400
 msgid "Could not list directory contents"
 msgstr "ディレクトリの内容をリストできません"
 
@@ -2789,7 +2792,7 @@ msgstr ""
 "ん。\n"
 "同期ブラウジングを無効にしました。"
 
-#: ../src/commonui/updater.cpp:845
+#: ../src/commonui/updater.cpp:856
 #, c-format
 msgid "Could not obtain size of '%s'"
 msgstr "「%s」のサイズを取得できません"
@@ -2799,7 +2802,7 @@ msgstr "「%s」のサイズを取得できません"
 msgid "Could not obtain size of '%s'."
 msgstr "「%s」のサイズを取得できません。"
 
-#: ../src/commonui/updater.cpp:858
+#: ../src/commonui/updater.cpp:869
 #, c-format
 msgid "Could not open '%s'"
 msgstr "「%s」を開くことができません"
@@ -2814,9 +2817,9 @@ msgstr "読み取り用に「%s」を開くことができません。"
 msgid "Could not open '%s' for writing."
 msgstr "書き込み用に「%s」を開くことができません。"
 
-#: ../src/interface/aboutdialog.cpp:220
-#: ../src/interface/RemoteListView.cpp:2671
-#: ../src/interface/RemoteTreeView.cpp:1464 ../src/interface/search.cpp:1934
+#: ../src/interface/aboutdialog.cpp:220 ../src/interface/search.cpp:1934
+#: ../src/interface/RemoteListView.cpp:2685
+#: ../src/interface/RemoteTreeView.cpp:1479
 msgid "Could not open clipboard"
 msgstr "クリップボードを開くことができません"
 
@@ -2835,7 +2838,7 @@ msgstr "リモート パスを構文解析できません。"
 msgid "Could not parse server address:"
 msgstr "サーバーのアドレスを構文解析できません:"
 
-#: ../src/commonui/updater.cpp:867
+#: ../src/commonui/updater.cpp:878
 #, c-format
 msgid "Could not read from '%s'"
 msgstr "「%s」から読み取れません"
@@ -2914,8 +2917,8 @@ msgstr "「%s」をディスクに同期できません。"
 msgid "Could not truncate '%s' to offset %d."
 msgstr "「%s」を切り詰めて %d オフセットできません。"
 
-#: ../src/interface/sitemanager.cpp:329
 #: ../src/interface/sitemanager_dialog.cpp:797
+#: ../src/interface/sitemanager.cpp:329
 #, c-format
 msgid ""
 "Could not write \"%s\", any changes to the Site Manager could not be saved: "
@@ -2935,15 +2938,15 @@ msgid "Could not write \"%s\", the global bookmarks could no be saved: %s"
 msgstr ""
 "\"%s\" を書き込めなかったため、グローバル ブックマークを保存できません: %s"
 
-#: ../src/interface/sitemanager.cpp:422 ../src/interface/sitemanager.cpp:479
 #: ../src/interface/sitemanager_dialog.cpp:1935
+#: ../src/interface/sitemanager.cpp:422 ../src/interface/sitemanager.cpp:479
 #, c-format
 msgid "Could not write \"%s\", the selected sites could not be exported: %s"
 msgstr ""
 "\"%s\" を書き込めなかったため、選択したサイトをエクスポートできません: %s"
 
-#: ../src/interface/Options.cpp:180 ../src/interface/verifycertdialog.cpp:28
-#: ../src/interface/xmlfunctions.cpp:11
+#: ../src/interface/verifycertdialog.cpp:28
+#: ../src/interface/xmlfunctions.cpp:11 ../src/interface/Options.cpp:182
 #, c-format
 msgid "Could not write \"%s\":"
 msgstr "\"%s\" を書き込めません:"
@@ -2967,8 +2970,8 @@ msgstr "ローカル ファイルに書き込めません"
 msgid "Could not write to log file: %s"
 msgstr "ログ ファイルに書き込めません: %s"
 
-#: ../src/engine/controlsocket.cpp:733 ../src/engine/controlsocket.cpp:831
-#: ../src/engine/http/request.cpp:279
+#: ../src/engine/http/request.cpp:279 ../src/engine/controlsocket.cpp:733
+#: ../src/engine/controlsocket.cpp:831
 #, c-format
 msgid "Could not write to socket: %s"
 msgstr "ソケットに書き込めません: %s"
@@ -2989,17 +2992,17 @@ msgstr "ディレクトリを作成して移動(&M)"
 msgid "Create &missing remote directory and enter it"
 msgstr "ディレクトリを作成して移動(&M)"
 
-#: ../src/interface/LocalListView.cpp:822
-#: ../src/interface/LocalTreeView.cpp:1107
+#: ../src/interface/LocalListView.cpp:823
+#: ../src/interface/LocalTreeView.cpp:1116
 #: ../src/interface/RemoteListView.cpp:1062
-#: ../src/interface/RemoteTreeView.cpp:912
+#: ../src/interface/RemoteTreeView.cpp:927
 msgid "Create a new subdirectory in the current directory"
 msgstr "現在のディレクトリに新しいサブディレクトリを作成"
 
-#: ../src/interface/LocalListView.cpp:823
-#: ../src/interface/LocalTreeView.cpp:1108
+#: ../src/interface/LocalListView.cpp:824
+#: ../src/interface/LocalTreeView.cpp:1117
 #: ../src/interface/RemoteListView.cpp:1063
-#: ../src/interface/RemoteTreeView.cpp:913
+#: ../src/interface/RemoteTreeView.cpp:928
 msgid "Create a new subdirectory in the current directory and change into it"
 msgstr "現在のディレクトリに新しいサブディレクトリを作成して移動"
 
@@ -3007,21 +3010,21 @@ msgstr "現在のディレクトリに新しいサブディレクトリを作成
 msgid "Create a new, empty file in the current directory"
 msgstr "現在のディレクトリに空のファイルを作成"
 
-#: ../src/interface/LocalListView.cpp:823
-#: ../src/interface/LocalTreeView.cpp:1108
+#: ../src/interface/LocalListView.cpp:824
+#: ../src/interface/LocalTreeView.cpp:1117
 #: ../src/interface/RemoteListView.cpp:1063
-#: ../src/interface/RemoteTreeView.cpp:913
+#: ../src/interface/RemoteTreeView.cpp:928
 msgid "Create director&y and enter it"
 msgstr "ディレクトリを作成して移動(&Y)"
 
-#: ../src/interface/LocalListView.cpp:993
-#: ../src/interface/LocalTreeView.cpp:1226
+#: ../src/interface/LocalListView.cpp:994
+#: ../src/interface/LocalTreeView.cpp:1235
 #: ../src/interface/RemoteListView.cpp:1325
-#: ../src/interface/RemoteTreeView.cpp:1298
+#: ../src/interface/RemoteTreeView.cpp:1313
 msgid "Create directory"
 msgstr "ディレクトリを作成"
 
-#: ../src/interface/RemoteListView.cpp:2760
+#: ../src/interface/RemoteListView.cpp:2774
 msgid "Create empty file"
 msgstr "空のファイルを作成"
 
@@ -3132,9 +3135,9 @@ msgstr "SI 接頭辞 (10進数) (例: 1 KB = 1000 バイト)(&E)"
 msgid "D&efault"
 msgstr "デフォルト(&E)"
 
+#: ../src/interface/search.cpp:1231 ../src/interface/search.cpp:1239
 #: ../src/interface/RemoteListView.cpp:1068
-#: ../src/interface/RemoteTreeView.cpp:916 ../src/interface/search.cpp:1231
-#: ../src/interface/search.cpp:1239
+#: ../src/interface/RemoteTreeView.cpp:931
 msgid "D&elete"
 msgstr "削除(&E)"
 
@@ -3146,8 +3149,8 @@ msgstr "ディレクトリの比較を有効にする(&I)"
 msgid "D&isable all"
 msgstr "すべて無効(&I)"
 
-#: ../src/interface/asksavepassworddialog.cpp:44
 #: ../src/interface/settings/optionspage_passwords.cpp:45
+#: ../src/interface/asksavepassworddialog.cpp:44
 msgid "D&o not save passwords"
 msgstr "パスワードを保存しない(&O)"
 
@@ -3262,12 +3265,12 @@ msgstr[0] "前回の接続失敗から %d 秒間再接続を遅延させてい�
 msgid "Delete Site Manager entries"
 msgstr "サイト マネージャー エントリの削除"
 
-#: ../src/interface/LocalTreeView.cpp:1111
-#: ../src/interface/RemoteTreeView.cpp:916
+#: ../src/interface/LocalTreeView.cpp:1120
+#: ../src/interface/RemoteTreeView.cpp:931
 msgid "Delete selected directory"
 msgstr "選択したディレクトリを削除"
 
-#: ../src/interface/LocalListView.cpp:827
+#: ../src/interface/LocalListView.cpp:828
 #: ../src/interface/RemoteListView.cpp:1068
 msgid "Delete selected files and directories"
 msgstr "選択したファイルとフォルダーを削除"
@@ -3286,7 +3289,7 @@ msgstr "%u 個のファイルを \"%s\" から削除中"
 msgid "Deleting symbolic link"
 msgstr "シンボリックリンクを削除中"
 
-#: ../src/interface/LocalTreeView.cpp:1021
+#: ../src/interface/LocalTreeView.cpp:1030
 msgid "Desktop"
 msgstr "デスクトップ"
 
@@ -3319,12 +3322,11 @@ msgstr "ディレクトリ"
 msgid "Directory access permissions"
 msgstr "ディレクトリのアクセス許可"
 
-#: ../src/interface/filelistctrl.cpp:494 ../src/interface/Mainfrm.cpp:2391
-#: ../src/interface/Mainfrm.cpp:2411
 #: ../src/interface/settings/optionspage_filelists.cpp:64
-#: ../src/interface/sitemanager_controls.cpp:939
-#: ../src/interface/sitemanager_dialog.cpp:282 ../src/interface/toolbar.cpp:115
-#: ../src/interface/view.cpp:114
+#: ../src/interface/toolbar.cpp:115 ../src/interface/sitemanager_dialog.cpp:282
+#: ../src/interface/filelistctrl.cpp:494
+#: ../src/interface/sitemanager_controls.cpp:939 ../src/interface/view.cpp:114
+#: ../src/interface/Mainfrm.cpp:2391 ../src/interface/Mainfrm.cpp:2411
 msgid "Directory comparison"
 msgstr "ディレクトリの比較を有効にする"
 
@@ -3381,20 +3383,19 @@ msgstr ""
 msgid "Disconnect from server"
 msgstr "サーバーから切断"
 
-#: ../src/engine/controlsocket.cpp:53 ../src/engine/controlsocket.cpp:734
-#: ../src/engine/controlsocket.cpp:833
 #: ../src/engine/ftp/ftpcontrolsocket.cpp:64 ../src/engine/http/request.cpp:280
-#: ../src/interface/queue.cpp:363
+#: ../src/engine/controlsocket.cpp:53 ../src/engine/controlsocket.cpp:734
+#: ../src/engine/controlsocket.cpp:833 ../src/interface/queue.cpp:363
 msgid "Disconnected from server"
 msgstr "サーバーから切断されました"
 
-#: ../src/engine/controlsocket.cpp:858
 #: ../src/engine/http/httpcontrolsocket.cpp:325
+#: ../src/engine/controlsocket.cpp:858
 #, c-format
 msgid "Disconnected from server: %s"
 msgstr "サーバーから切断されました: %s"
 
-#: ../src/interface/queue.cpp:362 ../src/interface/statuslinectrl.cpp:262
+#: ../src/interface/statuslinectrl.cpp:262 ../src/interface/queue.cpp:362
 msgid "Disconnecting from previous server"
 msgstr "前のサーバーから切断しています"
 
@@ -3410,7 +3411,7 @@ msgstr "ダイアログについて表示"
 msgid "Do &not use default editor"
 msgstr "デフォルトのエディターを使用しない(&N)"
 
-#: ../src/interface/edithandler.cpp:1217
+#: ../src/interface/edithandler.cpp:1216
 msgid "Do the same with &all selected files already being edited"
 msgstr "既に編集中のすべての選択したファイルで同じ操作を行う(&A)"
 
@@ -3440,7 +3441,7 @@ msgstr "本当に転送キューを削除しますか?"
 msgid "Do you really want to send '%s' to the server?"
 msgstr "本当にサーバーに「%s」を送信しますか?"
 
-#: ../src/interface/edithandler.cpp:1197
+#: ../src/interface/edithandler.cpp:1196
 msgid "Do you want to reopen this file?"
 msgstr "このファイルを開き直しますか?"
 
@@ -3488,7 +3489,7 @@ msgstr "ダウンロード制限: なし"
 msgid "Download search results"
 msgstr "検索結果をダウンロード"
 
-#: ../src/interface/RemoteTreeView.cpp:904
+#: ../src/interface/RemoteTreeView.cpp:919
 msgid "Download selected directory"
 msgstr "選択したディレクトリをダウンロード"
 
@@ -3501,7 +3502,7 @@ msgstr "選択したファイルとディレクトリをダウンロード"
 msgid "Download: %s/s"
 msgstr "ダウンロード速度: %s/s"
 
-#: ../src/interface/edithandler.cpp:1421
+#: ../src/interface/edithandler.cpp:1420
 msgid "Downloading"
 msgstr "ダウンロード中"
 
@@ -3514,19 +3515,19 @@ msgstr "%s をダウンロード中"
 msgid "Downloading update..."
 msgstr "ダウンロード中..."
 
-#: ../src/interface/LocalListView.cpp:116
-#: ../src/interface/LocalTreeView.cpp:113 ../src/interface/QueueView.cpp:101
+#: ../src/interface/LocalListView.cpp:117
+#: ../src/interface/LocalTreeView.cpp:114
 #: ../src/interface/RemoteListView.cpp:118
-#: ../src/interface/RemoteTreeView.cpp:91
+#: ../src/interface/RemoteTreeView.cpp:91 ../src/interface/QueueView.cpp:101
 msgid ""
 "Drag&drop between different instances of FileZilla has not been implemented "
 "yet."
 msgstr "FileZilla の異なるインスタンス間でのドラッグ＆ドロップは未実装です。"
 
-#: ../src/interface/LocalListView.cpp:121
-#: ../src/interface/LocalTreeView.cpp:119 ../src/interface/QueueView.cpp:115
+#: ../src/interface/LocalListView.cpp:122
+#: ../src/interface/LocalTreeView.cpp:120
 #: ../src/interface/RemoteListView.cpp:123
-#: ../src/interface/RemoteTreeView.cpp:96
+#: ../src/interface/RemoteTreeView.cpp:96 ../src/interface/QueueView.cpp:115
 msgid "Drag&drop between different servers has not been implemented yet."
 msgstr "異なるサーバー間でのドラッグ＆ドロップは未実装です。"
 
@@ -3542,7 +3543,7 @@ msgstr "複製(&I)"
 msgid "E&nable all"
 msgstr "すべて有効(&N)"
 
-#: ../src/interface/LocalListView.cpp:815
+#: ../src/interface/LocalListView.cpp:816
 #: ../src/interface/RemoteListView.cpp:1058
 msgid "E&nter directory"
 msgstr "ディレクトリを開く(&N)"
@@ -3555,8 +3556,9 @@ msgstr "実行(&X)"
 msgid "E&xit"
 msgstr "終了(&X)"
 
-#: ../src/interface/QueueView.cpp:1811 ../src/interface/queueview_failed.cpp:38
+#: ../src/interface/queueview_failed.cpp:38
 #: ../src/interface/queueview_successful.cpp:34
+#: ../src/interface/QueueView.cpp:1811
 msgid "E&xport..."
 msgstr "エクスポート(&X)..."
 
@@ -3572,7 +3574,7 @@ msgstr "各フィルターは少なくとも 1 つの条件を必要とします
 msgid "Edit filters"
 msgstr "フィルター編集"
 
-#: ../src/interface/LocalListView.cpp:819
+#: ../src/interface/LocalListView.cpp:820
 msgid ""
 "Edit the file with the configured editor and upload changes to the server."
 msgstr ""
@@ -3582,8 +3584,8 @@ msgstr ""
 msgid "Editing directories is not supported"
 msgstr "複数ディレクトリの編集はサポートされていません"
 
-#: ../src/interface/LocalListView.cpp:1809
-#: ../src/interface/LocalListView.cpp:1818
+#: ../src/interface/LocalListView.cpp:1817
+#: ../src/interface/LocalListView.cpp:1826
 msgid "Editing failed"
 msgstr "編集に失敗"
 
@@ -3705,7 +3707,7 @@ msgstr "フィルターセットの新しい名前を入力"
 msgid "Enter password"
 msgstr "パスワードを入力"
 
-#: ../src/interface/LocalListView.cpp:815
+#: ../src/interface/LocalListView.cpp:816
 #: ../src/interface/RemoteListView.cpp:1058
 msgid "Enter selected directory"
 msgstr "選択したディレクトリに移動"
@@ -3775,8 +3777,8 @@ msgstr "入力したファイルは ASCII として転送されます"
 msgid "Entered file would transfer as binary"
 msgstr "入力したファイルはバイナリとして転送されます"
 
-#: ../src/interface/asksavepassworddialog.cpp:111
 #: ../src/interface/settings/optionspage_passwords.cpp:149
+#: ../src/interface/asksavepassworddialog.cpp:111
 msgid "Error"
 msgstr "エラー"
 
@@ -3803,16 +3805,17 @@ msgstr "キューの読み込みエラー"
 #: ../src/interface/bookmarks_dialog.cpp:836
 #: ../src/interface/bookmarks_dialog.cpp:889
 #: ../src/interface/filter_manager.cpp:527
-#: ../src/interface/filter_manager.cpp:570 ../src/interface/Options.cpp:151
+#: ../src/interface/filter_manager.cpp:570
 #: ../src/interface/osx_sandbox_userdirs.cpp:67
 #: ../src/interface/osx_sandbox_userdirs.cpp:138
-#: ../src/interface/search.cpp:1790 ../src/interface/search.cpp:1824
+#: ../src/interface/wrapengine.cpp:946
+#: ../src/interface/sitemanager_dialog.cpp:715
+#: ../src/interface/sitemanager_dialog.cpp:775
 #: ../src/interface/sitemanager.cpp:44 ../src/interface/sitemanager.cpp:281
 #: ../src/interface/sitemanager.cpp:358 ../src/interface/sitemanager.cpp:446
 #: ../src/interface/sitemanager.cpp:544 ../src/interface/sitemanager.cpp:650
-#: ../src/interface/sitemanager_dialog.cpp:715
-#: ../src/interface/sitemanager_dialog.cpp:775
-#: ../src/interface/wrapengine.cpp:946
+#: ../src/interface/search.cpp:1790 ../src/interface/search.cpp:1824
+#: ../src/interface/Options.cpp:153
 msgid "Error loading xml file"
 msgstr "xml ファイルの読み込みエラー"
 
@@ -3828,13 +3831,13 @@ msgid "Error starting program"
 msgstr "プログラムの開始エラー"
 
 #: ../src/interface/bookmarks_dialog.cpp:376
-#: ../src/interface/bookmarks_dialog.cpp:931 ../src/interface/Options.cpp:185
-#: ../src/interface/sitemanager.cpp:330 ../src/interface/sitemanager.cpp:423
-#: ../src/interface/sitemanager.cpp:480
-#: ../src/interface/sitemanager_dialog.cpp:798
-#: ../src/interface/sitemanager_dialog.cpp:1936
+#: ../src/interface/bookmarks_dialog.cpp:931
 #: ../src/interface/verifycertdialog.cpp:29
 #: ../src/interface/xmlfunctions.cpp:15
+#: ../src/interface/sitemanager_dialog.cpp:798
+#: ../src/interface/sitemanager_dialog.cpp:1936
+#: ../src/interface/sitemanager.cpp:330 ../src/interface/sitemanager.cpp:423
+#: ../src/interface/sitemanager.cpp:480 ../src/interface/Options.cpp:187
 msgid "Error writing xml file"
 msgstr "xml ファイルの書き込みエラー"
 
@@ -3943,12 +3946,12 @@ msgstr "FTPES - FTP over TLS (明示的)"
 msgid "FTPS - FTP over implicit TLS"
 msgstr "FTPS - FTP over TLS (暗黙的)"
 
-#: ../src/interface/LocalListView.cpp:564
-#: ../src/interface/LocalListView.cpp:637
-#: ../src/interface/LocalListView.cpp:980
-#: ../src/interface/LocalListView.cpp:2013
-#: ../src/interface/LocalTreeView.cpp:897
-#: ../src/interface/LocalTreeView.cpp:1199 ../src/interface/viewheader.cpp:505
+#: ../src/interface/viewheader.cpp:505 ../src/interface/LocalListView.cpp:565
+#: ../src/interface/LocalListView.cpp:638
+#: ../src/interface/LocalListView.cpp:981
+#: ../src/interface/LocalListView.cpp:2021
+#: ../src/interface/LocalTreeView.cpp:898
+#: ../src/interface/LocalTreeView.cpp:1208
 msgid "Failed to change directory"
 msgstr "ディレクトリ変更に失敗しました"
 
@@ -3961,8 +3964,8 @@ msgstr "言語の変更に失敗しました"
 msgid "Failed to convert command to 8 bit charset"
 msgstr "8 ビット文字コードへ変換するコマンドに失敗しました"
 
-#: ../src/engine/sftp/input_parser.cpp:111
-#: ../src/engine/sftp/input_parser.cpp:124
+#: ../src/engine/sftp/input_parser.cpp:115
+#: ../src/engine/sftp/input_parser.cpp:128
 msgid "Failed to convert reply to local character set."
 msgstr "応答をローカル文字セットに変換できません。"
 
@@ -3987,11 +3990,11 @@ msgstr "アクティブモード転送のためのリスニング ソケット�
 msgid "Failed to decrypt server password."
 msgstr "サーバーのパスワードを復号化できません。"
 
-#: ../src/interface/LocalTreeView.cpp:645
+#: ../src/interface/LocalTreeView.cpp:646
 msgid "Failed to get 'My Documents' path"
 msgstr "「ドキュメント」のパス取得に失敗しました"
 
-#: ../src/interface/LocalTreeView.cpp:631
+#: ../src/interface/LocalTreeView.cpp:632
 msgid "Failed to get desktop path"
 msgstr "デスクトップへのパスの取得に失敗しました"
 
@@ -4139,7 +4142,7 @@ msgstr "ファイルが存在しています"
 msgid "File exists action"
 msgstr "ファイル存在時のアクション"
 
-#: ../src/interface/edithandler.cpp:806
+#: ../src/interface/edithandler.cpp:805
 msgid "File has changed"
 msgstr "ファイルは変更されています"
 
@@ -4147,13 +4150,13 @@ msgstr "ファイルは変更されています"
 msgid "File lists"
 msgstr "ファイル リスト"
 
-#: ../src/interface/edithandler.cpp:1919 ../src/interface/FileZilla.cpp:440
 #: ../src/interface/settings/optionspage_edit.cpp:194
+#: ../src/interface/edithandler.cpp:1918 ../src/interface/FileZilla.cpp:440
 msgid "File not found"
 msgstr "ファイルが見つかりません"
 
-#: ../src/interface/search.cpp:647 ../src/interface/search.cpp:1039
-#: ../src/interface/toolbar.cpp:117
+#: ../src/interface/toolbar.cpp:117 ../src/interface/search.cpp:647
+#: ../src/interface/search.cpp:1039
 msgid "File search"
 msgstr "ファイル検索"
 
@@ -4218,11 +4221,11 @@ msgstr "Filezilla のアップデート"
 msgid "Filelist status &bars"
 msgstr "ファイル リストのステータス バー(&B)"
 
-#: ../src/interface/edithandler.cpp:1407
 #: ../src/interface/filter_conditions_dialog.cpp:100
-#: ../src/interface/LocalListView.cpp:287
-#: ../src/interface/RemoteListView.cpp:338 ../src/interface/search.cpp:175
 #: ../src/interface/settings/optionspage_connection_sftp.cpp:85
+#: ../src/interface/search.cpp:175 ../src/interface/edithandler.cpp:1406
+#: ../src/interface/LocalListView.cpp:288
+#: ../src/interface/RemoteListView.cpp:338
 msgid "Filename"
 msgstr "名前"
 
@@ -4239,8 +4242,8 @@ msgstr "ファイル名が不正です"
 msgid "Filename unchanged"
 msgstr "ファイル名は変更されません"
 
-#: ../src/interface/edithandler.cpp:820
 #: ../src/interface/settings/optionspage_logging.cpp:50
+#: ../src/interface/edithandler.cpp:819
 msgid "Filename:"
 msgstr "ファイル名:"
 
@@ -4254,7 +4257,7 @@ msgid ""
 "|"
 msgstr "ファイル名に使用できない文字: / \\ : * ? \" < > |"
 
-#: ../src/interface/edithandler.cpp:1392
+#: ../src/interface/edithandler.cpp:1391
 msgid "Files currently being edited"
 msgstr "編集中のファイルがあります"
 
@@ -4264,8 +4267,8 @@ msgstr ""
 "フィルター ルールに一致するファイルは、ディレクトリ リストから削除されます。"
 
 #: ../src/interface/filter_conditions_dialog.cpp:104
-#: ../src/interface/LocalListView.cpp:288
-#: ../src/interface/RemoteListView.cpp:339 ../src/interface/search.cpp:177
+#: ../src/interface/search.cpp:177 ../src/interface/LocalListView.cpp:289
+#: ../src/interface/RemoteListView.cpp:339
 msgid "Filesize"
 msgstr "サイズ"
 
@@ -4273,8 +4276,8 @@ msgstr "サイズ"
 msgid "Filesize format"
 msgstr "ファイル サイズの書式"
 
-#: ../src/interface/LocalListView.cpp:289
-#: ../src/interface/RemoteListView.cpp:340 ../src/interface/search.cpp:178
+#: ../src/interface/search.cpp:178 ../src/interface/LocalListView.cpp:290
+#: ../src/interface/RemoteListView.cpp:340
 msgid "Filetype"
 msgstr "種類"
 
@@ -4363,14 +4366,14 @@ msgstr ""
 msgid "For reliability you should specify a range of at least 10 ports."
 msgstr "信頼性確保のために、少なくとも 10 ポートの範囲指定が必要です。"
 
-#: ../src/interface/Options.cpp:150
+#: ../src/interface/Options.cpp:152
 msgid ""
 "For this session the default settings will be used. Any changes to the "
 "settings will not be saved."
 msgstr ""
 "このセッションではデフォルトの設定を使用します。設定の変更は保存されません。"
 
-#: ../src/interface/edithandler.cpp:1147
+#: ../src/interface/edithandler.cpp:1146
 msgid "Forbidden character in file extension."
 msgstr "ファイルの拡張子に禁止文字があります。"
 
@@ -4395,7 +4398,7 @@ msgid "Format: Extension followed by properly quoted command and arguments."
 msgstr "書式: 拡張子の後に引用符で適切に囲まれたコマンドと引数が続きます"
 
 #. @translator: Two examples: Found new nightly 2014-04-03\n, Found new release 3.9.0.1\n
-#: ../src/commonui/updater.cpp:800
+#: ../src/commonui/updater.cpp:811
 #, c-format
 msgid "Found new %s %s\n"
 msgstr "新しい %s %s が見つかりました\n"
@@ -4451,7 +4454,7 @@ msgstr "グローバル ブックマーク"
 msgid "GnuTLS:"
 msgstr "GnuTLS:"
 
-#: ../src/engine/sftp/input_parser.cpp:95
+#: ../src/engine/sftp/input_parser.cpp:99
 msgid "Got overlong input line, aborting."
 msgstr "入力行が長すぎるため、中止しました。"
 
@@ -4483,8 +4486,8 @@ msgstr "ハッシュ:"
 msgid "Hidden"
 msgstr "隠しファイル属性"
 
-#: ../src/interface/queue.cpp:1017 ../src/interface/queue.cpp:1079
 #: ../src/interface/settings/optionspage_transfer.cpp:97
+#: ../src/interface/queue.cpp:1017 ../src/interface/queue.cpp:1079
 msgid "High"
 msgstr "高い"
 
@@ -4527,10 +4530,10 @@ msgstr "ホストに到達できません"
 
 #: ../src/interface/resources/xrc/dialogs.xrc:37
 #: ../src/interface/resources/xrc/dialogs.xrc:158
-#: ../src/interface/loginmanager.cpp:38 ../src/interface/loginmanager.cpp:166
 #: ../src/interface/verifycertdialog.cpp:355
 #: ../src/interface/verifycertdialog.cpp:628
 #: ../src/interface/verifycertdialog.cpp:696
+#: ../src/interface/loginmanager.cpp:38 ../src/interface/loginmanager.cpp:166
 msgid "Host:"
 msgstr "ホスト:"
 
@@ -4904,7 +4907,7 @@ msgstr "不正な日付"
 msgid "Invalid filename"
 msgstr "不正なファイル名"
 
-#: ../src/commonui/updater.cpp:795
+#: ../src/commonui/updater.cpp:806
 #, c-format
 msgid "Invalid hash: %s\n"
 msgstr "不正なハッシュ: %s\n"
@@ -4930,7 +4933,7 @@ msgstr "不正な入力"
 msgid "Invalid line"
 msgstr "不正な行"
 
-#: ../src/engine/storj/mkd.cpp:18 ../src/engine/storj/rmd.cpp:21
+#: ../src/engine/storj/rmd.cpp:21 ../src/engine/storj/mkd.cpp:18
 msgid "Invalid path"
 msgstr "不正なパス"
 
@@ -5049,8 +5052,8 @@ msgstr "言語"
 msgid "Language changed"
 msgstr "言語が変更されました"
 
-#: ../src/interface/LocalListView.cpp:290
-#: ../src/interface/RemoteListView.cpp:341 ../src/interface/search.cpp:179
+#: ../src/interface/search.cpp:179 ../src/interface/LocalListView.cpp:291
+#: ../src/interface/RemoteListView.cpp:341
 msgid "Last modified"
 msgstr "更新日時"
 
@@ -5109,7 +5112,7 @@ msgstr "リスト:"
 msgid "Lo&west available port:"
 msgstr "利用可能なポートの最小値(&W):"
 
-#: ../src/interface/edithandler.cpp:1453 ../src/interface/edithandler.cpp:1701
+#: ../src/interface/edithandler.cpp:1452 ../src/interface/edithandler.cpp:1700
 msgid "Local"
 msgstr "ローカル"
 
@@ -5125,7 +5128,7 @@ msgstr "ローカル ファイル"
 msgid "Local file does not exist."
 msgstr "ローカル ファイルが存在しません。"
 
-#: ../src/commonui/updater.cpp:431 ../src/commonui/updater.cpp:541
+#: ../src/commonui/updater.cpp:442 ../src/commonui/updater.cpp:552
 #, c-format
 msgid "Local file is %s\n"
 msgstr "ローカル ファイル %s\n"
@@ -5158,7 +5161,7 @@ msgstr "ローカルの結果:"
 msgid "Local site:"
 msgstr "ローカル サイト:"
 
-#: ../src/commonui/updater.cpp:849
+#: ../src/commonui/updater.cpp:860
 #, c-format
 msgid "Local size of '%s' does not match expected size: %d != %d"
 msgstr "「%s」のローカル サイズが予想サイズと一致しません: %d != %d"
@@ -5175,8 +5178,8 @@ msgstr "ログ ファイル"
 msgid "Logged in"
 msgstr "ログインしました"
 
-#: ../src/interface/settings/optionspage_logging.cpp:40
 #: ../src/interface/settings/settingsdialog.cpp:146
+#: ../src/interface/settings/optionspage_logging.cpp:40
 msgid "Logging"
 msgstr "ログ"
 
@@ -5348,17 +5351,17 @@ msgstr "下に移動(&D)"
 msgid "Move &up"
 msgstr "上に移動(&U)"
 
-#: ../src/interface/LocalTreeView.cpp:1038
+#: ../src/interface/LocalTreeView.cpp:1047
 msgid "My Computer"
 msgstr "PC"
 
-#: ../src/interface/LocalTreeView.cpp:1029
+#: ../src/interface/LocalTreeView.cpp:1038
 msgid "My Documents"
 msgstr "ドキュメント"
 
-#: ../src/interface/sitemanager.cpp:203
 #: ../src/interface/sitemanager_dialog.cpp:701
 #: ../src/interface/sitemanager_dialog.cpp:704
+#: ../src/interface/sitemanager.cpp:203
 msgid "My Sites"
 msgstr "自分のサイト"
 
@@ -5389,8 +5392,8 @@ msgstr "ブックマーク名は既に存在しています。"
 msgid "Name or email address"
 msgstr "名前またはメール アドレス"
 
-#: ../src/interface/loginmanager.cpp:30 ../src/interface/loginmanager.cpp:162
 #: ../src/interface/verifycertdialog.cpp:520
+#: ../src/interface/loginmanager.cpp:30 ../src/interface/loginmanager.cpp:162
 msgid "Name:"
 msgstr "名前:"
 
@@ -5453,14 +5456,14 @@ msgstr "新規ブックマーク(&M)"
 #: ../src/interface/bookmarks_dialog.cpp:623
 #: ../src/interface/bookmarks_dialog.cpp:644
 #: ../src/interface/bookmarks_dialog.cpp:901
-#: ../src/interface/sitemanager.cpp:389
 #: ../src/interface/sitemanager_dialog.cpp:1858
+#: ../src/interface/sitemanager.cpp:389
 msgid "New bookmark"
 msgstr "新規ブックマーク"
 
-#: ../src/interface/LocalTreeView.cpp:1230
+#: ../src/interface/LocalTreeView.cpp:1239
 #: ../src/interface/RemoteListView.cpp:1338
-#: ../src/interface/RemoteTreeView.cpp:1312
+#: ../src/interface/RemoteTreeView.cpp:1327
 msgid "New directory"
 msgstr "新規ディレクトリ"
 
@@ -5477,8 +5480,8 @@ msgstr "新規フィルター"
 msgid "New folder"
 msgstr "新規フォルダー"
 
-#: ../src/interface/sitemanager.cpp:301 ../src/interface/sitemanager.cpp:315
 #: ../src/interface/sitemanager_dialog.cpp:1831
+#: ../src/interface/sitemanager.cpp:301 ../src/interface/sitemanager.cpp:315
 msgid "New site"
 msgstr "新規サイト"
 
@@ -5515,7 +5518,7 @@ msgstr "「%s」に一致するエントリは見つかりません。"
 msgid "No external IP address set, trying default."
 msgstr "外部 IP アドレスが設定されていないため、デフォルトを試しています。"
 
-#: ../src/interface/edithandler.cpp:1388
+#: ../src/interface/edithandler.cpp:1387
 msgid "No files are currently being edited."
 msgstr "現在編集中のファイルはありません。"
 
@@ -5542,19 +5545,19 @@ msgstr "フィルターセット名が入力されていません。"
 msgid "No permission to open '%s'"
 msgstr "「%s」を開く権限がありません"
 
-#: ../src/interface/edithandler.cpp:1747
+#: ../src/interface/edithandler.cpp:1746
 msgid "No program associated with filetype"
 msgstr "ファイルの種類に関連付けられたプログラムがありません"
 
-#: ../src/interface/edithandler.cpp:1757
+#: ../src/interface/edithandler.cpp:1756
 msgid "No program has been associated to edit dotfiles."
 msgstr "ドットファイルの編集に関連付けられたプログラムはありません。"
 
-#: ../src/interface/edithandler.cpp:1754
+#: ../src/interface/edithandler.cpp:1753
 msgid "No program has been associated to edit extensionless files."
 msgstr "拡張子なしのファイルの編集に関連付けられたプログラムはありません。"
 
-#: ../src/interface/edithandler.cpp:1760
+#: ../src/interface/edithandler.cpp:1759
 #, c-format
 msgid "No program has been associated to edit files with the extension '%s'."
 msgstr "拡張子「%s」のファイルの編集に関連付けられたプログラムはありません。"
@@ -5581,8 +5584,8 @@ msgstr "ユーザー名が入力されていません。"
 
 #: ../src/interface/settings/optionspage_filelists.cpp:84
 #: ../src/interface/settings/optionspage_filelists.cpp:90
-#: ../src/interface/sitemanager.cpp:25
 #: ../src/interface/verifycertdialog.cpp:102
+#: ../src/interface/sitemanager.cpp:25
 msgid "None"
 msgstr "なし"
 
@@ -5591,8 +5594,8 @@ msgid "None selected yet"
 msgstr "まだ選択されていません"
 
 #: ../src/engine/server.cpp:733 ../src/engine/server.cpp:763
-#: ../src/interface/queue.cpp:1015 ../src/interface/queue.cpp:1077
 #: ../src/interface/settings/optionspage_transfer.cpp:96
+#: ../src/interface/queue.cpp:1015 ../src/interface/queue.cpp:1077
 msgid "Normal"
 msgstr "通常"
 
@@ -5660,13 +5663,12 @@ msgstr "再試行回数は 0 から 99 の間でなければなりません。"
 #: ../src/interface/resources/xrc/dialogs.xrc:826
 #: ../src/interface/resources/xrc/dialogs.xrc:921
 #: ../src/interface/resources/xrc/dialogs.xrc:990
-#: ../src/interface/aboutdialog.cpp:132 ../src/interface/edithandler.cpp:1227
-#: ../src/interface/edithandler.cpp:1504 ../src/interface/edithandler.cpp:1813
-#: ../src/interface/filteredit.cpp:140 ../src/interface/filter_manager.cpp:123
-#: ../src/interface/listctrlex.cpp:736
+#: ../src/interface/filter_manager.cpp:123 ../src/interface/filteredit.cpp:140
 #: ../src/interface/settings/settingsdialog.cpp:72
 #: ../src/interface/verifycertdialog.cpp:394
-#: ../src/interface/welcome_dialog.cpp:119
+#: ../src/interface/aboutdialog.cpp:132 ../src/interface/welcome_dialog.cpp:119
+#: ../src/interface/listctrlex.cpp:736 ../src/interface/edithandler.cpp:1226
+#: ../src/interface/edithandler.cpp:1503 ../src/interface/edithandler.cpp:1812
 msgid "OK"
 msgstr "OK"
 
@@ -5710,11 +5712,11 @@ msgstr ""
 msgid "Only use plain FTP (insecure)"
 msgstr "平文の FTP のみを使用する (安全でない)"
 
-#: ../src/interface/edithandler.cpp:1498
+#: ../src/interface/edithandler.cpp:1497
 msgid "Op&en file"
 msgstr "ファイルを開く(&E)"
 
-#: ../src/interface/LocalTreeView.cpp:1104
+#: ../src/interface/LocalTreeView.cpp:1113
 msgid "Open directory in system's file manager"
 msgstr "システムのファイル マネージャーでディレクトリを開く"
 
@@ -5738,7 +5740,7 @@ msgstr ""
 "ディレクトリのアクセス許可ダイアログを開き、FileZilla がアクセスできるローカ"
 "ル ディレクトリを設定します。"
 
-#: ../src/interface/LocalListView.cpp:818
+#: ../src/interface/LocalListView.cpp:819
 msgid "Open the file."
 msgstr "ファイルを開きます。"
 
@@ -5746,14 +5748,14 @@ msgstr "ファイルを開きます。"
 msgid "Open the settings dialog of FileZilla"
 msgstr "FileZilla の設定ダイアログを開く"
 
-#: ../src/interface/edithandler.cpp:830
+#: ../src/interface/edithandler.cpp:829
 msgid "Opened as:"
 msgstr "開かれています:"
 
-#: ../src/interface/edithandler.cpp:381 ../src/interface/edithandler.cpp:1332
-#: ../src/interface/LocalListView.cpp:1925
-#: ../src/interface/LocalListView.cpp:1937 ../src/interface/search.cpp:2073
-#: ../src/interface/search.cpp:2084
+#: ../src/interface/search.cpp:2073 ../src/interface/search.cpp:2084
+#: ../src/interface/edithandler.cpp:380 ../src/interface/edithandler.cpp:1331
+#: ../src/interface/LocalListView.cpp:1933
+#: ../src/interface/LocalListView.cpp:1945
 msgid "Opening failed"
 msgstr "開くのに失敗"
 
@@ -5837,7 +5839,7 @@ msgstr "サイズが異なる場合は上書き(&D)"
 msgid "Overwrite if different si&ze or source newer"
 msgstr "サイズが異なるかソースが新しければ上書き(&Z)"
 
-#: ../src/commonui/updater.cpp:249
+#: ../src/commonui/updater.cpp:260
 #, c-format
 msgid "Own build type: %s\n"
 msgstr "ビルド タイプ: %s\n"
@@ -5846,7 +5848,7 @@ msgstr "ビルド タイプ: %s\n"
 msgid "Owner permissions"
 msgstr "所有者のパーミッション"
 
-#: ../src/interface/RemoteListView.cpp:343 ../src/interface/search.cpp:181
+#: ../src/interface/search.cpp:181 ../src/interface/RemoteListView.cpp:343
 msgid "Owner/Group"
 msgstr "所有者/グループ"
 
@@ -5856,8 +5858,8 @@ msgid ""
 "operations"
 msgstr "転送中や他の操作中にシステムがアイドル スリープに入るのを回避する(&R)"
 
-#: ../src/interface/settings/optionspage_ftpproxy.cpp:82
 #: ../src/interface/settings/optionspage_proxy.cpp:61
+#: ../src/interface/settings/optionspage_ftpproxy.cpp:82
 msgid "P&roxy host:"
 msgstr "プロキシ ホスト(&R):"
 
@@ -5881,14 +5883,14 @@ msgstr "パッシブ (推奨)(&S)"
 msgid "Parameter not a valid URL"
 msgstr "パラメーターは有効な URL ではありません"
 
-#: ../src/commonui/updater.cpp:609
+#: ../src/commonui/updater.cpp:620
 #, c-format
 msgid "Parsing %d bytes of version information.\n"
 msgstr "%d バイトのバージョン情報を解析します。\n"
 
-#: ../src/interface/quickconnectbar.cpp:51
 #: ../src/interface/sitemanager_controls.cpp:133
 #: ../src/interface/sitemanager_controls.cpp:361
+#: ../src/interface/quickconnectbar.cpp:51
 msgid "Pass&word:"
 msgstr "パスワード(&W):"
 
@@ -5939,8 +5941,8 @@ msgstr "アイデンティティ サービスのパス"
 msgid "Paths"
 msgstr "パス"
 
-#: ../src/interface/edithandler.cpp:1433 ../src/interface/edithandler.cpp:1587
-#: ../src/interface/edithandler.cpp:1671 ../src/interface/edithandler.cpp:1682
+#: ../src/interface/edithandler.cpp:1432 ../src/interface/edithandler.cpp:1586
+#: ../src/interface/edithandler.cpp:1670 ../src/interface/edithandler.cpp:1681
 msgid "Pending removal"
 msgstr "保留を取り除く"
 
@@ -5948,7 +5950,7 @@ msgstr "保留を取り除く"
 msgid "Permission"
 msgstr "パーミッション"
 
-#: ../src/interface/RemoteListView.cpp:342 ../src/interface/search.cpp:180
+#: ../src/interface/search.cpp:180 ../src/interface/RemoteListView.cpp:342
 msgid "Permissions"
 msgstr "パーミッション"
 
@@ -6119,14 +6121,14 @@ msgstr ""
 "例: (MS Windows) c:\\somePath\\file.exe, (UNIX) /somePath/file\n"
 "スペースを含む場合はコマンドと引数を引用符で適切に囲む必要があります。"
 
-#: ../src/interface/LocalListView.cpp:993
-#: ../src/interface/LocalTreeView.cpp:1226
+#: ../src/interface/LocalListView.cpp:994
+#: ../src/interface/LocalTreeView.cpp:1235
 #: ../src/interface/RemoteListView.cpp:1325
-#: ../src/interface/RemoteTreeView.cpp:1298
+#: ../src/interface/RemoteTreeView.cpp:1313
 msgid "Please enter the name of the directory which should be created:"
 msgstr "作成するディレクトリ名を入力:"
 
-#: ../src/interface/RemoteListView.cpp:2760
+#: ../src/interface/RemoteListView.cpp:2774
 msgid "Please enter the name of the file which should be created:"
 msgstr "作成するファイル名を入力:"
 
@@ -6297,8 +6299,8 @@ msgstr "ダウンロード前に領域を事前確保する(&A)"
 msgid "Preallocation"
 msgstr "事前確保"
 
-#: ../src/interface/sitemanager.cpp:202
 #: ../src/interface/sitemanager_dialog.cpp:1508
+#: ../src/interface/sitemanager.cpp:202
 msgid "Predefined Sites"
 msgstr "所定のサイト"
 
@@ -6350,8 +6352,8 @@ msgstr "プロジェクト(&J):"
 msgid "Pro&tocol:"
 msgstr "プロトコル(&T):"
 
-#: ../src/interface/settings/optionspage_ftpproxy.cpp:88
 #: ../src/interface/settings/optionspage_proxy.cpp:71
+#: ../src/interface/settings/optionspage_ftpproxy.cpp:88
 msgid "Pro&xy password:"
 msgstr "プロキシ パスワード(&X):"
 
@@ -6382,8 +6384,8 @@ msgstr "プロトコル:"
 msgid "Proxy &port:"
 msgstr "プロキシ ポート(&P):"
 
-#: ../src/interface/settings/optionspage_ftpproxy.cpp:85
 #: ../src/interface/settings/optionspage_proxy.cpp:68
+#: ../src/interface/settings/optionspage_ftpproxy.cpp:85
 msgid "Proxy &user:"
 msgstr "プロキシ ユーザー(&U):"
 
@@ -6476,10 +6478,10 @@ msgstr "クイック検索:"
 msgid "Quick search cannot be opened if comparing directories."
 msgstr "ディレクトリを比較中はクイック検索を開くことができません。"
 
-#: ../src/interface/edithandler.cpp:1801
+#: ../src/interface/settings/optionspage_edit_associations.cpp:33
 #: ../src/interface/settings/optionspage_edit.cpp:41
 #: ../src/interface/settings/optionspage_edit.cpp:78
-#: ../src/interface/settings/optionspage_edit_associations.cpp:33
+#: ../src/interface/edithandler.cpp:1800
 msgid "Quoting rules"
 msgstr "引用符の規則"
 
@@ -6504,7 +6506,7 @@ msgstr "生の FTP コマンド"
 msgid "Re&ad"
 msgstr "読み取り(&A)"
 
-#: ../src/interface/LocalListView.cpp:824
+#: ../src/interface/LocalListView.cpp:825
 #: ../src/interface/RemoteListView.cpp:1065
 msgid "Re&fresh"
 msgstr "最新の情報に更新(&F)"
@@ -6542,25 +6544,25 @@ msgstr "「%s」からの読み取りに失敗しました。"
 msgid "Really cancel current operation?"
 msgstr "本当に現在の操作を中止しますか?"
 
-#: ../src/interface/RemoteListView.cpp:1420 ../src/interface/search.cpp:1687
+#: ../src/interface/search.cpp:1687 ../src/interface/RemoteListView.cpp:1420
 #, c-format
 msgid "Really delete %d directory with its contents from the server?"
 msgid_plural ""
 "Really delete %d directories with their contents from the server?"
 msgstr[0] "本当にサーバーから %d 個のディレクトリとその中身を削除しますか?"
 
-#: ../src/interface/RemoteListView.cpp:1417 ../src/interface/search.cpp:1684
+#: ../src/interface/search.cpp:1684 ../src/interface/RemoteListView.cpp:1417
 #, c-format
 msgid "Really delete %d file from the server?"
 msgid_plural "Really delete %d files from the server?"
 msgstr[0] "本当にサーバーから %d 個のファイルを削除しますか?"
 
-#: ../src/interface/RemoteListView.cpp:1425 ../src/interface/search.cpp:1692
+#: ../src/interface/search.cpp:1692 ../src/interface/RemoteListView.cpp:1425
 #, c-format
 msgid "Really delete %s and %s from the server?"
 msgstr "本当にサーバーから %sと %s を削除しますか?"
 
-#: ../src/interface/RemoteTreeView.cpp:1099
+#: ../src/interface/RemoteTreeView.cpp:1114
 msgid "Really delete all selected files and/or directories from the server?"
 msgstr "本当に選択したすべてのファイル/ディレクトリをサーバーから削除しますか?"
 
@@ -6597,7 +6599,7 @@ msgstr "10000 文字を超える行を受信したため中止しています。
 msgid "Received data tainted"
 msgstr "受信したデータは失われました"
 
-#: ../src/commonui/updater.cpp:590
+#: ../src/commonui/updater.cpp:601
 msgid "Received invalid character in version information"
 msgstr "受信したバージョン情報に不正な文字が含まれています"
 
@@ -6659,11 +6661,11 @@ msgstr "ファイルとフォルダーのリストを更新"
 msgid "Remember passwords?"
 msgstr "パスワードを保存しますか?"
 
-#: ../src/interface/edithandler.cpp:1417
+#: ../src/interface/edithandler.cpp:1416
 msgid "Remote"
 msgstr "リモート"
 
-#: ../src/interface/manual_transfer.cpp:101 ../src/interface/queue.cpp:1295
+#: ../src/interface/queue.cpp:1295 ../src/interface/manual_transfer.cpp:101
 msgid "Remote file"
 msgstr "リモート ファイル"
 
@@ -6675,7 +6677,7 @@ msgstr "リモート ファイルの検索"
 msgid "Remote filters:"
 msgstr "リモート フィルター:"
 
-#: ../src/interface/edithandler.cpp:1409
+#: ../src/interface/edithandler.cpp:1408
 msgid "Remote path"
 msgstr "リモート パス"
 
@@ -6711,7 +6713,7 @@ msgstr "リモート パスを構文解析できません。"
 msgid "Remote path handling:"
 msgstr "リモート パスの処理:"
 
-#: ../src/interface/edithandler.cpp:838
+#: ../src/interface/edithandler.cpp:837
 msgid "Remote path:"
 msgstr "リモート パス:"
 
@@ -6733,18 +6735,18 @@ msgstr "すべて削除(&A)"
 msgid "Remove &selected"
 msgstr "選択されているアイテムを削除(&S)"
 
-#: ../src/interface/asyncrequestqueue.cpp:385
 #: ../src/interface/defaultfileexistsdlg.cpp:51
 #: ../src/interface/settings/optionspage_fileexists.cpp:52
+#: ../src/interface/asyncrequestqueue.cpp:385
 msgid "Rename file"
 msgstr "ファイル名を変更"
 
-#: ../src/interface/LocalTreeView.cpp:1112
-#: ../src/interface/RemoteTreeView.cpp:917
+#: ../src/interface/LocalTreeView.cpp:1121
+#: ../src/interface/RemoteTreeView.cpp:932
 msgid "Rename selected directory"
 msgstr "選択したディレクトリの名前の変更"
 
-#: ../src/interface/LocalListView.cpp:828
+#: ../src/interface/LocalListView.cpp:829
 #: ../src/interface/RemoteListView.cpp:1069
 msgid "Rename selected files and directories"
 msgstr "選択したファイルとディレクトリの名前の変更"
@@ -6907,8 +6909,8 @@ msgstr ""
 msgid "SQLite:"
 msgstr "SQLite:"
 
-#: ../src/interface/asksavepassworddialog.cpp:45
 #: ../src/interface/settings/optionspage_passwords.cpp:47
+#: ../src/interface/asksavepassworddialog.cpp:45
 msgid "Sa&ve passwords protected by a master password"
 msgstr "マスター パスワードで保護されたパスワードを保存する(&V)"
 
@@ -6920,8 +6922,8 @@ msgstr "サブジェクトと同一で、証明書は自己署名です"
 msgid "Satellite:"
 msgstr "サテライト:"
 
-#: ../src/interface/asksavepassworddialog.cpp:43
 #: ../src/interface/settings/optionspage_passwords.cpp:43
+#: ../src/interface/asksavepassworddialog.cpp:43
 msgid "Sav&e passwords"
 msgstr "パスワードを保存する(&E)"
 
@@ -7011,8 +7013,8 @@ msgstr ""
 "転送するターゲット ファイルが既に存在しているときのデフォルトのアクションを選"
 "択してください。"
 
-#: ../src/interface/edithandler.cpp:1898
 #: ../src/interface/settings/optionspage_edit.cpp:173
+#: ../src/interface/edithandler.cpp:1897
 msgid "Select default editor"
 msgstr "デフォルトのエディターを選択"
 
@@ -7068,7 +7070,7 @@ msgstr "アップロードするファイルを選択"
 msgid "Select filename for converted key file"
 msgstr "変換された鍵ファイルの名前を選択"
 
-#: ../src/interface/edithandler.cpp:1763
+#: ../src/interface/edithandler.cpp:1762
 msgid "Select how these files should be opened."
 msgstr "これらのファイルをどのように開くか選択してください。"
 
@@ -7133,12 +7135,12 @@ msgstr "%sと %sを選択 合計サイズ: %s"
 msgid "Selected %s and %s. Total size: At least %s"
 msgstr "%sと %sを選択 合計サイズ: %s 以上"
 
-#: ../src/interface/edithandler.cpp:1867 ../src/interface/edithandler.cpp:1919
 #: ../src/interface/settings/optionspage_edit.cpp:194
+#: ../src/interface/edithandler.cpp:1866 ../src/interface/edithandler.cpp:1918
 msgid "Selected editor does not exist."
 msgstr "選択したエディターは存在しません。"
 
-#: ../src/interface/edithandler.cpp:1179
+#: ../src/interface/edithandler.cpp:1178
 msgid "Selected file already being edited"
 msgstr "選択したファイルは既に編集中です"
 
@@ -7146,11 +7148,11 @@ msgstr "選択したファイルは既に編集中です"
 msgid "Selected file is already loaded"
 msgstr "選択したファイルは既に読み込まれています"
 
-#: ../src/interface/edithandler.cpp:1170
+#: ../src/interface/edithandler.cpp:1169
 msgid "Selected file is already opened"
 msgstr "選択したファイルは既に開かれています"
 
-#: ../src/interface/edithandler.cpp:1287
+#: ../src/interface/edithandler.cpp:1286
 msgid "Selected file is still being edited"
 msgstr "選択したファイルはまだ編集中です"
 
@@ -7333,8 +7335,8 @@ msgstr "サーバー -> クライアント 暗号化方式:"
 msgid "Server/Local file"
 msgstr "サーバー/ローカル ファイル"
 
-#: ../src/interface/edithandler.cpp:835
 #: ../src/interface/manual_transfer.cpp:133
+#: ../src/interface/edithandler.cpp:834
 msgid "Server:"
 msgstr "サーバー:"
 
@@ -7420,6 +7422,9 @@ msgstr "サイト マネージャー"
 msgid "Site Manager - Cannot remember password"
 msgstr "サイト マネージャー - パスワードを保存しない"
 
+#: ../src/interface/sitemanager_dialog.cpp:927
+#: ../src/interface/sitemanager_dialog.cpp:936
+#: ../src/interface/sitemanager_dialog.cpp:943
 #: ../src/interface/sitemanager_controls.cpp:558
 #: ../src/interface/sitemanager_controls.cpp:569
 #: ../src/interface/sitemanager_controls.cpp:627
@@ -7435,9 +7440,6 @@ msgstr "サイト マネージャー - パスワードを保存しない"
 #: ../src/interface/sitemanager_controls.cpp:1402
 #: ../src/interface/sitemanager_controls.cpp:1414
 #: ../src/interface/sitemanager_controls.cpp:1428
-#: ../src/interface/sitemanager_dialog.cpp:927
-#: ../src/interface/sitemanager_dialog.cpp:936
-#: ../src/interface/sitemanager_dialog.cpp:943
 msgid "Site Manager - Invalid data"
 msgstr "サイト マネージャー - 不正なデータ"
 
@@ -7586,7 +7588,7 @@ msgstr "今すぐ転送を開始する(&I)"
 msgid "Start with opened Site Manager"
 msgstr "サイト マネージャーを開いた状態で起動"
 
-#: ../src/commonui/updater.cpp:239
+#: ../src/commonui/updater.cpp:250
 #, c-format
 msgid "Started update check on %s\n"
 msgstr "%s のアップデートの確認を開始\n"
@@ -7611,7 +7613,7 @@ msgstr "指定したパスでローカル サイトを開始する"
 msgid "State or province:"
 msgstr "都道府県:"
 
-#: ../src/interface/edithandler.cpp:1410 ../src/interface/queue.cpp:1295
+#: ../src/interface/queue.cpp:1295 ../src/interface/edithandler.cpp:1409
 msgid "Status"
 msgstr "状態"
 
@@ -7674,13 +7676,13 @@ msgstr ""
 "リックリンクは常に削除されます。"
 
 #: ../src/interface/resources/xrc/dialogs.xrc:1082
-#: ../src/interface/state.cpp:279 ../src/interface/state.cpp:294
-#: ../src/interface/state.cpp:301 ../src/interface/state.cpp:312
-#: ../src/interface/state.cpp:411 ../src/interface/state.cpp:419
-#: ../src/interface/state.cpp:427 ../src/interface/state.cpp:1130
-#: ../src/interface/state.cpp:1138 ../src/interface/state.cpp:1145
-#: ../src/interface/state.cpp:1154 ../src/interface/state.cpp:1181
-#: ../src/interface/toolbar.cpp:116
+#: ../src/interface/toolbar.cpp:116 ../src/interface/state.cpp:279
+#: ../src/interface/state.cpp:294 ../src/interface/state.cpp:301
+#: ../src/interface/state.cpp:312 ../src/interface/state.cpp:411
+#: ../src/interface/state.cpp:419 ../src/interface/state.cpp:427
+#: ../src/interface/state.cpp:1130 ../src/interface/state.cpp:1138
+#: ../src/interface/state.cpp:1145 ../src/interface/state.cpp:1154
+#: ../src/interface/state.cpp:1181
 msgid "Synchronized browsing"
 msgstr "同期ブラウジング"
 
@@ -7756,7 +7758,7 @@ msgstr "ターゲット ファイルは既に存在しています"
 msgid "Target file:"
 msgstr "ターゲット ファイル:"
 
-#: ../src/interface/RemoteListView.cpp:2778
+#: ../src/interface/RemoteListView.cpp:2792
 msgid "Target filename already exists!"
 msgstr "ターゲットのファイル名は既に存在しています!"
 
@@ -7780,7 +7782,7 @@ msgstr "テスト結果"
 msgid "Testing resume capabilities of server"
 msgstr "サーバーの再開の互換性をテストしています"
 
-#: ../src/interface/edithandler.cpp:1399
+#: ../src/interface/edithandler.cpp:1398
 msgid "The &following files are currently being edited:"
 msgstr "以下のファイルが現在編集中です(&F):"
 
@@ -7810,7 +7812,7 @@ msgstr ""
 msgid "The address you entered was: %s"
 msgstr "入力したアドレス: %s"
 
-#: ../src/interface/edithandler.cpp:1881
+#: ../src/interface/edithandler.cpp:1880
 msgid "The associated program could not be found."
 msgstr "関連付けられたプログラムが見つかりません。"
 
@@ -7850,11 +7852,11 @@ msgstr ""
 msgid "The data connection could not be established: %s"
 msgstr "データ接続が確立できません: %s"
 
-#: ../src/interface/edithandler.cpp:1785
+#: ../src/interface/edithandler.cpp:1784
 msgid "The default editor for text files is:"
 msgstr "テキスト ファイルを編集するデフォルトのエディター:"
 
-#: ../src/interface/edithandler.cpp:1772
+#: ../src/interface/edithandler.cpp:1771
 msgid "The default editor for this file type is:"
 msgstr "このファイルの種類を編集するデフォルトのエディター:"
 
@@ -7863,8 +7865,8 @@ msgstr "このファイルの種類を編集するデフォルトのエディタ
 msgid "The entered filter name already exists, please choose a different name."
 msgstr "入力したフィルター名は既に存在しています。他の名前を選択してください。"
 
-#: ../src/interface/asksavepassworddialog.cpp:99
 #: ../src/interface/settings/optionspage_passwords.cpp:200
+#: ../src/interface/asksavepassworddialog.cpp:99
 msgid "The entered passwords are not the same."
 msgstr "入力したパスワードは同じではありません。"
 
@@ -7883,8 +7885,8 @@ msgstr ""
 "ファイル %s は既に存在しています。\n"
 "新しい名前を入力:"
 
-#: ../src/interface/edithandler.cpp:1337
-#: ../src/interface/LocalListView.cpp:1929 ../src/interface/search.cpp:2077
+#: ../src/interface/search.cpp:2077 ../src/interface/edithandler.cpp:1336
+#: ../src/interface/LocalListView.cpp:1937
 #, c-format
 msgid ""
 "The file '%s' cannot be opened:\n"
@@ -7914,8 +7916,8 @@ msgstr "ファイル「%s」を読み込めないか、秘密鍵を含んでい�
 msgid "The file '%s' could not be loaded."
 msgstr "ファイル「%s」を読み込めません。"
 
-#: ../src/interface/edithandler.cpp:1332
-#: ../src/interface/LocalListView.cpp:1925 ../src/interface/search.cpp:2073
+#: ../src/interface/search.cpp:2073 ../src/interface/edithandler.cpp:1331
+#: ../src/interface/LocalListView.cpp:1933
 #, c-format
 msgid ""
 "The file '%s' could not be opened:\n"
@@ -7924,8 +7926,8 @@ msgstr ""
 "ファイル「%s」を開くことができません:\n"
 "あなたのシステムではこのファイルの種類にプログラムが関連付けられていません。"
 
-#: ../src/interface/edithandler.cpp:381 ../src/interface/LocalListView.cpp:1937
-#: ../src/interface/search.cpp:2084
+#: ../src/interface/search.cpp:2084 ../src/interface/edithandler.cpp:380
+#: ../src/interface/LocalListView.cpp:1945
 #, c-format
 msgid ""
 "The file '%s' could not be opened:\n"
@@ -8023,8 +8025,8 @@ msgid ""
 "port."
 msgstr "利用可能なポートの最小値は最大値以下である必要があります。"
 
-#: ../src/interface/asksavepassworddialog.cpp:104
 #: ../src/interface/settings/optionspage_passwords.cpp:209
+#: ../src/interface/asksavepassworddialog.cpp:104
 msgid "The master password needs to be at least 8 characters long."
 msgstr "マスター パスワードは少なくとも 8 文字以上必要です。"
 
@@ -8059,11 +8061,11 @@ msgid ""
 "The selected file contains importable data for the following categories:"
 msgstr "選択したファイルに含まれるインポート可能なデータのカテゴリ:"
 
-#: ../src/interface/edithandler.cpp:1188
+#: ../src/interface/edithandler.cpp:1187
 msgid "The selected file is already being edited:"
 msgstr "選択したファイルは既に編集中です:"
 
-#: ../src/interface/edithandler.cpp:1287
+#: ../src/interface/edithandler.cpp:1286
 msgid ""
 "The selected file is still opened in some other program, please close it."
 msgstr ""
@@ -8206,8 +8208,8 @@ msgstr "時刻の書式"
 msgid "Time&out in seconds:"
 msgstr "タイムアウト (秒)(&O):"
 
-#: ../src/interface/queue.cpp:361
 #: ../src/interface/settings/optionspage_connection.cpp:39
+#: ../src/interface/queue.cpp:361
 msgid "Timeout"
 msgstr "タイムアウト"
 
@@ -8332,7 +8334,7 @@ msgstr "転送の接続が中断されました: %s"
 msgid "Transferred data got tainted."
 msgstr "転送したデータは失われました。"
 
-#: ../src/interface/queue.cpp:371 ../src/interface/statuslinectrl.cpp:271
+#: ../src/interface/statuslinectrl.cpp:271 ../src/interface/queue.cpp:371
 msgid "Transferring"
 msgstr "転送中"
 
@@ -8378,7 +8380,7 @@ msgid "Try again"
 msgstr "再試行"
 
 #: ../src/interface/resources/xrc/dialogs.xrc:603
-#: ../src/interface/edithandler.cpp:1408
+#: ../src/interface/edithandler.cpp:1407
 msgid "Type"
 msgstr "タイプ"
 
@@ -8390,7 +8392,7 @@ msgstr "FTP プロキシ タイプ:"
 msgid "Type of generic proxy:"
 msgstr "汎用プロキシ タイプ:"
 
-#: ../src/interface/edithandler.cpp:1492
+#: ../src/interface/edithandler.cpp:1491
 msgid "U&pload"
 msgstr "アップロード(&P)"
 
@@ -8431,7 +8433,7 @@ msgstr "ユニット:"
 #: ../src/interface/resources/xrc/dialogs.xrc:495
 #: ../src/interface/resources/xrc/dialogs.xrc:505
 #: ../src/engine/sizeformatting_base.cpp:63
-#: ../src/interface/edithandler.cpp:1439 ../src/interface/edithandler.cpp:1466
+#: ../src/interface/edithandler.cpp:1438 ../src/interface/edithandler.cpp:1465
 msgid "Unknown"
 msgstr "不明"
 
@@ -8448,7 +8450,7 @@ msgstr "不明な SOCKS プロトコル バージョン: %d"
 msgid "Unknown certificate"
 msgstr "不明な証明書"
 
-#: ../src/interface/Options.cpp:183 ../src/interface/xmlfunctions.cpp:13
+#: ../src/interface/xmlfunctions.cpp:13 ../src/interface/Options.cpp:185
 msgid "Unknown error"
 msgstr "不明なエラー"
 
@@ -8462,7 +8464,7 @@ msgstr "不明なエラー %d"
 msgid "Unknown error %u"
 msgstr "不明なエラー %u"
 
-#: ../src/engine/sftp/input_parser.cpp:152
+#: ../src/engine/sftp/input_parser.cpp:156
 #, c-format
 msgid "Unknown eventType %d"
 msgstr "不明なイベントの種類 %d"
@@ -8516,12 +8518,12 @@ msgstr ""
 msgid "Unsupported redirect"
 msgstr "サポートされていないリダイレクト"
 
-#: ../src/interface/edithandler.cpp:1495
+#: ../src/interface/edithandler.cpp:1494
 msgid "Up&load and unedit"
 msgstr "アップロードして編集中を解除(&L)"
 
-#: ../src/interface/settings/optionspage_updatecheck.cpp:98
 #: ../src/interface/settings/settingsdialog.cpp:143
+#: ../src/interface/settings/optionspage_updatecheck.cpp:98
 msgid "Updates"
 msgstr "アップデート"
 
@@ -8533,7 +8535,7 @@ msgstr "アップロード"
 msgid "Upload &limit:"
 msgstr "アップロード制限(&L):"
 
-#: ../src/interface/edithandler.cpp:1430
+#: ../src/interface/edithandler.cpp:1429
 msgid "Upload failed"
 msgstr "アップロード失敗"
 
@@ -8551,19 +8553,19 @@ msgstr "アップロード制限: なし"
 msgid "Upload search results"
 msgstr "検索結果をアップロード"
 
-#: ../src/interface/LocalTreeView.cpp:1096
+#: ../src/interface/LocalTreeView.cpp:1105
 msgid "Upload selected directory"
 msgstr "選択したディレクトリをアップロード"
 
-#: ../src/interface/LocalListView.cpp:809
+#: ../src/interface/LocalListView.cpp:810
 msgid "Upload selected files and directories"
 msgstr "選択したファイルとディレクトリをアップロード"
 
-#: ../src/interface/edithandler.cpp:849
+#: ../src/interface/edithandler.cpp:848
 msgid "Upload this file back to the server?"
 msgstr "このファイルをサーバーに戻すためにアップロードしますか?"
 
-#: ../src/interface/edithandler.cpp:845
+#: ../src/interface/edithandler.cpp:844
 msgid "Upload this file to the server?"
 msgstr "このファイルをサーバーにアップロードしますか?"
 
@@ -8572,16 +8574,16 @@ msgstr "このファイルをサーバーにアップロードしますか?"
 msgid "Upload: %s/s"
 msgstr "アップロード速度: %s/s"
 
-#: ../src/interface/edithandler.cpp:1424 ../src/interface/edithandler.cpp:1457
-#: ../src/interface/edithandler.cpp:1628
+#: ../src/interface/edithandler.cpp:1423 ../src/interface/edithandler.cpp:1456
+#: ../src/interface/edithandler.cpp:1627
 msgid "Uploading"
 msgstr "アップロード中"
 
-#: ../src/interface/edithandler.cpp:1427 ../src/interface/edithandler.cpp:1631
+#: ../src/interface/edithandler.cpp:1426 ../src/interface/edithandler.cpp:1630
 msgid "Uploading and pending removal"
 msgstr "アップロード中と未解決を取り除く"
 
-#: ../src/interface/edithandler.cpp:1460 ../src/interface/edithandler.cpp:1634
+#: ../src/interface/edithandler.cpp:1459 ../src/interface/edithandler.cpp:1633
 msgid "Uploading and unediting"
 msgstr "アップロード/編集解除中"
 
@@ -8597,7 +8599,7 @@ msgstr "カスタム文字コードを使用(&C)"
 msgid "Use &custom editor:"
 msgstr "カスタム エディターを使用(&C):"
 
-#: ../src/interface/edithandler.cpp:1779
+#: ../src/interface/edithandler.cpp:1778
 msgid "Use &default editor for text files"
 msgstr "テキスト ファイルにデフォルトのエディターを使用(&D)"
 
@@ -8634,7 +8636,7 @@ msgstr "サイト マネージャーからサーバーを選択"
 msgid "Use system &defaults for current language"
 msgstr "システムのデフォルト言語を使用(&D)"
 
-#: ../src/interface/edithandler.cpp:1768
+#: ../src/interface/edithandler.cpp:1767
 msgid "Use system association"
 msgstr "システムの関連付けを使用する"
 
@@ -8935,7 +8937,7 @@ msgid "You did not enter a new name for the file. Overwrite the file instead?"
 msgstr ""
 "ファイルの新しい名前を入力していません。代わりにファイルを上書きしますか?"
 
-#: ../src/interface/LocalListView.cpp:396
+#: ../src/interface/LocalListView.cpp:397
 msgid "You do not have permission to list this directory"
 msgstr "このディレクトリをリストする権限がありません"
 
@@ -8943,13 +8945,13 @@ msgstr "このディレクトリをリストする権限がありません"
 msgid "You have selected at least one symbolic link."
 msgstr "少なくとも 1 つのシンボリックリンクを選択する必要があります。"
 
-#: ../src/interface/edithandler.cpp:1125 ../src/interface/search.cpp:1647
+#: ../src/interface/search.cpp:1647 ../src/interface/edithandler.cpp:1124
 msgid ""
 "You have selected more than 10 files for editing, do you really want to "
 "continue?"
 msgstr "10 個以上のファイルを選択していますが、本当に続行しますか?"
 
-#: ../src/interface/LocalListView.cpp:1896 ../src/interface/search.cpp:2043
+#: ../src/interface/search.cpp:2043 ../src/interface/LocalListView.cpp:1904
 msgid ""
 "You have selected more than 10 files or directories to open, do you really "
 "want to continue?"
@@ -9021,12 +9023,12 @@ msgstr "ブックマーク名を入力する必要があります。"
 msgid "You need to enter a name for the log file."
 msgstr "ログ ファイルの名前を入力する必要があります。"
 
-#: ../src/interface/edithandler.cpp:1862
+#: ../src/interface/edithandler.cpp:1861
 msgid "You need to enter a properly quoted command."
 msgstr "引用符で適切に囲まれたコマンドを入力する必要があります。"
 
-#: ../src/interface/settings/optionspage_ftpproxy.cpp:166
 #: ../src/interface/settings/optionspage_proxy.cpp:149
+#: ../src/interface/settings/optionspage_ftpproxy.cpp:166
 msgid "You need to enter a proxy host."
 msgstr "プロキシのホストを入力する必要があります。"
 
@@ -9124,7 +9126,7 @@ msgstr "バイト"
 msgid "contains"
 msgstr "部分一致"
 
-#: ../src/commonui/updater.cpp:244
+#: ../src/commonui/updater.cpp:255
 msgid "custom"
 msgstr "カスタム"
 
