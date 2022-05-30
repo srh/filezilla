@@ -46,23 +46,26 @@ bool COptionsPageTransfer::CreateControls(wxWindow* parent)
 	SetSizer(main);
 
 	{
+		const int MAXTRANSFERS = 10000;
+		const char *TRANSFER_RANGE_STR = "(1-10000)";
+		const int MAXTRANSFERS_LENGTH = 5;
 		auto [box, inner] = lay.createStatBox(main, _("Concurrent transfers"), 3);
 		inner->Add(new wxStaticText(box, nullID, _("Maximum simultaneous &transfers:")), lay.valign);
 		impl_->transfers_ = new wxSpinCtrlEx(box, nullID, wxString(), wxDefaultPosition, wxSize(lay.dlgUnits(26), -1));
-		impl_->transfers_->SetRange(1, 10);
-		impl_->transfers_->SetMaxLength(2);
+		impl_->transfers_->SetRange(1, MAXTRANSFERS);
+		impl_->transfers_->SetMaxLength(MAXTRANSFERS_LENGTH);
 		inner->Add(impl_->transfers_, lay.valign);
-		inner->Add(new wxStaticText(box, nullID, _("(1-10)")), lay.valign);
+		inner->Add(new wxStaticText(box, nullID, _(TRANSFER_RANGE_STR)), lay.valign);
 		inner->Add(new wxStaticText(box, nullID, _("Limit for concurrent &downloads:")), lay.valign);
 		impl_->downloads_ = new wxSpinCtrlEx(box, nullID, wxString(), wxDefaultPosition, wxSize(lay.dlgUnits(26), -1));
-		impl_->downloads_->SetRange(0, 10);
-		impl_->downloads_->SetMaxLength(2);
+		impl_->downloads_->SetRange(0, MAXTRANSFERS);
+		impl_->downloads_->SetMaxLength(MAXTRANSFERS_LENGTH);
 		inner->Add(impl_->downloads_, lay.valign);
 		inner->Add(new wxStaticText(box, nullID, _("(0 for no limit)")), lay.valign);
 		inner->Add(new wxStaticText(box, nullID, _("Limit for concurrent &uploads:")), lay.valign);
 		impl_->uploads_ = new wxSpinCtrlEx(box, nullID, wxString(), wxDefaultPosition, wxSize(lay.dlgUnits(26), -1));
-		impl_->uploads_->SetRange(0, 10);
-		impl_->uploads_->SetMaxLength(2);
+		impl_->uploads_->SetRange(0, MAXTRANSFERS);
+		impl_->uploads_->SetMaxLength(MAXTRANSFERS_LENGTH);
 		inner->Add(impl_->uploads_, lay.valign);
 		inner->Add(new wxStaticText(box, nullID, _("(0 for no limit)")), lay.valign);
 	}
